@@ -26,6 +26,10 @@ void Game::run()
     //sf::Clock clock;
     window.setFramerateLimit(60);
 
+	// Setting up the camera
+	camera.reset(sf::FloatRect(0,0,1280,720));
+	//camera.move(64,0);
+
     while (!close)
     {
         update();
@@ -35,19 +39,8 @@ void Game::run()
 
 void Game::update()
 {
-    //float currentTime = clock.restart().asSeconds();
-    //float fps = 1.f / currentTime;//(currentTime - lastTime);
-    //lastTime = currentTime;
-
     std::vector<sf::Vector3i> locations;
 	std::stack<sf::Vector2i> path;
-
-	/*while(window.pollEvent(event))
-	{
-		switch(event.type)
-		{
-		}
-	}*/
 
 	// Updating the input manager
 	inputManager.update(window);
@@ -75,6 +68,7 @@ void Game::update()
 void Game::render()
 {
     window.clear();
+	window.setView(camera);
     testLevel->draw(window);
 	ui.draw(&window);
     window.display();

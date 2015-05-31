@@ -107,7 +107,10 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 		unit.setSprite(imageManager.getTexture(unit.getType()));
 
 	// Adding a unit for the AI to fight, normally these would be loaded from a file but eh.
-	combatController.addEnemyUnit(Unit("test", "tank", 5, 50, 10, 0, 6, 3, 16, 2, 3, 3, 1, 3));
+	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 1, 3));
+	combatController.getEnemyUnits().back().setSprite(imageManager.getTexture("player"));
+
+	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 8, 3));
 	combatController.getEnemyUnits().back().setSprite(imageManager.getTexture("player"));
 
 	// Initilising the pathfinder
@@ -123,7 +126,6 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 
 	if(!playerTurn)
 	{
-		//updateAI();
 		combatController.update(pathfinder, tiles, tileSize);
 		nextTurn();
 	}
@@ -131,8 +133,7 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 	{
 		// Checking if the AI's turn has been initiated
 		if(inputManager.pressedOnce("nextTurn"))
-			//nextTurn();
-		combatController.outputPositions();
+			nextTurn();
 
 		// Finding the tile that the cursor is hovered over
 		hoveredTile = sf::Vector2i(mousePos.x / tileSize, mousePos.y / tileSize);
@@ -237,7 +238,7 @@ void Level::draw(sf::RenderWindow& window)
         }
     }
 
-	// Drawing the units enemy
+	// Drawing the enemy units
 	for(auto &unit : combatController.getAvailableUnits())
 		window.draw(unit.getSprite());
 

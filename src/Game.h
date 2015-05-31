@@ -26,6 +26,7 @@ class Game
 		sf::Event event;
 		UserInterface ui;
         Level* testLevel;
+		sf::View camera;
 
 		bool close = false;
         bool turnPassed = false;    // Flag to stop the AI from taking multiple turns

@@ -43,8 +43,6 @@ AI::AI(const std::string l_unitsPath, const std::string l_statsPath)
     		int finalStats[statCount] = {0,0,0,0,0,0,0,0,0};
 	
             ss.str(unitLine);
-            std::cout << std::endl;
-            std::cout << "Creating a unit with the following values: \n";
 
             // For every parameter in the line
             while(std::getline(ss, unitSubString, ','))
@@ -55,22 +53,18 @@ AI::AI(const std::string l_unitsPath, const std::string l_statsPath)
                     {
                     case 0:
                         unitType = unitSubString;
-                        std::cout << "Type: " << unitType << std::endl;
                         break;
                     case 1:
                         convert.str(unitSubString);
                         convert >> tempLvl;
-                        std::cout << "Level: " << tempLvl << std::endl;
                         break;
                     case 2:
                         convert.str(unitSubString);
                         convert >> tempX;
-                        std::cout << "X: " << tempX << std::endl;
                         break;
                     case 3:
                         convert.str(unitSubString);
                         convert >> tempY;
-                        std::cout << "Y: "<< tempY << std::endl;
                     }
                     // Move to the next line
                     i++;
@@ -150,8 +144,6 @@ AI::AI(const std::string l_unitsPath, const std::string l_statsPath)
             for(int k = 0; k < statCount; k++)
             {
                 finalStats[k] += baseStats[k];
-                std::cout << "Base Stat: " << baseStats[k];
-				std::cout << "\t Final pre increment: " << finalStats[k] << std::endl;
                 int rng;
                 for(int j = 0; j < tempLvl - 1; j++)
                 {
@@ -163,9 +155,7 @@ AI::AI(const std::string l_unitsPath, const std::string l_statsPath)
                         finalStats[k]++;
                     }
                 }
-	            std::cout << ", Final: " << finalStats[k] << std::endl;
             }
-            std::cout << std::endl;
 
             // Adding the unit to the available units and assigning the previous unit type
             availableUnits.push_back(Unit(unitType, tempX, tempY, finalStats, tempLvl));
@@ -403,33 +393,36 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 
 				// TODO
 				// Preventing units moving onto the same tile
-				// It's not working ;_;
-/*
-				for(auto &itr : combatController.getAvailableUnits())
+				// both culling spaces with available and enemy units is failing for some reason
+				for(auto &itr : availableUnits)
 				{
-					if(itr.getX() != unit.getX() && itr.getY() != unit.getY())
-					{
+					// Removing spaces containing other available units, but not the current unit
+				//	if(itr.getX() != unit.getX() && itr.getY() != unit.getY())
+				//	{
 						for(auto posItr = validPositions.begin(); posItr != validPositions.end() ; )
 						{
 							if(posItr->x == itr.getX() && posItr->y == itr.getY())
 								posItr = validPositions.erase(posItr);
 							else ++posItr;
 						}
-					}
-				}
-				for(auto &itr : combatController.getEnemyUnits())
-				{
-					if(itr.getX() == unit.getX() && itr.getY() == unit.getY())
+				/*	}
+					else
 					{
-						for(auto posItr = validPositions.begin(); posItr != validPositions.end() ; )
-						{
-							if(posItr->x == itr.getX() && posItr->y == itr.getY())
-								posItr = validPositions.erase(posItr);
-							else ++posItr;
-						}
+						std::cout << unit.getType() << " skipping " << itr.getType() << std::endl;
+					}
+				*/}
+
+				// Removing all spaces containing enemy units
+				for(auto &itr : enemyUnits)
+				{
+					for(auto posItr = validPositions.begin(); posItr != validPositions.end() ; )
+					{
+						if(posItr->x == itr.getX() && posItr->y == itr.getY())
+							posItr = validPositions.erase(posItr);
+						else ++posItr;
 					}
 				}
-*/
+
 				// Selecting the best tile to attack from
 				if(validPositions.size() != 0)	// Only move if there's a valid position
 				{

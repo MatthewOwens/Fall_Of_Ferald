@@ -1,3 +1,2 @@
 Tutorial|Hey there, click to progress this dialogue!
-Tutorial|Grand, you can press 'P' to play an AI turn once this dialog is exhausted
-Tutorial|Alternatively, you can press 'S' to step through the AI's turn, 'R' to reset or Backspace to quit
+Tutorial|Grand, you can press 'P' to play an AI turn once this dialog is exhausted or Backspace to quit

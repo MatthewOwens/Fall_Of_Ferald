@@ -35,7 +35,9 @@ void InputManager::update(sf::RenderWindow& window)
 
 	// Updating the state of the mouse position
 	previousMousePosition = mousePosition;
-	mousePosition = sf::Mouse::getPosition(window);
+	//mousePosition = sf::Mouse::getPosition(window);
+	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+	mousePosition = (sf::Vector2i)window.mapPixelToCoords(pixelPos);
 }
 
 bool InputManager::pressedOnce(std::string keyName)
