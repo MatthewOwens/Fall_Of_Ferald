@@ -45,6 +45,16 @@ void Game::update()
 	// Updating the input manager
 	inputManager.update(window);
 
+	// Updating the camera
+	if(inputManager.keyHeld("right"))
+		camera.move(1,0);
+	if(inputManager.keyHeld("left"))
+		camera.move(-1,0);
+	if(inputManager.keyHeld("down"))
+		camera.move(0,1);
+	if(inputManager.keyHeld("up"))
+		camera.move(0,-1);
+
 	// Updating the UI
 	ui.update(inputManager.getMousePosition(), inputManager.getPrevMousePosition(),
 			  inputManager.pressedOnce(sf::Mouse::Left), inputManager.pressedOnce(sf::Mouse::Right));

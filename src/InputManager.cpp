@@ -40,6 +40,11 @@ void InputManager::update(sf::RenderWindow& window)
 	mousePosition = (sf::Vector2i)window.mapPixelToCoords(pixelPos);
 }
 
+bool InputManager::keyHeld(std::string keyName)
+{
+	return pressedKeys[keyBinds[keyName]];
+}
+
 bool InputManager::pressedOnce(std::string keyName)
 {
     if(pressedKeys[keyBinds[keyName]] && !previousPressedKeys[keyBinds[keyName]])
