@@ -77,9 +77,16 @@ void Game::update()
 
 void Game::render()
 {
+	// Clearing the window to prevent ghosting from the previous frame
     window.clear();
+
+	// Binding the window view to the camera
 	window.setView(camera);
     testLevel->draw(window);
-	ui.draw(&window);
+
+	// Resetting the window view for our UI
+	window.setView(window.getDefaultView());
+	ui.draw(&window, camera);
+
     window.display();
 }

@@ -98,15 +98,29 @@ void UserInterface::addDialogueBox(std::string scriptPath, sf::Texture& image, i
 }
 
 // Method to draw the various UI elements to the screen
-void UserInterface::draw(sf::RenderWindow *window)
+void UserInterface::draw(sf::RenderWindow *window, sf::View& camera)
 {
+	// Getting the current view so we can revert changes at the end
+	const sf::View& originalView = window->getView();
+
+	// Ensuring that the tile highlights are bound to the camera
+	window->setView(camera);
+
+	// Drawing the highlights
 	for (auto i = highlights.begin(); i != highlights.end(); i++)
 		i->draw(window);
 
+	// Making the rest of the interface static
+	window->setView(window->getDefaultView());
+
+	// Drawing the tooltips
     for (auto i = tooltips.begin(); i != tooltips.end(); i++)
         i->draw(window);
 
     dialogueBox.draw(window);
+
+	// Resetting the view
+	window->setView(originalView);
 }
 
 // Method to get the tooltip list

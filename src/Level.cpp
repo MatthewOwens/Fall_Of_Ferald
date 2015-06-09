@@ -33,8 +33,6 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
                 std::string ss;
                 while(std::getline(subString, ss, ','))
                 {
-                    std::cout << "paring the first line" << std::endl;
-
                     // If statments are there to prevent cleaning up the converter
                     // as doing so requires multiple function calls.
                     if(levelHeight == 0 && levelWidth != 0)
