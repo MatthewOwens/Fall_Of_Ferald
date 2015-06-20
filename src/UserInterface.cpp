@@ -13,7 +13,7 @@ UserInterface::~UserInterface()
     //dtor
 }
 
-void UserInterface::update(sf::Vector2i pointerPosition, sf::Vector2i prevPointerPos, bool lmbPressed, bool rmbPressed)
+void UserInterface::update(sf::Vector2f pointerPosition, sf::Vector2f prevPointerPos, bool lmbPressed, bool rmbPressed)
 {
     int offsetX, offsetY;       // The x and y offset to move the tooltip by
 
@@ -100,9 +100,6 @@ void UserInterface::addDialogueBox(std::string scriptPath, sf::Texture& image, i
 // Method to draw the various UI elements to the screen
 void UserInterface::draw(sf::RenderWindow *window, sf::View& camera)
 {
-	// Getting the current view so we can revert changes at the end
-	const sf::View& originalView = window->getView();
-
 	// Ensuring that the tile highlights are bound to the camera
 	window->setView(camera);
 
@@ -110,17 +107,21 @@ void UserInterface::draw(sf::RenderWindow *window, sf::View& camera)
 	for (auto i = highlights.begin(); i != highlights.end(); i++)
 		i->draw(window);
 
-	// Making the rest of the interface static
-	window->setView(window->getDefaultView());
-
 	// Drawing the tooltips
     for (auto i = tooltips.begin(); i != tooltips.end(); i++)
         i->draw(window);
 
+	// Making the rest of the interface static
+	window->setView(window->getDefaultView());
+
+	/* Drawing the tooltips
+    for (auto i = tooltips.begin(); i != tooltips.end(); i++)
+        i->draw(window); */
+
     dialogueBox.draw(window);
 
 	// Resetting the view
-	window->setView(originalView);
+	window->setView(camera);
 }
 
 // Method to get the tooltip list
@@ -176,6 +177,11 @@ void UserInterface::highlightTiles(std::stack<sf::Vector2i> highlightRange, sf::
 	}
 }
 
+void UserInterface::highlightTile(int x, int y, sf::Color colour, int tileSize)
+{
+	highlights.push_back(TileHighlight(x, y, colour, tileSize));
+}
+
 // Clearing highlights of a certain colour
 void UserInterface::clearHighlight(sf::Color colour)
 {
@@ -187,4 +193,3 @@ void UserInterface::clearHighlight(sf::Color colour)
 		else i++;
 	}
 }
-

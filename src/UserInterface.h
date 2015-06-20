@@ -22,7 +22,8 @@ class UserInterface
         virtual ~UserInterface();
         void addTooltip(std::string header, std::string body, sf::Texture& image, int x, int y);
         void addDialogueBox(std::string scriptPath, sf::Texture& image, int x, int y);
-        void update(sf::Vector2i pointerPosition, sf::Vector2i prevPointerPos, bool lmbPressed, bool rmbPressed);
+        void update(sf::Vector2f pointerPosition, sf::Vector2f prevPointerPos, bool lmbPressed, bool rmbPressed);
+					//const sf::Transform& cameraMatrix);
         void draw(sf::RenderWindow *window, sf::View& camera);
         void nextDialogueLine();
         std::list<Tooltip> getTooltips();
@@ -35,6 +36,7 @@ class UserInterface
 		void highlightTiles(std::vector<sf::Vector3i> highlightRange, sf::Color colour, int tileSize);
 		void highlightTiles(std::vector<sf::Vector2i> highlightRange, sf::Color colour, int tileSize);
 		void highlightTiles(std::stack<sf::Vector2i> highlightRange, sf::Color colour, int tileSize);
+		void highlightTile(int x, int y, sf::Color colour, int tileSize);
 		inline void clearHighlight() { highlights.clear(); }
 		void clearHighlight(sf::Color colour);
 };

@@ -28,7 +28,6 @@ void Game::run()
 
 	// Setting up the camera
 	camera.reset(sf::FloatRect(0,0,1280,720));
-	//camera.move(64,0);
 
     while (!close)
     {
@@ -47,13 +46,13 @@ void Game::update()
 
 	// Updating the camera
 	if(inputManager.keyHeld("right"))
-		camera.move(1,0);
+		camera.move(3,0);
 	if(inputManager.keyHeld("left"))
-		camera.move(-1,0);
+		camera.move(-3,0);
 	if(inputManager.keyHeld("down"))
-		camera.move(0,1);
+		camera.move(0,3);
 	if(inputManager.keyHeld("up"))
-		camera.move(0,-1);
+		camera.move(0,-3);
 
 	// Updating the UI
 	ui.update(inputManager.getMousePosition(), inputManager.getPrevMousePosition(),
@@ -85,7 +84,7 @@ void Game::render()
     testLevel->draw(window);
 
 	// Resetting the window view for our UI
-	window.setView(window.getDefaultView());
+//	window.setView(window.getDefaultView());
 	ui.draw(&window, camera);
 
     window.display();

@@ -14,16 +14,16 @@ class InputManager
 		bool pressedOnce(sf::Mouse::Button button);
 		bool keyHeld(std::string keyName);
         bool validKeyDown();
-		inline sf::Vector2i getMousePosition() { return mousePosition; }
-		inline sf::Vector2i getPrevMousePosition() { return previousMousePosition; }
+		inline sf::Vector2f getMousePosition() { return mousePosition; }
+		inline sf::Vector2f getPrevMousePosition() { return previousMousePosition; }
     private:
         bool pressedKeys[sf::Keyboard::KeyCount];
 		bool pressedMouseButtons[sf::Mouse::ButtonCount];
 		bool previousPressedMouseButtons[sf::Mouse::ButtonCount];
         bool previousPressedKeys[sf::Keyboard::KeyCount];
         std::map<std::string, sf::Keyboard::Key> keyBinds;
-		sf::Vector2i mousePosition;
-		sf::Vector2i previousMousePosition;
+		sf::Vector2f mousePosition;
+		sf::Vector2f previousMousePosition;
 };
 
 #endif // INPUTMANAGER_H

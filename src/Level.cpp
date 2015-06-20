@@ -119,8 +119,7 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 {
 	// Updating the sprites
 	combatController.updateSprites(tileSize);
-	sf::Vector2i mousePos = inputManager.getMousePosition();
-	//selectedUnit = NULL;
+	sf::Vector2f mousePos = inputManager.getMousePosition();
 
 	if(!playerTurn)
 	{
@@ -134,11 +133,24 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 			nextTurn();
 
 		// Finding the tile that the cursor is hovered over
-		hoveredTile = sf::Vector2i(mousePos.x / tileSize, mousePos.y / tileSize);
+		for(int y = 0; y < levelHeight; ++y)
+		{
+			for(int x = 0; x < levelWidth; ++x)
+			{
+				if(tiles[x][y].getSprite().getGlobalBounds().contains(mousePos))
+				{
+					hoveredTile = sf::Vector2i(x,y);
+					break;
+				}
+			}
+		}
 
 		// Displaying a unit's range if the player's unit is clicked for the first time
 		if(inputManager.pressedOnce(sf::Mouse::Button::Left))
 		{
+			// Outputting the mouse cursor position
+			std::cout << "(" << hoveredTile.x << "," << hoveredTile.y << ") clicked" << std::endl;
+
 			ui.clearHighlight();
 			playerUnitSelected = false;
 

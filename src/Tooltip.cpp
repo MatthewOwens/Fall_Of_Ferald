@@ -18,7 +18,7 @@ void Tooltip::draw(sf::RenderWindow* window)
     window->draw(bodyText);
 }
 
-bool Tooltip::containsPoint(sf::Vector2i& point)
+bool Tooltip::containsPoint(sf::Vector2f& point)
 {
 	sf::FloatRect bounds = sprite.getGlobalBounds();
 	if((point.x > bounds.left && point.x < bounds.left + bounds.width) &&

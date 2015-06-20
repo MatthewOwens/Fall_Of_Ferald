@@ -37,7 +37,7 @@ void InputManager::update(sf::RenderWindow& window)
 	previousMousePosition = mousePosition;
 	//mousePosition = sf::Mouse::getPosition(window);
 	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-	mousePosition = (sf::Vector2i)window.mapPixelToCoords(pixelPos);
+	mousePosition = window.mapPixelToCoords(pixelPos);
 }
 
 bool InputManager::keyHeld(std::string keyName)
