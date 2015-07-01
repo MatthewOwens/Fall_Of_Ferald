@@ -55,19 +55,6 @@ Unit::Unit(std::string unitType, int _x, int _y, int* statArray, int lvl)
 	y = _y;
 }
 
-std::list<Item> Unit::getWeapons()
-{
-    std::list<Item> value;
-
-    for(auto i : inventory)
-    {
-        if(i.getProperty("isWeapon") == 1)
-            value.push_back(i);
-    }
-
-    return value;
-}
-
 Unit::~Unit()
 {
     //dtor
@@ -86,22 +73,6 @@ void Unit::modifyStat(std::string statName, int mod)
     else
     {
         stats[statName].modifier += mod;
-    }
-}
-
-bool Unit::selectWeapon(int pos)
-{
-    std::list<Item>::iterator item_itr = inventory.begin();
-    std::advance(item_itr, pos);
-
-    if(item_itr->getProperty("isWeapon"))
-    {
-        currentWeapon = item_itr;
-        return true;
-    }
-    else
-    {
-        return false;
     }
 }
 
@@ -128,26 +99,9 @@ int Unit::getStat(std::string statName)
     return stats[statName].getCurrent();
 }
 
-Item& Unit::getCurrentWeapon()
-{
-    return *currentWeapon;
-}
-
 int Unit::getMaxRange()
 {
-    std::list<Item>::iterator item_itr;
-    int maxRange = 0;
-
-    for(item_itr = inventory.begin(); item_itr != inventory.end(); ++item_itr)
-    {
-        if(item_itr->getProperty("isWeapon"))
-        {
-            if(item_itr->getProperty("range") > maxRange)
-                maxRange = item_itr->getProperty("range");
-        }
-    }
-
-    return maxRange;
+	return 1;
 }
 
 void Unit::setPosition(int newX, int newY, int tileSize)

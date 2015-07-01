@@ -1,7 +1,6 @@
 #ifndef UNIT_H
 #define UNIT_H
 #include "ImageManager.h"
-#include "Item.h"
 #include <string>
 #include <list>
 #include <SFML/Graphics/Sprite.hpp>
@@ -17,9 +16,6 @@ class Unit
         virtual ~Unit();
         void modifyStat(std::string statName, int mod);
 		inline void setSprite(sf::Texture& texture) { sprite.setTexture(texture); }
-        bool selectWeapon(int pos);
-        std::list<Item> getWeapons();
-        Item& getCurrentWeapon();
         int getStat(std::string statName);
         std::string getHighestStat();
         //std::string getType();
@@ -65,8 +61,6 @@ class Unit
         std::map<std::string, Stat> stats;
         int x, y;                   // The unit's x and y coords on the map
 		int tileSize;
-        std::list<Item> inventory;
-        std::list<Item>::iterator currentWeapon;
 };
 
 #endif // UNIT_H
