@@ -86,7 +86,6 @@ void UserInterface::addTooltip(std::string header, std::string body, int x, int 
     tempTooltip.bodyText.setPosition(x + 12, y + 25);
     tempTooltip.bodyText.setScale(.75f, .75f);
 
-    //tempTooltip.sprite.setTexture(*tooltipTexture);
     tempTooltip.sprite.setPosition(x, y);
     tempTooltip.isCloseable = true;
     tempTooltip.isMoveable = true;
@@ -109,7 +108,6 @@ void UserInterface::addDialogueBox(std::string scriptPath, int x, int y)
     {
         std::cout << "script loaded successfully." << std::endl;
         dialogueBox.sprite.setPosition(x, y);
-        //dialogueBox.sprite.setTexture(*dialogueTexture);
         dialogueBox.name.setFont(regularFont);
         dialogueBox.name.setCharacterSize(48);
         dialogueBox.dialogue.setFont(regularFont);

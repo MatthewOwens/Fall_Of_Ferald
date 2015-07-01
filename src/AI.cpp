@@ -271,7 +271,7 @@ void AI::updateSprites(const int& tileSize)
 void AI::outputPositions()
 {
 	for(auto &unit : availableUnits)
-		std::cout << unit.getType() << " located at (" << unit.getX() << "," << unit.getY() << ")" << std::endl;
+		std::cout << unit.getName() << " located at (" << unit.getX() << "," << unit.getY() << ")" << std::endl;
 
 	for(auto &unit : enemyUnits)
 		std::cout << "enemy located at (" << unit.getX() << "," << unit.getY() << ")" << std::endl;

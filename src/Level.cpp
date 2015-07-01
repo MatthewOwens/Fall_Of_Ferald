@@ -102,10 +102,10 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 	// Setting the sprites for the NPC units, works as long as the generic unit
 	// names are the same as the imageManager keys
 	for(auto &unit : combatController.getAvailableUnits())
-		unit.setSprite(imageManager.getTexture(unit.getType()));
+		unit.setSprite(imageManager.getTexture(unit.getName()));
 
 	// Adding a unit for the AI to fight, normally these would be loaded from a file but eh.
-	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 1, 3));
+	combatController.addEnemyUnit(Unit("", "player", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 1, 3));
 	combatController.getEnemyUnits().back().setSprite(imageManager.getTexture("player"));
 
 	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 8, 3));
@@ -150,9 +150,20 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 		{
 			for(auto &unit : combatController.getEnemyUnits())
 			{
-				//if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+				{
 					// Draw appropriate tooltip
-					//ui.addTooltip(unit.getType(), unit.getHighestStat(), imageManager.getTextur
+					ui.addTooltip(unit.getName(), unit.getInfo(),
+						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize);
+				}
+			}
+
+			for(auto &unit : combatController.getAvailableUnits())
+			{
+				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+					// Draw appropriate tooltip
+					ui.addTooltip(unit.getName(), unit.getInfo(),
+						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize);
 			}
 		}
 

@@ -1,4 +1,5 @@
 #include "Unit.h"
+#include <iostream>
 
 // Constructor
 Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int strength, int magic, int skill,
@@ -21,6 +22,9 @@ Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int 
     if (unitName == "")
         name = unitType;
     else name = unitName;
+	//name = unitName;
+
+	std::cout << "Created a unit called " << name << "!" << std::endl;
 
 	x = _x;
 	y = _y;
@@ -109,7 +113,7 @@ std::string Unit::getHighestStat()
 
     for(stat_itr = stats.begin(); stat_itr != stats.end(); ++stat_itr)
     {
-        if((stat_itr->second.getCurrent() < highestVal)
+        if((stat_itr->second.getCurrent() > highestVal)
            && (stat_itr->first == "magic" || stat_itr->first == "strength" || stat_itr->first == "defense"))
         {
             highestVal = stat_itr->second.getCurrent();
@@ -117,11 +121,6 @@ std::string Unit::getHighestStat()
         }
     }
     return highestName;
-}
-
-std::string Unit::getType()
-{
-    return type;
 }
 
 int Unit::getStat(std::string statName)
@@ -169,4 +168,19 @@ void Unit::setPosition(sf::Vector2f newPos, int tileSize)
 
 	// Setting the sprite's position
 	sprite.setPosition(x * tileSize, y * tileSize);
+}
+
+std::string Unit::getInfo()
+{
+	std::string result = "";
+    std::map<std::string, Stat>::iterator stat_itr;
+
+    for(stat_itr = stats.begin(); stat_itr != stats.end(); ++stat_itr)
+    {
+		if(stat_itr->first != "moveRange")
+			result += stat_itr->first + ": " + std::to_string(stat_itr->second.getCurrent()) + "\n";
+	}
+
+	return result;
+
 }

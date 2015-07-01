@@ -22,15 +22,18 @@ class Unit
         Item& getCurrentWeapon();
         int getStat(std::string statName);
         std::string getHighestStat();
-        std::string getType();
+        //std::string getType();
         int getX(){return x;}
         int getY(){return y;}
         int getMaxRange();
 		inline sf::Sprite& getSprite() { return sprite; }
 		inline bool getMoved() { return moved; }
 		inline void setMoved(bool val) { moved = val; }
+		inline std::string getName() { return name; }
 		void setPosition(int newX, int newY, int tileSize);	
 		void setPosition(sf::Vector2f newPos, int tileSize);
+
+		std::string getInfo();
 
         // Structure used to store unit statisitics and modifiers
         struct Stat
