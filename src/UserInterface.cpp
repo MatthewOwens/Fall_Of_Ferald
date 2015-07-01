@@ -3,9 +3,27 @@
 
 UserInterface::UserInterface()
 {
+/*
     // Loading in the fonts required for the UI
     regularFont.loadFromFile("assets/fonts/steelfish rg.ttf");
     italicFont.loadFromFile ("assets/fonts/steelfish rg it.ttf");
+
+	tooltipTexture = tooltipImage;
+*/
+}
+
+void UserInterface::loadAssets(ImageManager& imageManager)
+{
+    // Loading in the fonts required for the UI
+    regularFont.loadFromFile("assets/fonts/steelfish rg.ttf");
+    italicFont.loadFromFile ("assets/fonts/steelfish rg it.ttf");
+
+	// Loading the textures
+	imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
+	imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
+
+	tooltipTexture = &imageManager.getTexture("tooltip");
+	dialogueTexture = &imageManager.getTexture("dialogueBox");
 }
 
 UserInterface::~UserInterface()
@@ -33,7 +51,7 @@ void UserInterface::update(sf::Vector2f pointerPosition, sf::Vector2f prevPointe
 			}
 		}
 
-		if(lmbPressed)
+		if(lmbPressed)	// Ensuring one click per line of dialogue
 			dialogueBox.nextLine();
 	}
 	else if (rmbPressed)
@@ -51,7 +69,7 @@ void UserInterface::update(sf::Vector2f pointerPosition, sf::Vector2f prevPointe
 }
 
 // Method to add a new tooltip to the tooltip list
-void UserInterface::addTooltip(std::string header, std::string body, sf::Texture& texture, int x, int y)
+void UserInterface::addTooltip(std::string header, std::string body, int x, int y)
 {
     // Temporary object to store the values in
     Tooltip tempTooltip;
@@ -68,11 +86,15 @@ void UserInterface::addTooltip(std::string header, std::string body, sf::Texture
     tempTooltip.bodyText.setPosition(x + 12, y + 25);
     tempTooltip.bodyText.setScale(.75f, .75f);
 
-    tempTooltip.sprite.setTexture(texture);
+    //tempTooltip.sprite.setTexture(*tooltipTexture);
     tempTooltip.sprite.setPosition(x, y);
     tempTooltip.isCloseable = true;
     tempTooltip.isMoveable = true;
     tempTooltip.sprite.scale(0.5f, 0.5f);
+
+	if(tooltipTexture != NULL)		// Preventing possible null pointer dereferencing
+    	tempTooltip.sprite.setTexture(*tooltipTexture);
+	else std::cout << "Tooltip texture not loaded!" << std::endl;
 
     // Adding the temporary object to the tooltip list
     tooltips.push_back(tempTooltip);
@@ -81,19 +103,23 @@ void UserInterface::addTooltip(std::string header, std::string body, sf::Texture
 void UserInterface::nextDialogueLine() { dialogueBox.nextLine(); }
 
 // Method to add a new dialogue box. Normally only one of these is needed at a time.
-void UserInterface::addDialogueBox(std::string scriptPath, sf::Texture& image, int x, int y)
+void UserInterface::addDialogueBox(std::string scriptPath, int x, int y)
 {
     if(dialogueBox.openScript(scriptPath))
     {
         std::cout << "script loaded successfully." << std::endl;
         dialogueBox.sprite.setPosition(x, y);
-        dialogueBox.sprite.setTexture(image);
+        //dialogueBox.sprite.setTexture(*dialogueTexture);
         dialogueBox.name.setFont(regularFont);
         dialogueBox.name.setCharacterSize(48);
         dialogueBox.dialogue.setFont(regularFont);
         dialogueBox.dialogue.setCharacterSize(48);
         dialogueBox.nextLine();
 		dialogueBox.active = true;
+
+		if(dialogueTexture != NULL)	// Preventing possible null pointer dereferencing
+        	dialogueBox.sprite.setTexture(*dialogueTexture);
+		else std::cout << "Dialogue texture not loaded!" << std::endl;
     }
 }
 

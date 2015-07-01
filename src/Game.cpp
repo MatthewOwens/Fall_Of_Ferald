@@ -18,9 +18,10 @@ void Game::run()
     testLevel->initilizeAI("levels/example/units.txt", "assets/images/unitSprites", imageManager);
 
 	// Loading the interface data
-	imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
-	imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
-	ui.addDialogueBox("dialogue/test.txt", imageManager.getTexture("dialogueBox"), 0, 500);
+	//imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
+	//imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
+	ui.loadAssets(imageManager);
+	ui.addDialogueBox("dialogue/test.txt", 0, 500);
 
     //float lastTime = 0;
     //sf::Clock clock;
@@ -70,7 +71,7 @@ void Game::update()
 	else if (inputManager.pressedOnce("confirm"))
 	{
 		std::cout << "Creating tooltip!" << std::endl;
-		ui.addTooltip("Test Tooltip", "Sometext", imageManager.getTexture("tooltip"), 50, 50);
+		ui.addTooltip("Test Tooltip", "Sometext", 50, 50);
 	}
 }
 

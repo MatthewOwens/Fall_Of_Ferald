@@ -145,12 +145,20 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 			}
 		}
 
+		// Rendering unit stats on right click
+		if(inputManager.pressedOnce(sf::Mouse::Button::Right))
+		{
+			for(auto &unit : combatController.getEnemyUnits())
+			{
+				//if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+					// Draw appropriate tooltip
+					//ui.addTooltip(unit.getType(), unit.getHighestStat(), imageManager.getTextur
+			}
+		}
+
 		// Displaying a unit's range if the player's unit is clicked for the first time
 		if(inputManager.pressedOnce(sf::Mouse::Button::Left))
 		{
-			// Outputting the mouse cursor position
-			std::cout << "(" << hoveredTile.x << "," << hoveredTile.y << ") clicked" << std::endl;
-
 			ui.clearHighlight();
 			playerUnitSelected = false;
 

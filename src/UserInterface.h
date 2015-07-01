@@ -7,6 +7,7 @@
 #include "Tooltip.h"
 #include "DialogueBox.h"
 #include "TileHighlight.h"
+#include "ImageManager.h"
 #include <SFML/System/Vector2.hpp>
 
 class UserInterface
@@ -17,13 +18,17 @@ class UserInterface
         sf::Font italicFont;
         DialogueBox dialogueBox;
 		std::vector<TileHighlight> highlights;
+
+		// References to textures, to be populated in loadAssets()
+		sf::Texture* tooltipTexture = NULL;
+		sf::Texture* dialogueTexture = NULL;
     public:
         UserInterface();
+		void loadAssets(ImageManager& imageManager);
         virtual ~UserInterface();
-        void addTooltip(std::string header, std::string body, sf::Texture& image, int x, int y);
-        void addDialogueBox(std::string scriptPath, sf::Texture& image, int x, int y);
+        void addTooltip(std::string header, std::string body, int x, int y);
+        void addDialogueBox(std::string scriptPath, int x, int y);
         void update(sf::Vector2f pointerPosition, sf::Vector2f prevPointerPos, bool lmbPressed, bool rmbPressed);
-					//const sf::Transform& cameraMatrix);
         void draw(sf::RenderWindow *window, sf::View& camera);
         void nextDialogueLine();
         std::list<Tooltip> getTooltips();
