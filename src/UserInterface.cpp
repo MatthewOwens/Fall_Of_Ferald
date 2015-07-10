@@ -1,4 +1,5 @@
 #include "UserInterface.h"
+#include <SFML/Graphics/Image.hpp>
 #include <iostream>
 
 UserInterface::UserInterface()
@@ -19,10 +20,13 @@ void UserInterface::loadAssets(ImageManager& imageManager)
     italicFont.loadFromFile ("assets/fonts/steelfish rg it.ttf");
 
 	// Loading the textures
-	imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
+	//imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
 	imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
+	imageManager.loadImage("assets/images/interface/newTooltip.png", "newTooltip");
 
-	tooltipTexture = &imageManager.getTexture("tooltip");
+	//tooltipTexture = &imageManager.getTexture("tooltip");
+	tooltipTexture= &imageManager.getTexture("newTooltip");
+	tooltipTexture->setRepeated(true);
 	dialogueTexture = &imageManager.getTexture("dialogueBox");
 }
 
@@ -69,7 +73,7 @@ void UserInterface::update(sf::Vector2f pointerPosition, sf::Vector2f prevPointe
 }
 
 // Method to add a new tooltip to the tooltip list
-void UserInterface::addTooltip(std::string header, std::string body, int x, int y)
+/*void UserInterface::addTooltip(std::string header, std::string body, int x, int y)
 {
     // Temporary object to store the values in
     Tooltip tempTooltip;
@@ -97,6 +101,59 @@ void UserInterface::addTooltip(std::string header, std::string body, int x, int 
 
     // Adding the temporary object to the tooltip list
     tooltips.push_back(tempTooltip);
+}*/
+
+void UserInterface::addTooltip(std::string header, std::string body, int x, int y, int characterSize)
+{
+	int lineCount = 0;	// Number of line in the text
+	float scaleFactorY = 0;
+	Tooltip tempTooltip;
+	sf::Image spriteSheet;
+
+	// Counting how many lines we'll need
+	for(auto itr : body)
+	{
+		if(itr == '\n')
+			lineCount++;
+	}
+
+	// Building the tooltip
+	// Creating the header text
+	tempTooltip.headerText.setString(header);
+	tempTooltip.headerText.setFont(regularFont);
+	tempTooltip.headerText.setPosition(x + 5, y + 1);
+	//tempTooltip.headerText.setScale(.75f, .75f);
+	tempTooltip.headerText.setCharacterSize(characterSize);
+
+	// Creating the body text
+	tempTooltip.bodyText.setString(body);
+	tempTooltip.bodyText.setFont(regularFont);
+	tempTooltip.bodyText.setPosition(x + 12, y + 25);
+	tempTooltip.bodyText.setCharacterSize(characterSize);
+
+	tempTooltip.sprite.setPosition(x, y);
+	tempTooltip.isCloseable = true;
+	tempTooltip.isMoveable = true;
+	//tempTooltip.sprite.scale(0.5f, 0.5f);
+
+	if(tooltipTexture != NULL)// Preventing possible null pointer dereferencing
+	{
+		// Setting the texture
+		tempTooltip.sprite.setTexture(*tooltipTexture);
+
+		// Ensuring proper scaling for the font
+		scaleFactorY = tempTooltip.bodyText.getLocalBounds().height / tempTooltip.sprite.getLocalBounds().height;
+		scaleFactorY += 0.1f;	// TODO: Replace magic number with scaling to include decenders
+		tempTooltip.sprite.setScale(1, scaleFactorY);
+
+		// Ensuring proper scaling for the number of lines
+		sf::Vector2u textureSize = tooltipTexture->getSize();
+		//tempTooltip.sprite.scale(1, lineCount);
+	}
+	else std::cout << "Tooltip texture not loaded!" << std::endl;
+
+	// Pushing to the tooltip list
+		tooltips.push_back(tempTooltip);
 }
 
 void UserInterface::nextDialogueLine() { dialogueBox.nextLine(); }

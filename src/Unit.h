@@ -18,7 +18,6 @@ class Unit
 		inline void setSprite(sf::Texture& texture) { sprite.setTexture(texture); }
         int getStat(std::string statName);
         std::string getHighestStat();
-        //std::string getType();
         int getX(){return x;}
         int getY(){return y;}
         int getMaxRange();

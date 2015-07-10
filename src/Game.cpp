@@ -68,11 +68,6 @@ void Game::update()
 		std::cout << "Closing...!" << std::endl;
 		close = true;
 	}
-	else if (inputManager.pressedOnce("confirm"))
-	{
-		std::cout << "Creating tooltip!" << std::endl;
-		ui.addTooltip("Test Tooltip", "Sometext", 50, 50);
-	}
 }
 
 void Game::render()

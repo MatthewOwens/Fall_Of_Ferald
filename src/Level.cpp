@@ -154,7 +154,7 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 				{
 					// Draw appropriate tooltip
 					ui.addTooltip(unit.getName(), unit.getInfo(),
-						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize);
+						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
 				}
 			}
 
@@ -163,7 +163,7 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
 					// Draw appropriate tooltip
 					ui.addTooltip(unit.getName(), unit.getInfo(),
-						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize);
+						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
 			}
 		}
 

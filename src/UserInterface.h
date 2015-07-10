@@ -26,7 +26,7 @@ class UserInterface
         UserInterface();
 		void loadAssets(ImageManager& imageManager);
         virtual ~UserInterface();
-        void addTooltip(std::string header, std::string body, int x, int y);
+        void addTooltip(std::string header, std::string body, int x, int y, int characterSize);
         void addDialogueBox(std::string scriptPath, int x, int y);
         void update(sf::Vector2f pointerPosition, sf::Vector2f prevPointerPos, bool lmbPressed, bool rmbPressed);
         void draw(sf::RenderWindow *window, sf::View& camera);
