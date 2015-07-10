@@ -138,3 +138,16 @@ std::string Unit::getInfo()
 	return result;
 
 }
+
+bool Unit::useItem(std::string itemName)
+{
+	// Ensuring that the item exists
+	if(inventory.exists(itemName))
+	{
+		// TODO: Stat manipulation
+
+		// Removing the item from our inventory
+		inventory.removeItem(itemName);
+	}
+	else return false;
+}

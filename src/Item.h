@@ -11,6 +11,9 @@ class Item
 		// Constructor for key items
 		Item(std::string name_);
 
+		// Default constructor for inventory
+		Item(){};
+
 		// Check functions to determine the type of item
 		bool isWeapon();
 		bool isKey();

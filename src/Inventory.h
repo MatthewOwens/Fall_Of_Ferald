@@ -7,8 +7,11 @@
 class Inventory
 {
 	public:
+		Inventory(){};
 		void addItem(Item newItem);
 		void removeItem(std::string itemName);
+		bool exists(std::string itemName);
+		Item* getItem(std::string itemName);
 
 		struct Stock
 		{

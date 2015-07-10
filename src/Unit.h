@@ -1,6 +1,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 #include "ImageManager.h"
+#include "Inventory.h"
 #include <string>
 #include <list>
 #include <SFML/Graphics/Sprite.hpp>
@@ -8,7 +9,6 @@
 
 class Unit
 {
-    friend class UnitManager;
     public:
 		Unit(std::string unitName, std::string unitType, int lvl, int health, int strength, int magic, int skill,
 			int speed, int defense, int resistance, int luck, int moveRange, int _x, int _y);
@@ -25,8 +25,12 @@ class Unit
 		inline bool getMoved() { return moved; }
 		inline void setMoved(bool val) { moved = val; }
 		inline std::string getName() { return name; }
+
 		void setPosition(int newX, int newY, int tileSize);	
 		void setPosition(sf::Vector2f newPos, int tileSize);
+	
+		bool useItem(std::string itemName, Unit* target);	// For targeting other units
+		bool useItem(std::string itemName);					// For using on self
 
 		std::string getInfo();
 
@@ -50,6 +54,7 @@ class Unit
 
     private:
 		sf::Sprite sprite;
+		Inventory inventory;
         std::string movementType;   // The unit's movement type. (Treads, flight etc.)
         std::string type;           // The unit's type (Tank, Mech, Infantry etc.)
         std::string name;           // The unit's name (if not specified, this becomes the unit's type)
