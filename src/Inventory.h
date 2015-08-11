@@ -1,8 +1,7 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 #include "Item.h"
-#include <map>
-#include <list>
+#include <vector>
 
 class Inventory
 {
@@ -13,18 +12,7 @@ class Inventory
 		bool exists(std::string itemName);
 		Item* getItem(std::string itemName);
 
-		struct Stock
-		{
-			Item item;
-			int count;
-
-			Stock(Item& newItem)
-			{
-				item = newItem;
-				count = 1;
-			}
-		};
 	private:
-		std::list<Stock> stocks;
+		std::vector<Item> stock;
 };
 #endif //INVENTORY_H

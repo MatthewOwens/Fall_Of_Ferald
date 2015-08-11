@@ -155,6 +155,11 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 					// Draw appropriate tooltip
 					ui.addTooltip(unit.getName(), unit.getInfo(),
 						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
+
+					// TODO: move to an appropriate place in the codebase, testing for now
+					Item newItem("topkek", "health", 100, 1, 0);
+					unit.getInventory().addItem(newItem);
+					unit.useItem("topkek");
 				}
 			}
 

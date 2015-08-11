@@ -1,49 +1,43 @@
 #include "Inventory.h"
+#include <iostream>
+#include <algorithm>
 
 void Inventory::addItem(Item newItem)
 {
-	for(auto existing : stocks)
-	{
-		if(existing.item.getName() == newItem.getName())
-		{
-			existing.count++;
-			return;
-		}
-	}
+	// Adding the new inventory item
+	stock.push_back(newItem);
 
-	stocks.push_back(newItem);
+	std::cout << "Added "<< stock.back().getName() << " to the inventory" << std::endl;
 }
 
 void Inventory::removeItem(std::string itemName)
 {
-	std::list<Stock>::iterator stock_itr;
-	for(stock_itr = stocks.begin(); stock_itr != stocks.end() ; )
-	{
-		if(itemName == stock_itr->item.getName())
-		{
-			// If the stock count is greater than one, we can just decrease the count
-			if(stock_itr->count > 1)
-			{
-				stock_itr->count--;
-				return;	// Stock has been removed, no need to continue
-			}
-			else	// Removing the listing if there is no stock left
-			{
-				stock_itr = stocks.erase(stock_itr);
-			}
-		}
-
-		// No match, check the next item in stocks
-		++stock_itr;
-	}
+	stock.erase(std::remove_if(stock.begin(), stock.end(),
+				[&](Item i){return i.getName() == itemName;}), stock.end());
 }
 
 bool Inventory::exists(std::string itemName)
 {
-	for(auto stock : stocks)
+	for(auto item: stock)
 	{
-		if(stock.item.getName() == itemName)
+		if(item.getName() == itemName)
 			return true;
 	}
 	return false;
 }
+
+Item* Inventory::getItem(std::string itemName)
+{
+	std::vector<Item>::iterator itr;
+	for(auto &item : stock)
+	{
+		std::cout << "Found an item named " << item.getName() << ", looking for " << itemName << std::endl;
+		if(item.getName() == itemName)
+		{
+			std::cout << "Returning " << &item << std::endl;
+			return &item;
+		}
+	}
+	return nullptr;
+}
+

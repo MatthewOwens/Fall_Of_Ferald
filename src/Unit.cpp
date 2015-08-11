@@ -141,13 +141,23 @@ std::string Unit::getInfo()
 
 bool Unit::useItem(std::string itemName)
 {
+	Item* item = inventory.getItem(itemName);
+
 	// Ensuring that the item exists
-	if(inventory.exists(itemName))
+	if(item != nullptr)
 	{
-		// TODO: Stat manipulation
+		std::cout << "Removing " << item->getName() << " from inventory." << std::endl;
+	   	std::cout << "Decreasing " << item->getTargetStat() << " by " << item->getModifier() << std::endl;
+		stats[item->getTargetStat()].modifier += item->getModifier();
 
 		// Removing the item from our inventory
 		inventory.removeItem(itemName);
+		return true;
 	}
-	else return false;
+	else
+	{
+		std::cout << "Item " << itemName << " not found in " << getName() << "'s inventory!" << std::endl;
+		std::cout << item << " was returned!" << std::endl << std::endl;
+		return false;
+	}
 }
