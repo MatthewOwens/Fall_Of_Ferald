@@ -6,9 +6,6 @@
 #include <list>
 #include <SFML/Graphics/Sprite.hpp>
 
-//TODO: Fix Inventories ;_;
-
-
 class Unit
 {
     public:
@@ -28,6 +25,7 @@ class Unit
 		inline void setMoved(bool val) { moved = val; }
 		inline Inventory& getInventory() { return inventory; }
 		inline std::string getName() { return name; }
+		inline std::string getMovementType() { return movementType; }
 
 		void setPosition(int newX, int newY, int tileSize);	
 		void setPosition(sf::Vector2f newPos, int tileSize);

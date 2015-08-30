@@ -4,166 +4,16 @@
 #include <iostream>
 #include <deque>
 
-AI::AI(const std::string l_unitsPath, const std::string l_statsPath)
+#if defined (__gnu_linux__)
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <errno.h>
+	#include <fcntl.h>
+#endif
+
+AI::AI(const std::string unitsPath, const std::string statsPath)
 {
-    mapWidth = -1;
-    mapHeight = -1;
-
-    // Stuff for file parsing
-    std::ifstream unitFile(l_unitsPath);
-    std::ifstream statsFile;
-    std::string unitLine;
-    std::string unitSubString;
-    std::string previousUnitType;
-    std::string unitType;
-    std::stringstream convert;
-    std::stringstream ss;
-
-	int tempX = 0;
-    int tempY = 0;
-    int tempLvl = 0;
-
-    // Temporary variables to keep track of what line and line section is
-    // currently being accessed.
-    int i = 0;
-    int j = 0;
-
-    // Stuff for randomization
-    std::mt19937 gen(std::time(NULL));
-    std::uniform_int_distribution<int> dis(1,100);
-
-    if(unitFile.good())
-    {
-        // For every unit that has to be loaded
-        while(std::getline(unitFile,unitLine))
-        {
-    		// Arrays to store the stats and growths temporarily
-  			int baseStats[statCount] =	{0,0,0,0,0,0,0,0,0};
-    		int growths[statCount] =	{0,0,0,0,0,0,0,0,0};
-    		int finalStats[statCount] = {0,0,0,0,0,0,0,0,0};
-	
-            ss.str(unitLine);
-
-            // For every parameter in the line
-            while(std::getline(ss, unitSubString, ','))
-            {
-                if (unitSubString[0] != '#')
-                {
-                    switch(i)
-                    {
-                    case 0:
-                        unitType = unitSubString;
-                        break;
-                    case 1:
-                        convert.str(unitSubString);
-                        convert >> tempLvl;
-                        break;
-                    case 2:
-                        convert.str(unitSubString);
-                        convert >> tempX;
-                        break;
-                    case 3:
-                        convert.str(unitSubString);
-                        convert >> tempY;
-                    }
-                    // Move to the next line
-                    i++;
-
-                    // Clearing the stringstream
-                    convert.clear();
-                    convert.str(std::string());
-                }
-            }
-            i = 0;
-
-            // Clearing the stringstream
-            ss.clear();
-            ss.str(std::string());
-
-            // If the current unit type changed from last time, get the
-            // stat bases/growths again.
-            if(unitType != previousUnitType)
-            {
-                // Closing the previous stats file
-                statsFile.close();
-
-                // Opening a new stats file
-                statsFile.open(l_statsPath + unitType + ".txt");
-
-                if(statsFile.good())
-                    std::cout << "The " << unitType << " stats file is good. \n";
-                else
-                    std::cout << "Error loading " << l_statsPath + unitType + ".txt" << std::endl;
-
-
-                while(std::getline(statsFile, unitLine))
-                {
-                    bool skipLine = false;
-                    ss.str(unitLine);
-
-                    while(std::getline(ss,unitSubString,','))
-                    {
-                        if (unitLine[0] != '#')// || unitLine[0] != ' ')
-                        {
-                            convert.str(unitSubString);
-                            if (i == 0)
-                            {
-                                convert >> baseStats[j];
-                            }
-                            else if (i == 1)
-                                convert >> growths[j];
-
-                            j++;
-                        }
-                        else
-                        {
-                            //std::cout << "Line started with the # character, skipping..." << std::endl;
-                            skipLine = true;
-                        }
-
-                        // Clear the stringstream
-                        convert.clear();
-                        convert.str(std::string());
-                    }
-                    // Move to the next line
-                    j = 0;
-
-                    if (!skipLine)
-                    {
-                        i++;
-                    }
-
-                    ss.clear();
-                    ss.str(std::string());
-                }
-            }
-            // Resetting the counters for the next line
-            i = 0;
-
-            // leveling up each of the individual stats depending on the unit's level
-            for(int k = 0; k < statCount; k++)
-            {
-                finalStats[k] += baseStats[k];
-                int rng;
-                for(int j = 0; j < tempLvl - 1; j++)
-                {
-                    rng = dis(gen);
-                    //std::cout << "rng: " << rng << ", grw: " << growths[k] << std::endl;
-
-                    if(rng < growths[k])
-                    {
-                        finalStats[k]++;
-                    }
-                }
-            }
-
-            // Adding the unit to the available units and assigning the previous unit type
-            availableUnits.push_back(Unit(unitType, tempX, tempY, finalStats, tempLvl));
-            previousUnitType = unitType;
-        }
-    }
-    // Closing the unit file
-    unitFile.close();
+	populateAIUnits(unitsPath, statsPath);
 }
 
 std::list<Unit*> AI::getPossibleTargets(std::vector<sf::Vector3i> attackRange)
@@ -356,7 +206,8 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 		std::vector<sf::Vector3i> moveRange;	// Where the AI controlled unit can move to
 
 		// Finding the moveRange
-		moveRange = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()), unit.getStat("moveRange"));
+		moveRange = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()), unit.getStat("moveRange"),
+				unit.getMovementType());
 
 		// Searching for possible targets based on the moveRange
 		possibleTargets = getPossibleTargets(moveRange);
@@ -391,9 +242,6 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 					}
 				}
 
-				// TODO
-				// Preventing units moving onto the same tile
-				// both culling spaces with available and enemy units is failing for some reason
 				for(auto &itr : availableUnits)
 				{
 					// Removing spaces containing other available units, but not the current unit
@@ -449,4 +297,177 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 			unit.getSprite().setPosition(unit.getX() * tileSize, unit.getY() * tileSize);
 		}
 	}
+}
+
+bool AI::populateAIUnits(const std::string& unitsPath, const std::string& statsPath)
+{
+
+    mapWidth = -1;
+    mapHeight = -1;
+
+    // Stuff for file parsing
+    std::ifstream unitFile(unitsPath);
+    std::ifstream statsFile;
+    std::string unitLine;
+    std::string unitSubString;
+    std::string previousUnitType;
+    std::string unitType;
+    std::stringstream convert;
+    std::stringstream ss;
+
+	int tempX = 0;
+    int tempY = 0;
+    int tempLvl = 0;
+
+    // Temporary variables to keep track of what line and line section is
+    // currently being accessed.
+    int i = 0;
+    int j = 0;
+
+    // Stuff for randomization
+    std::mt19937 gen(std::time(NULL));
+    std::uniform_int_distribution<int> dis(1,100);
+
+    if(unitFile.good())
+    {
+        // For every unit that has to be loaded
+        while(std::getline(unitFile,unitLine))
+        {
+    		// Arrays to store the stats and growths temporarily
+  			int baseStats[statCount] =	{0,0,0,0,0,0,0,0,0};
+    		int growths[statCount] =	{0,0,0,0,0,0,0,0,0};
+    		int finalStats[statCount] = {0,0,0,0,0,0,0,0,0};
+	
+            ss.str(unitLine);
+
+            // For every parameter in the line
+            while(std::getline(ss, unitSubString, ','))
+            {
+                if (unitSubString[0] != '#')
+                {
+                    switch(i)
+                    {
+                    case 0:
+                        unitType = unitSubString;
+                        break;
+                    case 1:
+                        convert.str(unitSubString);
+                        convert >> tempLvl;
+                        break;
+                    case 2:
+                        convert.str(unitSubString);
+                        convert >> tempX;
+                        break;
+                    case 3:
+                        convert.str(unitSubString);
+                        convert >> tempY;
+                    }
+                    // Move to the next line
+                    i++;
+
+                    // Clearing the stringstream
+                    convert.clear();
+                    convert.str(std::string());
+                }
+            }
+            i = 0;
+
+            // Clearing the stringstream
+            ss.clear();
+            ss.str(std::string());
+
+            // If the current unit type changed from last time, get the
+            // stat bases/growths again.
+            if(unitType != previousUnitType)
+            {
+                // Closing the previous stats file
+                statsFile.close();
+
+                // Opening a new stats file
+                statsFile.open(statsPath + unitType + ".txt");
+
+                if(statsFile.good())
+                    std::cout << "The " << unitType << " stats file is good. \n";
+                else
+				{
+                    std::cout << "Error loading " << statsPath + unitType + ".txt" << std::endl;
+					availableUnits.clear(); // Clearing to avoid half-populated lists.
+					return false;
+				}
+
+
+                while(std::getline(statsFile, unitLine))
+                {
+                    bool skipLine = false;
+                    ss.str(unitLine);
+
+                    while(std::getline(ss,unitSubString,','))
+                    {
+                        if (unitLine[0] != '#')// || unitLine[0] != ' ')
+                        {
+                            convert.str(unitSubString);
+                            if (i == 0)
+                            {
+                                convert >> baseStats[j];
+                            }
+                            else if (i == 1)
+                                convert >> growths[j];
+
+                            j++;
+                        }
+                        else
+                        {
+                            skipLine = true;
+                        }
+
+                        // Clear the stringstream
+                        convert.clear();
+                        convert.str(std::string());
+                    }
+                    // Move to the next line
+                    j = 0;
+
+                    if (!skipLine)
+                    {
+                        i++;
+                    }
+
+                    ss.clear();
+                    ss.str(std::string());
+                }
+            }
+            // Resetting the counters for the next line
+            i = 0;
+
+            // leveling up each of the individual stats depending on the unit's level
+            for(int k = 0; k < statCount; k++)
+            {
+                finalStats[k] += baseStats[k];
+                int rng;
+                for(int j = 0; j < tempLvl - 1; j++)
+                {
+                    rng = dis(gen);
+
+                    if(rng < growths[k])
+                    {
+                        finalStats[k]++;
+                    }
+                }
+            }
+
+            // Adding the unit to the available units and assigning the previous unit type
+            availableUnits.push_back(Unit(unitType, tempX, tempY, finalStats, tempLvl));
+            previousUnitType = unitType;
+        }
+    }
+	else	// unitFile.good == false
+	{
+		std::cout << "Error reading from " << unitsPath << std::endl;
+		availableUnits.clear();	// Clearing to avoid half-populated lists
+		return false;
+	}
+
+    // Closing the unit file
+    unitFile.close();
+	return true;
 }

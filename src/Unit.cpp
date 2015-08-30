@@ -18,6 +18,7 @@ Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int 
 	stats["resistance"] = Stat(resistance);
 	stats["luck"] = Stat(luck);
     stats["moveRange"] = Stat(moveRange);
+	movementType = "foot";
 
     if (unitName == "")
         name = unitType;

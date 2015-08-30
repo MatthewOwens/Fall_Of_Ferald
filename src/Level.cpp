@@ -89,7 +89,8 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
 // with no enemies or NPC allies.
 void Level::initilizeAI(const std::string& unitPath, const std::string& spritesheetPath, ImageManager& imageManager)
 {
-    std::cout << "starting to init AI" << std::endl;
+   // std::cout << "starting to init AI" << std::endl;
+	std::cout << "UNIT PATH IS " << unitPath << std::endl;
     combatController = AI(unitPath, "Stats/");
     std::cout << "AI initilized" << std::endl;
 
@@ -155,11 +156,6 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 					// Draw appropriate tooltip
 					ui.addTooltip(unit.getName(), unit.getInfo(),
 						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
-
-					// TODO: move to an appropriate place in the codebase, testing for now
-					Item newItem("topkek", "health", 100, 1, 0);
-					unit.getInventory().addItem(newItem);
-					unit.useItem("topkek");
 				}
 			}
 
@@ -185,7 +181,7 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 				{
 
 					toHighlight = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()),
-						unit.getStat("moveRange"));
+						unit.getStat("moveRange"), unit.getMovementType());
 
 					ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
 					playerUnitSelected = true;

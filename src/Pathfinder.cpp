@@ -46,7 +46,7 @@ Pathfinder::~Pathfinder()
 // TODO: Change function to take a unit reference rather than the start and range values
 //		 This will both cut down on the number of parameters and allow proper terrain
 //		 cost evaluation.
-std::vector<sf::Vector3i> Pathfinder::calculateArea(sf::Vector2i start, int range)
+std::vector<sf::Vector3i> Pathfinder::calculateArea(sf::Vector2i start, int range, const std::string& moveType)
 {
     std::vector<sf::Vector3i> expansion;
     int maxSize = 1;
@@ -105,7 +105,8 @@ std::vector<sf::Vector3i> Pathfinder::calculateArea(sf::Vector2i start, int rang
 	for(auto i = expansion.begin() + 1; i != expansion.end(); )
 	{
 		// TODO: Proper move cost evaluation
-		i->z = moveCosts["foot"][levelPtr->getTileType(i->x, i->y)];
+		i->z = moveCosts[moveType][levelPtr->getTileType(i->x, i->y)];
+		//i->z = moveCosts["foot"][levelPtr->getTileType(i->x, i->y)];
 		//i->z = moveCosts["foot"]["plain"];
 		i->z += std::abs(start.x - i->x);
 		i->z += std::abs(start.y - i->y);
