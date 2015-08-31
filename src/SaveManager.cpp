@@ -34,7 +34,7 @@ int SaveManager::load(const int saveSlot)
 
 }
 
-int SaveManager::combatLoad()
+int SaveManager::combatLoad(std::list<Unit>& playerUnits, std::list<Unit>& computerUnits)
 {
 	#if defined(_WIN32)
 		std::string folderPath = saveFolder + "combatSave\\";
@@ -55,7 +55,7 @@ int SaveManager::combatLoad()
 	if(computerFile.good() != 0)
 		return -1;
 
-	int ret = loadCombatUnits(playerFile);
+	int ret = loadCombatUnits(playerFile, playerUnits);
 	if(ret != 0)
 	{
 		std::cout << "loadCombatUnits() failed with return " << ret << std::endl;
@@ -63,7 +63,7 @@ int SaveManager::combatLoad()
 	}
 	else
 	{
-		ret = loadCombatUnits(computerFile);
+		ret = loadCombatUnits(computerFile, computerUnits);
 		if(ret != 0)
 			std::cout << "loadCombatUnits() failed with return " << ret << std::endl;
 		return ret;
@@ -108,7 +108,7 @@ bool SaveManager::folderExists(const std::string& path)
 	#endif
 }
 
-int SaveManager::loadCombatUnits(std::ifstream& file)
+int SaveManager::loadCombatUnits(std::ifstream& file, std::list<Unit>& unitList)
 {
 }
 

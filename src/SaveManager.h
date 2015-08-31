@@ -11,14 +11,14 @@ class SaveManager
 		int combatSave(std::list<Unit>& playerUnits, std::list<Unit>& computerUnits);
 
 		int load(const int saveSlot);
-		int combatLoad();
+		int combatLoad(std::list<Unit>& playerUnits, std::list<Unit>& computerUnits);
 	private:
 		std::string getFolderPath(const int saveSlot);
 		bool folderExists(const std::string & path);
 		int createFolderPath(const std::string& path);
 
 		int saveCombatUnits(std::list<Unit>& unitList);
-		int loadCombatUnits(std::ifstream& file);
+		int loadCombatUnits(std::ifstream& file, std::list<Unit>& unitList);
 
 		#if defined(_WIN32)
 			static const char* saveFolder = "saves\\"
