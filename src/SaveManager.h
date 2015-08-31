@@ -20,7 +20,11 @@ class SaveManager
 		int saveCombatUnits(std::list<Unit>& unitList);
 		int loadCombatUnits(std::ifstream& file);
 
-		static const char* saveFolder = "saves/"
+		#if defined(_WIN32)
+			static const char* saveFolder = "saves\\"
+		#else
+			static const char* saveFolder = "saves/"
+		#endif
 
 }
 #endif //SAVEMANAGER_H

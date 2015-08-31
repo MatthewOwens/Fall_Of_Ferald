@@ -15,7 +15,12 @@ int SaveManager::save(const int saveSlot)
 int SaveManager::combatSave(const std::list<Unit>& playerUnits,
 		const std::list<Unit>& computerUnits)
 {
-	std::string folderPath = saveFolder + "combatSave/";
+	#if defined(_WIN32)
+		std::string folderPath = saveFolder + "combatSave\\";
+	#else
+		std::string folderPath = saveFolder + "combatSave/";
+	#endif
+
 	std::string playerPath = folderPath + "playerUnits";
 	std::string computerPath = folderPath + "computerUnits";
 	std::ifstream playerFile;
@@ -31,7 +36,12 @@ int SaveManager::load(const int saveSlot)
 
 int SaveManager::combatLoad()
 {
-	std::string folderPath = saveFolder + "combatSave/":
+	#if defined(_WIN32)
+		std::string folderPath = saveFolder + "combatSave\\";
+	#else
+		std::string folderPath = saveFolder + "combatSave/";
+	#endif
+
 	std::string playerPath = folderPath + "playerUnits";
 	std::string computerPath = folderPath + "computerUnits";
 	std::ifstream playerFile;
