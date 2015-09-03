@@ -2,6 +2,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #if defined(_WIN32)
 	#include <direct.h> // for _mkdir
@@ -15,11 +18,7 @@ int SaveManager::save(const int saveSlot)
 int SaveManager::combatSave(const std::list<Unit>& playerUnits,
 		const std::list<Unit>& computerUnits)
 {
-	#if defined(_WIN32)
-		std::string folderPath = saveFolder + "combatSave\\";
-	#else
-		std::string folderPath = saveFolder + "combatSave/";
-	#endif
+	std::string folderPath = saveFolder + "combatSave/";
 
 	std::string playerPath = folderPath + "playerUnits";
 	std::string computerPath = folderPath + "computerUnits";
@@ -36,11 +35,7 @@ int SaveManager::load(const int saveSlot)
 
 int SaveManager::combatLoad(std::list<Unit>& playerUnits, std::list<Unit>& computerUnits)
 {
-	#if defined(_WIN32)
-		std::string folderPath = saveFolder + "combatSave\\";
-	#else
-		std::string folderPath = saveFolder + "combatSave/";
-	#endif
+	std::string folderPath = saveFolder + "combatSave/";
 
 	std::string playerPath = folderPath + "playerUnits";
 	std::string computerPath = folderPath + "computerUnits";
@@ -72,7 +67,7 @@ int SaveManager::combatLoad(std::list<Unit>& playerUnits, std::list<Unit>& compu
 
 }
 
-std::string SaveManaager::getFolderPath(const int saveSlot)
+std::string SaveManager::getFolderPath(const int saveSlot)
 {
 	std::stringstream sstream;
 
@@ -86,7 +81,7 @@ int SaveManager::createFolderPath(const std::string& path)
 		int ret = _mkdir(path.c_str());
 	#else
 		mode_t mode = 0755;
-		int ret = mkdir(path.c_str());
+		int ret = mkdir(path.c_str(), mode);
 	#endif
 
 	//TODO: error handling for mkdir failures.
@@ -110,9 +105,10 @@ bool SaveManager::folderExists(const std::string& path)
 
 int SaveManager::loadCombatUnits(std::ifstream& file, std::list<Unit>& unitList)
 {
+	
 }
 
-int SaveManager::saveCombatUnits(std::list<Unit>& unitList)
+int SaveManager::saveCombatUnits(std::list<Unit>& unitList, std::string& filepath)
 {
-
+	//TODO: json saving	
 }
