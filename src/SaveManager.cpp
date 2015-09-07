@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "json/json.h"
 
 #if defined(_WIN32)
 	#include <direct.h> // for _mkdir
@@ -110,5 +111,11 @@ int SaveManager::loadCombatUnits(std::ifstream& file, std::list<Unit>& unitList)
 
 int SaveManager::saveCombatUnits(std::list<Unit>& unitList, std::string& filepath)
 {
-	//TODO: json saving	
+	//TODO: json saving
+	Json::Value jsonList;
+	jsonList.append("hello");
+	jsonList.append("world");
+
+	Json::StyledWriter jsonWriter;
+	std::cout << jsonWriter.write(jsonList);
 }
