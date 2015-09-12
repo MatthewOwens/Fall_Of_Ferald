@@ -119,3 +119,13 @@ int SaveManager::saveCombatUnits(std::list<Unit>& unitList, std::string& filepat
 	Json::StyledWriter jsonWriter;
 	std::cout << jsonWriter.write(jsonList);
 }
+void SaveManager::jsonTest()
+{
+	//TODO: json saving
+	Json::Value jsonList;
+	jsonList.append("hello");
+	jsonList.append("world");
+
+	Json::StyledWriter jsonWriter;
+	std::cout << jsonWriter.write(jsonList);
+}

@@ -12,6 +12,7 @@ class SaveManager
 
 		int load(const int saveSlot);
 		int combatLoad(std::list<Unit>& playerUnits, std::list<Unit>& computerUnits);
+		SaveManager() {jsonTest();}
 	private:
 		std::string getFolderPath(const int saveSlot);
 		bool folderExists(const std::string & path);
@@ -19,6 +20,7 @@ class SaveManager
 
 		int saveCombatUnits(std::list<Unit>& unitList, std::string& filepath);
 		int loadCombatUnits(std::ifstream& file, std::list<Unit>& unitList);
+		void jsonTest();
 
 		const std::string saveFolder = "saves/";
 
