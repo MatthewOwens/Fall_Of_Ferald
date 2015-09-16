@@ -51,8 +51,6 @@ class Unit
                 modifier = 0;
             }
             int getCurrent() { return base - modifier; }
-			int getBase() { return base; }
-			int getMod() { return modifier; }
 
             int base;           // The base stat
             int modifier;       // The modifier to be applied to the stat
