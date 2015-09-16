@@ -113,19 +113,39 @@ int SaveManager::saveCombatUnits(std::list<Unit>& unitList, std::string& filepat
 {
 	//TODO: json saving
 	Json::Value jsonList;
-	jsonList.append("hello");
-	jsonList.append("world");
-
 	Json::StyledWriter jsonWriter;
-	std::cout << jsonWriter.write(jsonList);
+
+	for(auto i : unitList)
+	{
+		for(int j = 0; j < i.getStatsSize(); j++)
+		{
+			//jsonList[i.getName()]["base stats"][i.statNames[j]] = i.getStat(i.statNames[j]).getBase();
+			jsonList[i.getName()]["base stats"][i.statNames[j]] = i.getStat(i.statNames[j]).base;
+			jsonList[i.getName()]["mod stats"][i.statNames[j]] = i.getStat(i.statNames[j]).modifier;
+		}
+	}
+
+	std::cout << jsonWriter.write(jsonList) << std::endl;
 }
 void SaveManager::jsonTest()
 {
+	std::map<std::string, int> stringMap;
+	stringMap["One"] = 1;
+	stringMap["Two"] = 2;
+	stringMap["Three"] = 3;
+
 	//TODO: json saving
 	Json::Value jsonList;
-	jsonList.append("hello");
-	jsonList.append("world");
+	for(auto i : stringMap)
+	{
+		jsonList["Unit"][i.first] = i.second;
+	}
+
+	stringMap["One"] = 10;
+	jsonList["One"] = stringMap["One"];
 
 	Json::StyledWriter jsonWriter;
+
+	std::cout << "Styled Json:" << std::endl;
 	std::cout << jsonWriter.write(jsonList);
 }

@@ -35,6 +35,8 @@ class Unit
 
 		std::string getInfo();
 
+		const int getStatsSize() { return 8; }
+
         // Structure used to store unit statisitics and modifiers
         struct Stat
         {
@@ -49,9 +51,16 @@ class Unit
                 modifier = 0;
             }
             int getCurrent() { return base - modifier; }
+			int getBase() { return base; }
+			int getMod() { return modifier; }
+
             int base;           // The base stat
             int modifier;       // The modifier to be applied to the stat
         };
+
+		const std::string statNames[8] = {"health", "strenght", "magic", "skill",
+										 "speed", "defense", "resistance", "luck"
+										 "moveRange"};
 
     private:
 		sf::Sprite sprite;
