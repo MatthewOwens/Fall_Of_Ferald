@@ -26,6 +26,7 @@ class AI
 		Unit* selectTarget(std::list<Unit*>& possibleTargets, Unit& currentUnit);
 		sf::Vector2f selectPosition(std::vector<sf::Vector3i> validRange);
         void setMapDimensions(int width, int height);
+		std::vector<sf::Vector2i> getItemRange(Unit& currentUnit, const int& attackRange, const int& excludedRange);
 		void updateSprites(const int& tileSize);
 		void update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize);
 		inline void addEnemyUnit(Unit unit) { enemyUnits.push_back(unit); }

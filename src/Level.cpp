@@ -190,6 +190,12 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 					selectedUnitPos = sf::Vector2i(unit.getX(), unit.getY());
 					selectedUnit = &unit;
 
+					// TODO: Show after unit moves
+					std::vector<sf::Vector2i> atkRange = combatController.getItemRange(unit, 3, 0);
+
+					for(auto i : atkRange)
+						std::cout << "(" << i.x << "," << i.y << ")" << std::endl;
+
 					// No need to check the rest of the units
 					break;
 				}
@@ -320,5 +326,4 @@ Level::~Level()
     for(int i = 0; i < levelWidth; ++i)
         delete[] tiles[i];
     delete tiles;
-
 }

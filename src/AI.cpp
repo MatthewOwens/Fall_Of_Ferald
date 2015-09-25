@@ -471,3 +471,40 @@ bool AI::populateAIUnits(const std::string& unitsPath, const std::string& statsP
     unitFile.close();
 	return true;
 }
+
+std::vector<sf::Vector2i> AI::getItemRange(Unit& currentUnit, const int& attackRange, const int& excludedRange)
+{
+	std::vector<sf::Vector2i> finalRange;
+	int x  = currentUnit.getX();
+	int y = currentUnit.getY();
+	sf::Vector2i location(x, y);
+
+	// Checking for units that can't attack
+	if(attackRange <= 0)
+		return finalRange;
+	else
+	{
+		for(int i = 0; i < attackRange; ++i)
+		{
+			for(int j = 0; j < attackRange; ++j)
+			{
+				// Preventing units from outside the attack range and the current location
+				// from being added. 
+				if(j + i <= attackRange && j + i != 0 && i + j > excludedRange)
+				{
+					finalRange.push_back(sf::Vector2i(i + x, j + y));
+					// Preventing duplications
+					// TODO: Measure time taken for checks vs time taken for removing dupes after
+					// This _should_ be more efficient, but need to be certain.
+					if(i != 0)
+						finalRange.push_back(sf::Vector2i(-i - x, j + y));
+					if(j != 0)
+						finalRange.push_back(sf::Vector2i(i + x, -j - y));
+					if(i != 0 && j != 0)
+						finalRange.push_back(sf::Vector2i(-i - x, -j - y));
+				}
+			}
+		}
+	}
+	return finalRange;
+}
