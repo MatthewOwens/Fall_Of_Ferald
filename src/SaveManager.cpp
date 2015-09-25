@@ -120,8 +120,8 @@ int SaveManager::saveCombatUnits(std::list<Unit>& unitList, std::string& filepat
 		for(int j = 0; j < i.getStatsSize(); j++)
 		{
 			//jsonList[i.getName()]["base stats"][i.statNames[j]] = i.getStat(i.statNames[j]).getBase();
-			jsonList[i.getName()]["base stats"][i.statNames[j]] = i.getStat(i.statNames[j]).base;
-			jsonList[i.getName()]["mod stats"][i.statNames[j]] = i.getStat(i.statNames[j]).modifier;
+			//jsonList[i.getName()]["base stats"][i.statNames[j]] = i.getStat(i.statNames[j]).base;
+			//jsonList[i.getName()]["mod stats"][i.statNames[j]] = i.getStat(i.statNames[j]).modifier;
 		}
 	}
 

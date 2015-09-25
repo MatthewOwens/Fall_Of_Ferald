@@ -56,8 +56,8 @@ class Unit
             int modifier;       // The modifier to be applied to the stat
         };
 
-		const std::string statNames[8] = {"health", "strenght", "magic", "skill",
-										 "speed", "defense", "resistance", "luck"
+		std::string statNames[9] = {"health", "strenght", "magic", "skill",
+										 "speed", "defense", "resistance", "luck",
 										 "moveRange"};
 
     private:

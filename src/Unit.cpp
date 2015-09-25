@@ -42,16 +42,6 @@ Unit::Unit(std::string unitType, int _x, int _y, int* statArray, int lvl)
     level = lvl;
 	moved = false;
 
-    /*stats["health"]     = Stat(statArray[0]);
-    stats["strength"]   = Stat(statArray[1]);
-    stats["magic"]      = Stat(statArray[2]);
-    stats["skill"]      = Stat(statArray[3]);
-    stats["speed"]      = Stat(statArray[4]);
-    stats["defense"]    = Stat(statArray[5]);
-    stats["resistance"] = Stat(statArray[6]);
-    stats["luck"]       = Stat(statArray[7]);
-    stats["moveRange"]  = Stat(statArray[8]);*/
-
 	for(int i = 0; i < getStatsSize(); ++i)
 		stats[statNames[i]] = Stat(statArray[i]);
 
