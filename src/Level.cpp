@@ -191,10 +191,11 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 					selectedUnit = &unit;
 
 					// TODO: Show after unit moves
-					std::vector<sf::Vector2i> atkRange = combatController.getItemRange(unit, 3, 0);
+					std::vector<sf::Vector2i> atkRange = combatController.getItemRange(unit, 2, 1);
 
 					for(auto i : atkRange)
 						std::cout << "(" << i.x << "," << i.y << ")" << std::endl;
+					std::cout << std::endl;
 
 					// No need to check the rest of the units
 					break;
