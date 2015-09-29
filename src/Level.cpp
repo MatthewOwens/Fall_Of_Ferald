@@ -15,6 +15,7 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
     levelHeight = 0;
 	playerTurn = true;
 	playerUnitSelected = false;
+	playerUnitTargeting = false;
 	hoveredTile = sf::Vector2i(0,0);
 	selectedUnitPos = sf::Vector2i(-1,-1);
 	previouslyHoveredTile = sf::Vector2i(-1,-1);
@@ -190,13 +191,6 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 					selectedUnitPos = sf::Vector2i(unit.getX(), unit.getY());
 					selectedUnit = &unit;
 
-					// TODO: Show after unit moves
-					std::vector<sf::Vector2i> atkRange = combatController.getItemRange(unit, 2, 1);
-
-					for(auto i : atkRange)
-						std::cout << "(" << i.x << "," << i.y << ")" << std::endl;
-					std::cout << std::endl;
-
 					// No need to check the rest of the units
 					break;
 				}
@@ -221,7 +215,8 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 					}
 				}
 				selectedUnit->setMoved(true);
-				selectedUnit = NULL;
+				playerUnitTargeting = true;
+				//selectedUnit = NULL;
 
 				// Changing turn if all the player units have been used
 				for(auto &unit : combatController.getEnemyUnits())
@@ -233,6 +228,15 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 				if(changeTurn)
 					nextTurn();
 			}
+		}
+
+		// TODO: Display radius with UI::highlightTiles
+		if(playerUnitTargeting && selectedUnit != NULL)
+		{
+			std::vector<sf::Vector2i> atkRange = combatController.getItemRange(*selectedUnit, 5, 2);
+			ui.highlightTiles(atkRange, ui.enemyHighlight, tileSize);
+
+			playerUnitTargeting = false;
 		}
 
 		// Drawing the path between the selected unit and the mouse

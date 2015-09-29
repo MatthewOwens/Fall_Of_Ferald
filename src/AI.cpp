@@ -510,7 +510,6 @@ std::vector<sf::Vector2i> AI::getItemRange(Unit& currentUnit, const int& attackR
 					if(i != 0 && j != 0)
 						finalRange.push_back(sf::Vector2i(-i + x, -j + y));
 				}
-				else std::cout << "(" << i << "," << j << ") excluded" << std::endl;
 			}
 		}
 	}
