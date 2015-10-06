@@ -128,6 +128,7 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 	if(!playerTurn)
 	{
 		combatController.update(pathfinder, tiles, tileSize);
+		std::cout << "Completed AI turn" << std::endl;
 		nextTurn();
 	}
 	else

@@ -43,7 +43,11 @@ Unit::Unit(std::string unitType, int _x, int _y, int* statArray, int lvl)
 	moved = false;
 
 	for(int i = 0; i < getStatsSize(); ++i)
+	{
 		stats[statNames[i]] = Stat(statArray[i]);
+		std::cout << "Setting " << statNames[i] << " to " << statArray[i] << std::endl;
+	}
+	std::cout << std::endl;
 
 	x = _x;
 	y = _y;
