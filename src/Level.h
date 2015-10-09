@@ -41,7 +41,9 @@ class Level
 		bool playerUnitTargeting;
 		sf::Vector2i hoveredTile;			// The tile the mouse is currently hovering over
 		sf::Vector2i previouslyHoveredTile;
+		//std::vector<sf::Vector3i> toHighlight;
 		std::vector<sf::Vector3i> toHighlight;
+		std::vector<sf::Vector2i> toHighlightAtk;
 		sf::Vector2i selectedUnitPos;
 		Unit* selectedUnit;
         Tile** tiles;

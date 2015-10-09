@@ -203,11 +203,16 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 	for(auto &unit : getAvailableUnits())
 	{
 		std::list<Unit*> possibleTargets;		// What the AI controlled unit can attack
-		std::vector<sf::Vector3i> moveRange;	// Where the AI controlled unit can move to
+		std::vector<sf::Vector3i> moveRange;
+		std::vector<sf::Vector2i> atkRange;
+		/*std::vector<sf::Vector3i> moveRange;	// Where the AI controlled unit can move to
 
 		// Finding the moveRange
 		moveRange = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()), unit.getStat("moveRange"),
-				unit.getMovementType());
+				unit.getMovementType());*/
+
+		// Finding the move and attack ranges
+		pathfinder.calculateArea(unit, moveRange, atkRange);
 
 		// Searching for possible targets based on the moveRange
 		possibleTargets = getPossibleTargets(moveRange);

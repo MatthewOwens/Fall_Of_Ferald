@@ -20,8 +20,7 @@ class Pathfinder
 		Pathfinder() {}
         virtual ~Pathfinder();
         std::vector<sf::Vector3i> calculateArea(sf::Vector2i start, int range, const std::string& moveType = "flight");
-        std::vector<sf::Vector3i> calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveRange,
-												std::vector<sf::Vector2i>& atkRange);
+        void calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet);
         std::vector<sf::Vector2i> getPath(Unit& currentUnit);
 		std::stack<sf::Vector2i> getPath(std::vector<sf::Vector3i> searchRange, sf::Vector2i start, sf::Vector2i target);
         void findPlayerPaths(std::list<Unit>& playerUnits);

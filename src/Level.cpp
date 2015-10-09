@@ -184,10 +184,12 @@ void Level::update(InputManager& inputManager, UserInterface& ui)
 				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
 				{
 
-					toHighlight = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()),
-						unit.getStat("moveRange"), unit.getMovementType());
+					/*toHighlight = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()),
+						unit.getStat("moveRange"), unit.getMovementType());*/
+					pathfinder.calculateArea(unit, toHighlight, toHighlightAtk);
 
 					ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
+					ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
 					playerUnitSelected = true;
 					selectedUnitPos = sf::Vector2i(unit.getX(), unit.getY());
 					selectedUnit = &unit;
