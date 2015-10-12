@@ -45,7 +45,8 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 	std::string moveType = unit.getMovementType();
 	int atkRange = moveRange + 2;					// TODO: Change to += weapon range
 	sf::Vector2i startPos(unit.getX(), unit.getY());
-	std::vector<sf::Vector3i> openSet;
+	std::list<sf::Vector3i> openSet;
+	//std::vector<sf::Vector3i> openSet;
 	int cornerSize = 1;
 
 	// No need to go further if the unit can't move
@@ -117,9 +118,12 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 			if(node == openSet.end())
 				openSet.push_back(adjacentNodes[i]);
 		}
+
 		std::cout << "Current openSet: " << std::endl;
 		for(auto i : openSet)
 			std::cout << "\t(" << i.x << "," << i.y << "," << i.z << ")" << std::endl;
+
+		std::cout << "Current node address: " << &currentNode << std::endl;
 
 		currentNode++;	//Somehow this is breaking everything
 	}
@@ -130,20 +134,22 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 	for(auto i = openSet.begin(); i != openSet.end() ; )
 	{
 		//std::cout << "\t(" << i->x << "," << i->y << "," << i->z << ")" << std::endl;
-		/*if(i->x < 0 || i->x > levelPtr->getMapSizeX() || i->y < 0 ||
-				i->y > levelPtr->getMapSizeY() || i->z > atkRange)*/
-		if(i->z > atkRange)
+		if(i->x < 0 || i->x > levelPtr->getMapSizeX() || i->y < 0 ||
+				i->y > levelPtr->getMapSizeY() || i->z > atkRange)
 		{
-			//i = openSet.erase(i);
+			i = openSet.erase(i);
 		}
 
 		++i;
 	} 
 
 
+	std::cout << std::endl << std::endl;
+	std::cout  << "Final openSet: " << std::endl;
 	// Populating our final vectors
 	for(auto i : openSet)
 	{
+		std::cout << "\t(" << i.x << "," << i.y << "," << i.z << ")" << std::endl;
 		/*if(i.z <= moveRange)
 			moveSet.push_back(i);
 		else if(i.z <= atkRange)
