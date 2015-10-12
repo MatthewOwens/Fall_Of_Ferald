@@ -77,9 +77,6 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 		sf::Vector3i adjacentNodes[4];
 
 		// Populating the adjacent nodes
-		std::cout << std::endl;
-		std::cout << "Current node: (" << currentNode->x << "," << currentNode->y << "," << currentNode->z << ")" << std::endl;
-		std::cout << "populating adjacentNodes" << std::endl;
 		adjacentNodes[0] = sf::Vector3i(currentNode->x + 1, currentNode->y, 9999);
 		adjacentNodes[1] = sf::Vector3i(currentNode->x - 1, currentNode->y, 9999);
 		adjacentNodes[2] = sf::Vector3i(currentNode->x, currentNode->y + 1, 9999);
@@ -94,7 +91,6 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 				adjacentNodes[i].z = moveCosts[moveType][levelPtr->getTileType(adjacentNodes[i].x, adjacentNodes[i].y)];
 				adjacentNodes[i].z += currentNode->z;
 			}
-			std::cout << i << ": (" << adjacentNodes[i].x << "," << adjacentNodes[i].y << "," << adjacentNodes[i].z << ")" << std::endl;
 
 			auto node = openSet.begin();
 
@@ -108,7 +104,7 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 					{
 						node->z = adjacentNodes[i].z;
 						break;
-					}
+					} else break;
 
 				}
 				node++;
@@ -119,23 +115,14 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 				openSet.push_back(adjacentNodes[i]);
 		}
 
-		std::cout << "Current openSet: " << std::endl;
-		for(auto i : openSet)
-			std::cout << "\t(" << i.x << "," << i.y << "," << i.z << ")" << std::endl;
-
-		std::cout << "Current node address: " << &currentNode << std::endl;
-
 		currentNode++;
 	}
-
-	//std::cout << "openSet: " << std::endl;
 
 	// Culling nodes that are too expensive or off the map
 	for(auto i = openSet.begin(); i != openSet.end() ; )
 	{
-		//std::cout << "\t(" << i->x << "," << i->y << "," << i->z << ")" << std::endl;
 		if(i->x < 0 || i->x > levelPtr->getMapSizeX() || i->y < 0 ||
-				i->y > levelPtr->getMapSizeY() || i->z > atkRange)
+				i->y > levelPtr->getMapSizeY())
 		{
 			i = openSet.erase(i);
 		}
@@ -144,17 +131,14 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 	} 
 
 
-	std::cout << std::endl << std::endl;
-	std::cout  << "Final openSet: " << std::endl;
 	// Populating our final vectors
 	for(auto i : openSet)
 	{
-		std::cout << "\t(" << i.x << "," << i.y << "," << i.z << ")" << std::endl;
-		/*if(i.z <= moveRange)
+		if(i.z <= moveRange)
 			moveSet.push_back(i);
-		else if(i.z <= atkRange)
-			atkSet.push_back(sf::Vector2i(i.x, i.y));*/
-		moveSet.push_back(i);
+		// TODO: Fix atkSet population
+		else if(i.z  - moveCosts[moveType][levelPtr->getTileType(i.x, i.y)] <= atkRange)
+			atkSet.push_back(sf::Vector2i(i.x, i.y));
 	}
 }
 
