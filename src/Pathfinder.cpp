@@ -125,7 +125,7 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 
 		std::cout << "Current node address: " << &currentNode << std::endl;
 
-		currentNode++;	//Somehow this is breaking everything
+		currentNode++;
 	}
 
 	//std::cout << "openSet: " << std::endl;
