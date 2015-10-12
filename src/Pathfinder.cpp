@@ -42,10 +42,11 @@ Pathfinder::~Pathfinder()
 void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet)
 {
 	int moveRange = unit.getStat("moveRange");
-	int atkRange = moveRange + 2;					// TODO: Change to += weapon range
 	std::string moveType = unit.getMovementType();
+	int atkRange = moveRange + 2;					// TODO: Change to += weapon range
 	sf::Vector2i startPos(unit.getX(), unit.getY());
 	std::vector<sf::Vector3i> openSet;
+	int cornerSize = 1;
 
 	// No need to go further if the unit can't move
 	if(moveRange <= 0)
@@ -59,60 +60,95 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 	moveSet.clear();
 	atkSet.clear();
 
-	// Definding the area we need to work with
-	for(int i = 0; i <= atkRange; ++i)
-	{
-		for(int j = 0; j <= atkRange; ++j)
-		{
-			// Preventing us from adding tiles outside our range
-			if((i + j) <= atkRange)// && (j + i) != 0)
-			{
-				// Ensuring that the positions are relative to the entire map,
-				// not just the unit
-				openSet.push_back(sf::Vector3i(i + startPos.x, j + startPos.y, 9999));
+	// Calculating how large the corners of the range are
+	for(int i = 2; i < atkRange; ++i)
+		cornerSize += i;
 
-				// Preventing flipping if the point is on an axis, as it would
-				// just result in duplications in openSet
-				if(i != 0)
-					openSet.push_back(sf::Vector3i(-i + startPos.x, j + startPos.y, 9999));
-				if(j != 0)
-					openSet.push_back(sf::Vector3i(i + startPos.x, -j + startPos.y, 9999));
-				if(i != 0 && j != 0)
-					openSet.push_back(sf::Vector3i(-i + startPos.x, -j + startPos.y, 9999));
+	// Calculating the total size of our range
+	const int maxSearchSize = 1 + (4 * atkRange) + (4 * cornerSize);
+
+	// Pushing our start point to the open set
+	openSet.push_back(sf::Vector3i(unit.getX(), unit.getY(), 0));
+
+	auto currentNode = openSet.begin();
+	while(openSet.size() != maxSearchSize)
+	{
+		sf::Vector3i adjacentNodes[4];
+
+		// Populating the adjacent nodes
+		std::cout << std::endl;
+		std::cout << "Current node: (" << currentNode->x << "," << currentNode->y << "," << currentNode->z << ")" << std::endl;
+		std::cout << "populating adjacentNodes" << std::endl;
+		adjacentNodes[0] = sf::Vector3i(currentNode->x + 1, currentNode->y, 9999);
+		adjacentNodes[1] = sf::Vector3i(currentNode->x - 1, currentNode->y, 9999);
+		adjacentNodes[2] = sf::Vector3i(currentNode->x, currentNode->y + 1, 9999);
+		adjacentNodes[3] = sf::Vector3i(currentNode->x, currentNode->y - 1, 9999);
+
+		for(int i = 0; i < 4; ++i)
+		{
+			// Preventing us from reading outside of the level's tile array
+			if(adjacentNodes[i].x >= 0 && adjacentNodes[i].x < levelPtr->getMapSizeX() &&
+			   adjacentNodes[i].y >= 0 && adjacentNodes[i].y < levelPtr->getMapSizeY())
+			{
+				adjacentNodes[i].z = moveCosts[moveType][levelPtr->getTileType(adjacentNodes[i].x, adjacentNodes[i].y)];
+				adjacentNodes[i].z += currentNode->z;
 			}
+			std::cout << i << ": (" << adjacentNodes[i].x << "," << adjacentNodes[i].y << "," << adjacentNodes[i].z << ")" << std::endl;
+
+			auto node = openSet.begin();
+
+			// Checking if the adjacent nodes are cheaper than any currently
+			// existing nodes in openSet
+			do
+			{
+				if(node->x == adjacentNodes[i].x && node->y == adjacentNodes[i].y)
+				{
+					if(node->z > adjacentNodes[i].z)
+					{
+						node->z = adjacentNodes[i].z;
+						break;
+					}
+
+				}
+				node++;
+			}while(node != openSet.end());
+
+			// If the node doesn't exist at all in openSet
+			if(node == openSet.end())
+				openSet.push_back(adjacentNodes[i]);
 		}
+		std::cout << "Current openSet: " << std::endl;
+		for(auto i : openSet)
+			std::cout << "\t(" << i.x << "," << i.y << "," << i.z << ")" << std::endl;
+
+		currentNode++;	//Somehow this is breaking everything
 	}
 
-	// Setting the cost to move to our current node to zero
-	openSet[0].z = 0;
+	//std::cout << "openSet: " << std::endl;
 
-	// Calculating the cost of traveling to any of the nodes from the start node.
-	// Starting at one after the start to avoid the start node, as we've set it's cost to zero.
-	for(auto i = openSet.begin() + 1; i != openSet.end(); )
+	// Culling nodes that are too expensive or off the map
+	for(auto i = openSet.begin(); i != openSet.end() ; )
 	{
-		// TODO: Change cost calculations, these only work for equal-cost nodes!
-		i->z = moveCosts[moveType][levelPtr->getTileType(i->x, i->y)];
-		i->z += std::abs(startPos.x - i->x);
-		i->z += std::abs(startPos.y - i->y);
-		i->z -= 1;
-
-		// Removing the node if it's cost is too high
+		//std::cout << "\t(" << i->x << "," << i->y << "," << i->z << ")" << std::endl;
+		/*if(i->x < 0 || i->x > levelPtr->getMapSizeX() || i->y < 0 ||
+				i->y > levelPtr->getMapSizeY() || i->z > atkRange)*/
 		if(i->z > atkRange)
 		{
-			//std::cout << "Culling " << i->x << "," << i->y << std::endl;
-			i = openSet.erase(i);
+			//i = openSet.erase(i);
 		}
-		else ++i;
-	}
+
+		++i;
+	} 
+
 
 	// Populating our final vectors
 	for(auto i : openSet)
 	{
-		if(i.z <= moveRange)
+		/*if(i.z <= moveRange)
 			moveSet.push_back(i);
-			//moveSet.push_back(sf::Vector2i(i.x, i.y));
 		else if(i.z <= atkRange)
-			atkSet.push_back(sf::Vector2i(i.x, i.y));
+			atkSet.push_back(sf::Vector2i(i.x, i.y));*/
+		moveSet.push_back(i);
 	}
 }
 
