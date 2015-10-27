@@ -43,9 +43,10 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 {
 	int moveRange = unit.getStat("moveRange");
 	std::string moveType = unit.getMovementType();
-	int atkRange = moveRange + 2;					// TODO: Change to += weapon range
+	int atkRange = moveRange + 3;					// TODO: Change to += weapon range
 	sf::Vector2i startPos(unit.getX(), unit.getY());
 	std::list<sf::Vector3i> openSet;
+	std::vector<sf::Vector3i> edgeSet;
 	//std::vector<sf::Vector3i> openSet;
 	int cornerSize = 1;
 
@@ -90,6 +91,13 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 			{
 				adjacentNodes[i].z = moveCosts[moveType][levelPtr->getTileType(adjacentNodes[i].x, adjacentNodes[i].y)];
 				adjacentNodes[i].z += currentNode->z;
+
+				// Checking if the current node is an edge node and unique in edgeNodes
+				if (adjacentNodes[i].z > moveRange && currentNode->z <= moveRange)
+				{
+					if (std::find(edgeSet.begin(), edgeSet.end(), *currentNode) == edgeSet.end())
+						edgeSet.push_back(*currentNode);
+				}
 			}
 
 			auto node = openSet.begin();
@@ -125,9 +133,7 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 				i->y > levelPtr->getMapSizeY())
 		{
 			i = openSet.erase(i);
-		}
-
-		++i;
+		} else ++i;
 	} 
 
 
@@ -136,9 +142,29 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 	{
 		if(i.z <= moveRange)
 			moveSet.push_back(i);
+		else
+		{
+			bool close = false;
+
+			// Checking if the node is close enough to one of our edge nodes
+			for (auto j : edgeSet)
+			{
+				int distance = std::abs(j.x - i.x) + std::abs(j.y - i.y);
+
+				if (distance <= moveRange)
+				{
+					close = true;
+					break;
+				}
+			}
+
+			if (close)
+				atkSet.push_back(sf::Vector2i(i.x, i.y));
+		}
 		// TODO: Fix atkSet population
-		else if(i.z  - moveCosts[moveType][levelPtr->getTileType(i.x, i.y)] <= atkRange)
-			atkSet.push_back(sf::Vector2i(i.x, i.y));
+		/*else if(i.z  - moveCosts[moveType][levelPtr->getTileType(i.x, i.y)] <= atkRange)
+			atkSet.push_back(sf::Vector2i(i.x, i.y));*/
+		std::cout << "Edge set size: " << edgeSet.size() << std::endl;
 	}
 }
 
