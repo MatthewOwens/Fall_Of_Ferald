@@ -180,6 +180,7 @@ sf::Vector2f AI::selectPosition(std::vector<sf::Vector3i> validRange)
 			bestItr = itr;
 	}
 
+	std::cout << "Tile (" << bestItr->x << "," << bestItr->y << ") chosen with a def. of " << bestItr->z << std::endl;
 	return sf::Vector2f(bestItr->x, bestItr->y);
 }
 

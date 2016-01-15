@@ -164,7 +164,6 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 		// TODO: Fix atkSet population
 		/*else if(i.z  - moveCosts[moveType][levelPtr->getTileType(i.x, i.y)] <= atkRange)
 			atkSet.push_back(sf::Vector2i(i.x, i.y));*/
-		std::cout << "Edge set size: " << edgeSet.size() << std::endl;
 	}
 }
 
