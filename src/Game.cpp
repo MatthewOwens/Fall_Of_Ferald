@@ -4,7 +4,7 @@
 
 Game::Game()
 {
-    window.create(sf::VideoMode(1280, 720), "Fall of Ferald - Refactoring");
+    window.create(sf::VideoMode(1280, 720), "Fall of Ferald");
 }
 
 Game::~Game()
