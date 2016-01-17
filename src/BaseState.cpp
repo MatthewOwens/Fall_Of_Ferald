@@ -1,6 +1,6 @@
 #include "BaseState.h"
 
-BaseState::BaseState(){}
+//BaseState::BaseState(){}
 BaseState::~BaseState(){}
 void BaseState::update(InputManager* inputManager, StateManager* stateManager){}
 void BaseState::render(sf::RenderWindow* window){}

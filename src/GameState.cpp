@@ -2,7 +2,7 @@
 #include "StateManager.h"
 #include <iostream>
 
-GameState::GameState()
+GameState::GameState() : BaseState()
 {
 }
 
@@ -39,8 +39,8 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 	if(inputManager->pressedOnce("cancel"))
 	{
 		std::cout << "Closing...!" << std::endl;
-		//stateManager->switchState(stateManager->MENU);
-		stateManager->switchState(StateManager::MENU);
+		//stateManager->switchState(StateManager::MENU);
+		stateManager->popState();
 	}
 }
 
@@ -59,16 +59,29 @@ void GameState::render(sf::RenderWindow* window)
 	}
 }
 
-void GameState::onEnter(sf::Packet* data)
+void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 {
 	if(data != NULL)
 	{
 		// TODO: parse data
 	}
+
+    level = new Level("levels/example/map.txt", "assets/images/tileSheets/spriteSheet.png", imageManager);
+    level->initilizeAI("levels/example/units.txt", "assets/images/unitSprites", *imageManager);
+
+	// Loading the interface data
+	//imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
+	//imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
+	ui.loadAssets(*imageManager);
+	ui.addDialogueBox("dialogue/test.txt", 0, 500);
+
+	// Setting up the camera
+	camera.reset(sf::FloatRect(0,0,1280,720));
 }
 
 sf::Packet GameState::onExit()
 {
+	delete level;
 }
 
 void GameState::onPause()

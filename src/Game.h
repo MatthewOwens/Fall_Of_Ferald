@@ -23,15 +23,11 @@ class Game
     private:
         ImageManager imageManager;
 		InputManager inputManager;
-		StateManager stateMangaer;
+		StateManager* stateManager;
         sf::RenderWindow window;
 		sf::Event event;
-		UserInterface ui;
-        Level* testLevel;
-		sf::View camera;
 
 		bool close = false;
-        bool turnPassed = false;    // Flag to stop the AI from taking multiple turns
 
         // AI test vars
         /*std::list<Unit> testUnits();

@@ -1,11 +1,14 @@
 #include "StateManager.h"
+#include "GameState.h"
 #include <iostream>
 
-StateManager::StateManager(InputManager* inputs, ImageManager* images)
+StateManager::StateManager(InputManager* inputs, ImageManager* images, sf::RenderWindow* win)
 {
 	// Setting up our pointers
 	inputManager = inputs;
 	imageManager = images;
+	window = win;
+
 
 	// Creating the game state right off the bat, since it's all we have
 	// implemented currently
@@ -16,6 +19,7 @@ StateManager::StateManager()
 {
 	inputManager = NULL;
 	imageManager = NULL;
+	window = NULL;
 }
 
 StateManager::~StateManager()
@@ -27,12 +31,17 @@ StateManager::~StateManager()
 
 void StateManager::pushState(StateEnum stateType)
 {
-	// Pausing the current state
-	stateStack.top().onPause();
+	// Pausing the current state, if needed
+	if(!stateStack.empty())
+		stateStack.top()->onPause();
 
 	// Creating a new state on top of the stack
 	switch(stateType)
 	{
+		case GAME:
+			std::cout << "\t Game State Entered!" << std::endl;
+			stateStack.emplace(new GameState());
+			break;
 		default:
 			std::cout << "Cannot create state!" << std::endl;
 	}
@@ -43,7 +52,8 @@ void StateManager::pushState(StateEnum stateType)
 // Removing the current state from the top of the stack
 void StateManager::popState()
 {
-	stateStack.top().onExit();
+	stateStack.top()->onExit();
+	delete stateStack.top();
 	stateStack.pop();
 }
 
@@ -51,8 +61,29 @@ void StateManager::popState()
 // usually called from within the current state
 void StateManager::switchState(StateEnum stateType)
 {
-	stateStack.top().onExit();
+	stateStack.top()->onExit();
 	//TODO: Create a new state, call update and render
+
+	delete stateStack.top();
 	stateStack.pop();
 	pushState(stateType);
+}
+
+// Returns false if we have no more states to update
+bool StateManager::update()
+{
+	// Just being safe
+	if(!stateStack.empty())
+	{
+		stateStack.top()->update(inputManager, this);
+	} 
+
+	// Rechecking since we may have exited from within the state
+	return !stateStack.empty();
+}
+
+void StateManager::render()
+{
+	if(!stateStack.empty() && window != NULL)
+		stateStack.top()->render(window);
 }

@@ -17,7 +17,7 @@ class StateManager;
 class BaseState
 {
 public:
-	virtual ~BaseState() = 0;
+	virtual ~BaseState();// = 0;
 	virtual void update(InputManager* inputManager, StateManager* stateManager) = 0;
 	virtual void render(sf::RenderWindow* window) = 0;
 	virtual void onEnter(sf::Packet* data) = 0;
@@ -26,7 +26,7 @@ public:
 
 	// Packet used to transfer data between states
 protected:
-	BaseState();
+	BaseState(){};
 	sf::Packet bundle;
 };
 #endif //BASESTATE_H

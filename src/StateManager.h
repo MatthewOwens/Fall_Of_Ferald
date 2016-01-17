@@ -9,17 +9,20 @@ class StateManager
 public:
 	enum StateEnum {MENU, OPTIONS, LOADING, GAME, COMBAT};
 
-	StateManager(InputManager* inputs, ImageManager* images);
+	StateManager(InputManager* inputs, ImageManager* images, sf::RenderWindow* win);
 	~StateManager();
 	StateManager();
 	void pushState(StateEnum stateType);
 
 	// Pop the current state and push a new state to the stack
 	void switchState(StateEnum stateType);
-private:
-	void popState();
 
-	std::stack<BaseState> stateStack;
+	bool update();
+	void render();
+	void popState();
+private:
+
+	std::stack<BaseState*> stateStack;
 	StateEnum currentState;
 	InputManager* inputManager;
 	ImageManager* imageManager;
