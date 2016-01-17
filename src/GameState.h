@@ -19,8 +19,8 @@ class GameState : public BaseState
 public:
 	GameState();
 	~GameState();
-	void update(InputManager& inputManager, StateManager& stateManager);
-	void render(sf::RenderWindow& window);
+	void update(InputManager* inputManager, StateManager* stateManager);
+	void render(sf::RenderWindow* window);
 	void onEnter(sf::Packet* data);
 	void onPause();
 	sf::Packet onExit();

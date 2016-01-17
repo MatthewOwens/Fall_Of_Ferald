@@ -8,6 +8,7 @@
 #include "InputManager.h"
 #include "UserInterface.h"
 #include "AI.h"
+#include "StateManager.h"
 #include <iostream>
 #include <list>
 
@@ -22,6 +23,7 @@ class Game
     private:
         ImageManager imageManager;
 		InputManager inputManager;
+		StateManager stateMangaer;
         sf::RenderWindow window;
 		sf::Event event;
 		UserInterface ui;

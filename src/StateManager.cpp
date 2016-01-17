@@ -1,10 +1,21 @@
 #include "StateManager.h"
 #include <iostream>
 
-StateManager::StateManager()
+StateManager::StateManager(InputManager* inputs, ImageManager* images)
 {
+	// Setting up our pointers
+	inputManager = inputs;
+	imageManager = images;
+
 	// Creating the game state right off the bat, since it's all we have
 	// implemented currently
+	pushState(StateEnum::GAME);
+}
+
+StateManager::StateManager()
+{
+	inputManager = NULL;
+	imageManager = NULL;
 }
 
 StateManager::~StateManager()
