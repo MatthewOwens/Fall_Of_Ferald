@@ -61,6 +61,7 @@ void GameState::render(sf::RenderWindow* window)
 
 void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 {
+	std::cout << "Game onEnter" << std::endl;
 	if(data != NULL)
 	{
 		// TODO: parse data

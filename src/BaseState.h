@@ -11,6 +11,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Network/Packet.hpp>
 #include "InputManager.h"
+#include "ImageManager.h"
 
 class StateManager;
 
@@ -20,7 +21,7 @@ public:
 	virtual ~BaseState();// = 0;
 	virtual void update(InputManager* inputManager, StateManager* stateManager) = 0;
 	virtual void render(sf::RenderWindow* window) = 0;
-	virtual void onEnter(sf::Packet* data) = 0;
+	virtual void onEnter(sf::Packet* data, ImageManager* imageManager) = 0;
 	virtual void onPause() = 0;
 	virtual sf::Packet onExit() = 0;
 

@@ -40,7 +40,9 @@ void StateManager::pushState(StateEnum stateType)
 	{
 		case GAME:
 			std::cout << "\t Game State Entered!" << std::endl;
-			stateStack.emplace(new GameState());
+			//stateStack.emplace(new GameState());
+			stateStack.push(new GameState());
+			stateStack.top()->onEnter(NULL, imageManager);	//onEnter not actually being called?
 			break;
 		default:
 			std::cout << "Cannot create state!" << std::endl;
