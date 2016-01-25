@@ -82,9 +82,13 @@ void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 
 sf::Packet GameState::onExit()
 {
-	std::cout << "onExit" << std::endl;
-	delete level;
-	std::cout << "level deleted" << std::endl;
+	if(level != NULL)
+	{
+		delete level;
+		level = NULL;
+	} else std::cout << "GameState level is null in onExit!" << std::endl;
+
+	return bundle;
 }
 
 void GameState::onPause()

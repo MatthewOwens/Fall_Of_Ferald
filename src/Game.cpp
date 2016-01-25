@@ -23,8 +23,6 @@ void Game::run()
 		update();
 		render();
 	}
-
-	std::cout << "Game closed safely" << std::endl;
 }
 
 void Game::update()
