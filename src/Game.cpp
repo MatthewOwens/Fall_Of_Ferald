@@ -23,6 +23,8 @@ void Game::run()
 		update();
 		render();
 	}
+
+	std::cout << "Game closed safely" << std::endl;
 }
 
 void Game::update()
@@ -32,5 +34,6 @@ void Game::update()
 
 void Game::render()
 {
-	stateManager->render();
+	if(!close)
+		stateManager->render();
 }

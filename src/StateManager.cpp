@@ -55,6 +55,7 @@ void StateManager::pushState(StateEnum stateType)
 void StateManager::popState()
 {
 	stateStack.top()->onExit();
+	std::cout << "onExit completed" << std::endl;
 	delete stateStack.top();
 	stateStack.pop();
 }
@@ -74,6 +75,8 @@ void StateManager::switchState(StateEnum stateType)
 // Returns false if we have no more states to update
 bool StateManager::update()
 {
+	inputManager->update(*window);
+
 	// Just being safe
 	if(!stateStack.empty())
 	{
@@ -81,7 +84,7 @@ bool StateManager::update()
 	} 
 
 	// Rechecking since we may have exited from within the state
-	return !stateStack.empty();
+	return stateStack.empty();
 }
 
 void StateManager::render()
