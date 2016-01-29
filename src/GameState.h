@@ -22,13 +22,10 @@ public:
 	void update(InputManager* inputManager, StateManager* stateManager);
 	void render(sf::RenderWindow* window);
 	void onEnter(sf::Packet* data, ImageManager* imageManager);
-	//void onEnter(sf::Packet* data) {}
 	void onPause();
 	sf::Packet onExit();
 
 private:
-	sf::RenderWindow window;
-	sf::Event event;
 	UserInterface ui;
 	Level* level;
 	sf::View camera;

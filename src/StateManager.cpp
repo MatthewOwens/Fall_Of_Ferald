@@ -1,5 +1,6 @@
 #include "StateManager.h"
 #include "GameState.h"
+#include "MenuState.h"
 #include <iostream>
 
 StateManager::StateManager(InputManager* inputs, ImageManager* images, sf::RenderWindow* win)
@@ -12,7 +13,8 @@ StateManager::StateManager(InputManager* inputs, ImageManager* images, sf::Rende
 
 	// Creating the game state right off the bat, since it's all we have
 	// implemented currently
-	pushState(StateEnum::GAME);
+	//pushState(StateEnum::GAME);
+	pushState(StateEnum::MENU);
 }
 
 StateManager::StateManager()
@@ -39,14 +41,19 @@ void StateManager::pushState(StateEnum stateType)
 	switch(stateType)
 	{
 		case GAME:
-			std::cout << "\t Game State Entered!" << std::endl;
+			std::cout << "\t Game State Created!" << std::endl;
 			stateStack.emplace(new GameState());
-			//stateStack.push(new GameState());
-			stateStack.top()->onEnter(NULL, imageManager);	//onEnter not actually being called?
+			break;
+		case MENU:
+			std::cout << "\t Menu State Created!" << std::endl;
+			stateStack.emplace(new MenuState());
 			break;
 		default:
 			std::cout << "Cannot create state!" << std::endl;
+			return;
 	}
+
+	stateStack.top()->onEnter(NULL, imageManager);
 	currentState = stateType;
 }
 
@@ -55,7 +62,6 @@ void StateManager::pushState(StateEnum stateType)
 void StateManager::popState()
 {
 	stateStack.top()->onExit();
-	std::cout << "onExit completed" << std::endl;
 	delete stateStack.top();
 	stateStack.pop();
 }
@@ -64,6 +70,13 @@ void StateManager::popState()
 // usually called from within the current state
 void StateManager::switchState(StateEnum stateType)
 {
+	if(stateType == LOADING)
+	{
+		std::cout << std::endl;
+		std::cout << "Please do not enter the loading state directly!" << std::endl;
+		std::cout << "Switching states will invoke the loading state>" << std::endl;
+		return;
+	}
 	stateStack.top()->onExit();
 	//TODO: Create a new state, call update and render
 
