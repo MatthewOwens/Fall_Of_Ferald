@@ -24,6 +24,8 @@ class InputManager
         std::map<std::string, sf::Keyboard::Key> keyBinds;
 		sf::Vector2f mousePosition;
 		sf::Vector2f previousMousePosition;
+
+		bool focus = true;
 };
 
 #endif // INPUTMANAGER_H
