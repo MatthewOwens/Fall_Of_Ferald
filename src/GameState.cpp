@@ -80,7 +80,7 @@ void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	camera.reset(sf::FloatRect(0,0,1280,720));
 }
 
-sf::Packet GameState::onExit()
+sf::Packet GameState::onExit(ImageManager* imageManager)
 {
 	if(level != NULL)
 	{

@@ -23,7 +23,7 @@ public:
 	virtual void render(sf::RenderWindow* window) = 0;
 	virtual void onEnter(sf::Packet* data, ImageManager* imageManager) = 0;
 	virtual void onPause() = 0;
-	virtual sf::Packet onExit() = 0;
+	virtual sf::Packet onExit(ImageManager* imageManager) = 0;
 
 	// Packet used to transfer data between states
 protected:

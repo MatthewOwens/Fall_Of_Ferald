@@ -1,24 +1,22 @@
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef MENUSTATE_H
+#define MENUSTATE_H
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <iostream>
 
 #include "BaseState.h"
 #include "ImageManager.h"
 #include "InputManager.h"
-#include "UserInterface.h"
-#include "Pathfinder.h"
-#include "Level.h"
-#include "AI.h"
+#include "Button.h"
 
 class GameStateManager;
 
-class GameState : public BaseState
+class MenuState : public BaseState
 {
 public:
-	GameState();
-	~GameState();
+	MenuState();
+	~MenuState();
 	void update(InputManager* inputManager, StateManager* stateManager);
 	void render(sf::RenderWindow* window);
 	void onEnter(sf::Packet* data, ImageManager* imageManager);
@@ -26,11 +24,8 @@ public:
 	sf::Packet onExit(ImageManager* imageManager);
 
 private:
-	UserInterface ui;
-	Level* level;
-	sf::View camera;
-
-	bool closed = false;
-	bool turnPassed = false;
+	sf::Sprite* menubgSprite;
+	sf::Font buttonFont;
+	Button* button;
 };
-#endif //GAMESTATE_H
+#endif //MENUSTATE_H

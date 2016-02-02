@@ -61,7 +61,7 @@ void StateManager::pushState(StateEnum stateType)
 // Removing the current state from the top of the stack
 void StateManager::popState()
 {
-	stateStack.top()->onExit();
+	stateStack.top()->onExit(imageManager);
 	delete stateStack.top();
 	stateStack.pop();
 }
@@ -77,7 +77,7 @@ void StateManager::switchState(StateEnum stateType)
 		std::cout << "Switching states will invoke the loading state>" << std::endl;
 		return;
 	}
-	stateStack.top()->onExit();
+	stateStack.top()->onExit(imageManager);
 	//TODO: Create a new state, call update and render
 
 	delete stateStack.top();
