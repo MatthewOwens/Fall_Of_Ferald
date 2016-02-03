@@ -11,9 +11,10 @@ Currently in the prototype stage.
 * Dialogue Boxes
 * Units
 * Super Basic AI
-* Create a 2D camera so that level sizes aren't restricted to the size of the window
+* 2D Camera
 
 ## TODO
 * Make some sprites that don't look awful
 * Implement dialog trees
-* Rework invewntory system
+* Rework inventory system
+* Decouple tile sprites and their attributes
