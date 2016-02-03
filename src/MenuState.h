@@ -27,5 +27,6 @@ private:
 	sf::Sprite* menubgSprite;
 	sf::Font buttonFont;
 	Button* button;
+	Button* exitButton;
 };
 #endif //MENUSTATE_H
