@@ -251,20 +251,13 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 				for(auto &itr : availableUnits)
 				{
 					// Removing spaces containing other available units, but not the current unit
-				//	if(itr.getX() != unit.getX() && itr.getY() != unit.getY())
-				//	{
-						for(auto posItr = validPositions.begin(); posItr != validPositions.end() ; )
-						{
-							if(posItr->x == itr.getX() && posItr->y == itr.getY())
-								posItr = validPositions.erase(posItr);
-							else ++posItr;
-						}
-				/*	}
-					else
+					for(auto posItr = validPositions.begin(); posItr != validPositions.end() ; )
 					{
-						std::cout << unit.getType() << " skipping " << itr.getType() << std::endl;
+						if((posItr->x == itr.getX() && posItr->y == itr.getY()) && &itr != &unit)
+							posItr = validPositions.erase(posItr);
+						else ++posItr;
 					}
-				*/}
+				}
 
 				// Removing all spaces containing enemy units
 				for(auto &itr : enemyUnits)

@@ -17,4 +17,3 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 * Implement dialog trees
 * Rework inventory system
-* Decouple tile sprites and their attributes
