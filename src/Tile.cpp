@@ -20,7 +20,21 @@ Tile::Tile(int terrainType, sf::Texture& texture)
     rect.left = terrainType * rect.width;
     sprite.setTextureRect(rect);
 
-    // Used to determine what unit movement types cannot move onto this tile
+	setStats(terrainType);
+}
+
+Tile::Tile(int terrainType, sf::Texture& texture, sf::IntRect& textureRect)
+{
+	// Setting the texture
+	sprite.setTexture(texture);
+	sprite.setTextureRect(textureRect);
+
+	setStats(terrainType);
+}
+
+// Used to determine what unit movement types cannot move onto this tile
+void Tile::setStats(int terrainType)
+{
     switch (terrainType)
     {
         case 0:

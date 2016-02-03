@@ -8,8 +8,10 @@
 class Tile
 {
     friend class Level;
+
 	public:
 		Tile(int terrainType, sf::Texture& texture);
+		Tile(int terrainType, sf::Texture& texture, sf::IntRect& textureRect);
 		Tile();
 		sf::Sprite getSprite() {return sprite;}
 		std::string getType(){return tileType;}
@@ -20,5 +22,7 @@ class Tile
 		int moveCost;								// The amount of movement points it costs to cross this tile
 		int terrainDef;								// The amount of defense a unit gains on this tile
 		sf::Sprite sprite;
+
+		void setStats(int terrainType);
 };
 #endif //TILE_H

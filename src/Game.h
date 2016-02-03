@@ -28,10 +28,6 @@ class Game
 		sf::Event event;
 
 		bool close = false;
-
-        // AI test vars
-        /*std::list<Unit> testUnits();
-        Unit testUnit("testUnit", "mage", 20, 5, 0, 2, 4, 3, 6, 5, 0);*/
 };
 
 #endif // GAME_H
