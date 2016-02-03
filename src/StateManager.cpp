@@ -41,11 +41,11 @@ void StateManager::pushState(StateEnum stateType)
 	switch(stateType)
 	{
 		case GAME:
-			std::cout << "\t Game State Created!" << std::endl;
+			std::cout << "Game State Created!" << std::endl;
 			stateStack.emplace(new GameState());
 			break;
 		case MENU:
-			std::cout << "\t Menu State Created!" << std::endl;
+			std::cout << "Menu State Created!" << std::endl;
 			stateStack.emplace(new MenuState());
 			break;
 		default:
