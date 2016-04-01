@@ -94,7 +94,7 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 {
    // std::cout << "starting to init AI" << std::endl;
 	std::cout << "UNIT PATH IS " << unitPath << std::endl;
-    combatController = AI(unitPath, "Stats/");
+    combatController = AI(unitPath, "stats/");
     std::cout << "AI initilized" << std::endl;
 
 	// Loading the images for the NPC units
