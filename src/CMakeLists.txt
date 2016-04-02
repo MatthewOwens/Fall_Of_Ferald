@@ -13,3 +13,4 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_subdirectory(game)	# adding a subdirectory, cmake will look here for an
 						# additional CMakeLists.txt file.
+add_subdirectory(dialogueGrapher)

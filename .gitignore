@@ -27,6 +27,7 @@
 *.out
 *.app
 SRPG
+DialogueGrapher
 
 # Subdirectories
 obj/
