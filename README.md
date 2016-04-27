@@ -15,5 +15,6 @@ Currently in the prototype stage.
 
 ## TODO
 * Make some sprites that don't look awful
+* Dialogue Grapher tool
 * Implement dialog trees
 * Rework inventory system
