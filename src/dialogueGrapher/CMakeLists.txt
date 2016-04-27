@@ -3,7 +3,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-list (APPEND CMAKE_CXX_FLAGS "-I ../ -w -g -std=c++11${CMAKE_CXX_FLAGS}")
+list (APPEND CMAKE_CXX_FLAGS "-I ../game -w -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
 
 file(GLOB SRCS *.cpp *.h)
 
