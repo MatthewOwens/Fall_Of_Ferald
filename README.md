@@ -18,3 +18,5 @@ Currently in the prototype stage.
 * Dialogue Grapher tool
 * Implement dialog trees
 * Rework inventory system
+* Bind camera to map
+* Realign camera on state change
