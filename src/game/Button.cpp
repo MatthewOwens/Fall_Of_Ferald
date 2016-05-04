@@ -56,6 +56,12 @@ bool Button::isPressed(InputManager* inputManager)
 	else return false;	// Can't be pressed if the LMB isn't down
 }
 
+void Button::setColor(const sf::Color& color)
+{
+	if(sprite)
+		sprite->setColor(color);
+}
+
 void Button::setTexture(const sf::Texture& texture, bool resetRect)
 {
 	if(sprite)

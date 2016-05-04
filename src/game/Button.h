@@ -25,6 +25,7 @@ public:
 	void setPosition(const sf::Vector2f &position);
 	void setScale(const sf::Vector2f &factors);
 	void setText(const sf::String &string, const sf::Font &font, unsigned int characterSize=30);
+	void setColor(const sf::Color& color);
 
 	const sf::Vector2f& getPosition();
 	const sf::Vector2f& getScale();

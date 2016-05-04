@@ -4,14 +4,14 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
 endif()
 
 include_directories(../game)
-add_library(InputManager STATIC ../game/InputManager.cpp)
+add_library(GameLib STATIC ../game/InputManager.cpp ../game/Button.cpp)
 
 list (APPEND CMAKE_CXX_FLAGS "-w -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
 
 file(GLOB SRCS *.cpp *.h)
 
 add_executable(DialogueGrapher ${SRCS})
-target_link_libraries(DialogueGrapher InputManager)
+target_link_libraries(DialogueGrapher GameLib)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 message(CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH})

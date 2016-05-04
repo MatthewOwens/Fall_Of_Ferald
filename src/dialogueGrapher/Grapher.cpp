@@ -1,7 +1,7 @@
 #include "Grapher.h"
 Grapher::Grapher()
 {
-	window.create(sf::VideoMode(1280, 720), "Dialogue Grapher");
+	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
 }
 
 Grapher::~Grapher()
@@ -31,6 +31,6 @@ void Grapher::update()
 
 void Grapher::render()
 {
-	window.clear();
+	window.clear(sf::Color(43,43,43));
 	window.display();
 }
