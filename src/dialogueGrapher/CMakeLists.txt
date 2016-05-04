@@ -3,11 +3,15 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-list (APPEND CMAKE_CXX_FLAGS "-I ../game -w -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
+include_directories(../game)
+add_library(InputManager STATIC ../game/InputManager.cpp)
+
+list (APPEND CMAKE_CXX_FLAGS "-w -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
 
 file(GLOB SRCS *.cpp *.h)
 
 add_executable(DialogueGrapher ${SRCS})
+target_link_libraries(DialogueGrapher InputManager)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 message(CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH})
