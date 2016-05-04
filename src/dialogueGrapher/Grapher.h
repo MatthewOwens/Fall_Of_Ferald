@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 #include "InputManager.h"
+#include "UserInterface.h"
 class Grapher
 {
 	public:
@@ -16,6 +17,7 @@ class Grapher
 
 		bool close = false;
 		InputManager inputManager;
+		UserInterface ui;
 		//ImageManager imageManager;
 		sf::RenderWindow window;
 		sf::Event event;

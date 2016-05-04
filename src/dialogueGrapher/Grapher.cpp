@@ -27,10 +27,13 @@ void Grapher::update()
 
 	if(inputManager.pressedOnce("cancel"))
 		close = true;
+	
+	ui.update(&inputManager);
 }
 
 void Grapher::render()
 {
 	window.clear(sf::Color(43,43,43));
+	ui.render(window);
 	window.display();
 }
