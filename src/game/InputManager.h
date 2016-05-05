@@ -13,6 +13,7 @@ class InputManager
         bool pressedOnce(std::string keyName);
 		bool pressedOnce(sf::Mouse::Button button);
 		bool keyHeld(std::string keyName);
+		bool buttonHeld(sf::Mouse::Button button);
         bool validKeyDown();
 		inline sf::Vector2f getMousePosition() { return mousePosition; }
 		inline sf::Vector2f getPrevMousePosition() { return previousMousePosition; }

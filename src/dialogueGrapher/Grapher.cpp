@@ -34,6 +34,7 @@ void Grapher::update()
 void Grapher::render()
 {
 	window.clear(sf::Color(43,43,43));
+	//window.clear(sf::Color(31,31,31));
 	ui.render(window);
 	window.display();
 }

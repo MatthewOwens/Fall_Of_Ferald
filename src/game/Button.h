@@ -14,11 +14,16 @@ class Button
 {
 public:
 	Button();
-	Button(const sf::Vector2f size, const sf::Color color = sf::Color(255, 255, 255));
+	Button(const sf::Vector2f size, const sf::Color color = sf::Color(255, 255, 255), const float outlineWidth = 5.f);
 	Button(const sf::Texture &texture);
 	Button(const sf::Texture &texture, const sf::IntRect &rectangle);
 	~Button();
-	bool isPressed(InputManager* inputManager);
+
+	inline bool isPressed() { return pressed; }
+	inline bool isHeld() { return held; }
+	inline bool isMouseOver() { return mouseOver; }
+
+	void update(InputManager* inputManager);
 
 	void setTexture(const sf::Texture &texture, bool resetRect = false);
 	void setIconTexture(const sf::Texture& texture, bool resetRect = false);
@@ -26,6 +31,8 @@ public:
 	void setScale(const sf::Vector2f &factors);
 	void setText(const sf::String &string, const sf::Font &font, unsigned int characterSize=20);
 	void setColor(const sf::Color& color);
+	void setHighlight(const sf::Color& color);
+	void clearHighlight();
 
 	const sf::Vector2f& getPosition();
 	const sf::Vector2f& getScale();
@@ -40,6 +47,10 @@ private:
 	sf::RectangleShape* rectShape = NULL;
 	//sf::Sprite* iconSprite = NULL;
 	sf::Text* text = NULL;
+
+	bool pressed = false;
+	bool held = false;
+	bool mouseOver = false;
 
 	void updatePositions();
 };

@@ -51,14 +51,17 @@ void MenuState::onPause()
 
 void MenuState::update(InputManager* inputManager, StateManager* stateManager)
 {
+	button->update(inputManager);
+	exitButton->update(inputManager);
+
 	//if(inputManager->pressedOnce("confirm"))
-	if(button->isPressed(inputManager))
+	if(button->isPressed())
 	{
 		stateManager->pushState(StateManager::GAME);
 	}
 
 	//if(inputManager->pressedOnce("cancel"))
-	if(exitButton->isPressed(inputManager) || inputManager->pressedOnce("cancel"))
+	if(exitButton->isPressed() || inputManager->pressedOnce("cancel"))
 		stateManager->popState();
 }
 

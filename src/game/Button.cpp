@@ -16,10 +16,11 @@ Button::Button(const sf::Texture &texture, const sf::IntRect &rectangle)
 	sprite = new sf::Sprite(texture, rectangle);
 }
 
-Button::Button(const sf::Vector2f size, const sf::Color color)
+Button::Button(const sf::Vector2f size, const sf::Color color, const float outlineWidth)
 {
 	rectShape = new sf::RectangleShape(size);
 	rectShape->setFillColor(color);
+	rectShape->setOutlineThickness(outlineWidth);
 }
 
 Button::~Button()
@@ -52,17 +53,27 @@ void Button::draw(sf::RenderWindow* window)
 		window->draw(*text);
 }
 
-bool Button::isPressed(InputManager* inputManager)
+void Button::update(InputManager* inputManager)
 {
-	if(inputManager->pressedOnce(sf::Mouse::Button::Left))
+	if(sprite)
+		mouseOver = sprite->getGlobalBounds()
+					.contains(inputManager->getMousePosition());
+	else if (rectShape)
+		mouseOver = rectShape->getGlobalBounds()
+					.contains(inputManager->getMousePosition());
+	else mouseOver = false;
+
+	if(mouseOver)
 	{
-		if(sprite)
-			return sprite->getGlobalBounds()
-				.contains(inputManager->getMousePosition());
-		else return rectShape->getGlobalBounds()
-				.contains(inputManager->getMousePosition());
+		held = inputManager->buttonHeld(sf::Mouse::Button::Left);
+		pressed = inputManager->buttonHeld(sf::Mouse::Button::Left);
 	}
-	else return false;	// Can't be pressed if the LMB isn't down
+	else
+	{
+		held = false;
+		pressed = false;
+	}
+
 }
 
 void Button::setColor(const sf::Color& color)
@@ -158,6 +169,20 @@ void Button::setText(const sf::String &string, const sf::Font &font, unsigned in
 	}
 
 	updatePositions();
+}
+
+void Button::setHighlight(const sf::Color& color)
+{
+	if(sprite)
+		sprite->setColor(color);
+	else rectShape->setOutlineColor(color);
+}
+
+void Button::clearHighlight()
+{
+	if(sprite)
+		sprite->setColor(sf::Color::White);
+	else rectShape->setOutlineColor(sf::Color(255, 255, 255, 0));
 }
 
 void Button::updatePositions()

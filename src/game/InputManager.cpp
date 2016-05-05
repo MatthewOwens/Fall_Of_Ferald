@@ -63,6 +63,11 @@ bool InputManager::keyHeld(std::string keyName)
 	return pressedKeys[keyBinds[keyName]];
 }
 
+bool InputManager::buttonHeld(sf::Mouse::Button button)
+{
+	return pressedMouseButtons[button];
+}
+
 bool InputManager::pressedOnce(std::string keyName)
 {
     if(pressedKeys[keyBinds[keyName]] && !previousPressedKeys[keyBinds[keyName]])

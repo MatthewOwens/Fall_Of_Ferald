@@ -3,8 +3,10 @@
 UserInterface::UserInterface()
 {
 	// Defining the UI colors
-	colors["buttonPressed"] = sf::Color::White;
 	colors["button"] = sf::Color(142, 196, 137);
+	colors["buttonHighlight"] = sf::Color(179,80,80);
+	colors["graphBG"] = sf::Color(31,31,31);
+	colors["background"] = sf::Color(43,43,43);
 
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
@@ -29,10 +31,19 @@ void UserInterface::update(InputManager* inputManager)
 	// Checking if any of the buttons have been pressed
 	for(auto i : buttons)
 	{
-		if(i.second->isPressed(inputManager))
-			i.second->setColor(colors["buttonPressed"]);
+		/*if(i.second->isHeld(inputManager))
+			i.second->setColor(colors["background"]);
 		else 
-			i.second->setColor(colors["button"]);
+			i.second->setColor(colors["button"]);*/
+		i.second->update(inputManager);
+
+		if(i.second->isHeld() || i.second->isPressed())
+			i.second->setColor(colors["background"]);
+		else i.second->setColor(colors["button"]);
+
+		if(i.second->isMouseOver())
+			i.second->setHighlight(colors["buttonHighlight"]);
+		else i.second->clearHighlight();
 	}
 }
 
