@@ -189,16 +189,21 @@ void Button::updatePositions()
 {
 	sf::Vector2f pos = getPosition();
 	sf::FloatRect buttonBounds;
+	float outlineOffset = 0.f;
 
 	if(sprite)
 		buttonBounds = sprite->getLocalBounds();
-	else buttonBounds = rectShape->getLocalBounds();
+	else
+	{
+		buttonBounds = rectShape->getLocalBounds();
+		outlineOffset = rectShape->getOutlineThickness();
+	}
 
 	// Centering the text
 	if(text)
 	{
 		sf::FloatRect textBounds = text->getLocalBounds();
-		text->setPosition(pos.x + (buttonBounds.width / 2) - (textBounds.width / 2),
-						pos.y + (buttonBounds.height / 2) - textBounds.height);
+		text->setPosition(pos.x + (buttonBounds.width / 2) - (textBounds.width / 2) - outlineOffset,
+						  pos.y + (buttonBounds.height / 2) - textBounds.height - outlineOffset);
 	}
 }

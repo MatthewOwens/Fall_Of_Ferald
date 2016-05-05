@@ -12,7 +12,7 @@ UserInterface::UserInterface()
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
 	// Initilising the buttons
-	buttons["test"] = new Button(sf::Vector2f(50,20), colors["button"]);
+	buttons["test"] = new Button(sf::Vector2f(50,20), colors["button"], 3);
 	buttons["test"]->setPosition(sf::Vector2f(100, 100));
 
 	// Setting the button text
