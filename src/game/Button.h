@@ -14,7 +14,7 @@ class Button
 {
 public:
 	Button();
-	Button(const sf::Vector2f size, const sf::Color color = sf::Color(255, 255, 255), const float outlineWidth = 5.f);
+	Button(const sf::Vector2f size, const sf::Color color = sf::Color(255, 255, 255), const float outlineWidth = 0.f);
 	Button(const sf::Texture &texture);
 	Button(const sf::Texture &texture, const sf::IntRect &rectangle);
 	~Button();

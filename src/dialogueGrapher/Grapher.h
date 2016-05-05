@@ -4,6 +4,7 @@
 #include <SFML/Window/Event.hpp>
 #include "InputManager.h"
 #include "UserInterface.h"
+#include "NodeView.h"
 class Grapher
 {
 	public:
@@ -19,6 +20,7 @@ class Grapher
 		InputManager inputManager;
 		UserInterface ui;
 		//ImageManager imageManager;
+		NodeView* nodeView = NULL;
 		sf::RenderWindow window;
 		sf::Event event;
 };

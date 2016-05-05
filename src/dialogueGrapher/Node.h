@@ -18,7 +18,12 @@ class Node
 
 		bool resolveable(std::map<std::string, bool> localFlags,
 						 std::map<std::string, bool> globalFlags);
-	private:
+
+		const std::string& getIdentifier() { return identifier; }
+		const std::string& getHeader() { return header; }
+		const std::string& getBody() { return body; }
+		const std::vector<Connector>& getConnections() { return connections; }
+	protected:
 		std::string identifier;	// Unique to this node in all modules
 		std::string header;		// Usually a character's name
 		std::string body;		// The dialogue text itself

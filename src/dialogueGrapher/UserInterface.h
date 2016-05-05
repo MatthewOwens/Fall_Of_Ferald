@@ -14,6 +14,7 @@ class UserInterface
 		~UserInterface();
 		void update(InputManager* inputManager);
 		void render(sf::RenderWindow& window);
+		const sf::Font& getFont() { return font; }
 
 	private:
 		std::map<std::string, sf::Color> colors;
