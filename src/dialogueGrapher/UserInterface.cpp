@@ -12,12 +12,24 @@ UserInterface::UserInterface()
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
 	// Initilising the buttons
-	buttons["test"] = new Button(sf::Vector2f(50,20), colors["button"], 1);
+	buttons["test"] = new Button(sf::Vector2f(50,20), colors["button"],1);
 	buttons["test"]->setPosition(sf::Vector2f(100, 100));
+
+	buttons["kek"] = new Button(sf::Vector2f(50,20), colors["buton"],1);
+	buttons["kek"]->setPosition(sf::Vector2f(100, 200));
 
 	// Setting the button text
 	for(auto i : buttons)
 		i.second->setText(i.first, font);
+
+}
+
+void UserInterface::initBG(const sf::Vector2u& windowSize)
+{
+	sf::Vector2f bgSize(windowSize.x - 500, windowSize.y - 20);
+	graphBG = sf::RectangleShape(bgSize);
+	graphBG.setFillColor(colors["graphBG"]);
+	graphBG.setPosition(10,10);
 }
 
 UserInterface::~UserInterface()
@@ -49,6 +61,8 @@ void UserInterface::update(InputManager* inputManager)
 
 void UserInterface::render(sf::RenderWindow& window)
 {
+	window.draw(graphBG);
+
 	for(auto i : buttons)
 		i.second->draw(&window);
 }

@@ -3,6 +3,7 @@ Grapher::Grapher()
 {
 	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
 	nodeView = new NodeView("test", 0, sf::Vector2f(500,50), ui.getFont());
+	ui.initBG(window.getSize());
 }
 
 Grapher::~Grapher()
