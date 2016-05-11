@@ -18,6 +18,7 @@ class UserInterface
 		void update(InputManager* inputManager);
 		void render(sf::RenderWindow& window);
 		const sf::Font& getFont() { return font; }
+		bool getButtonPressed(const std::string& button);
 
 	private:
 		std::map<std::string, sf::Color> colors;

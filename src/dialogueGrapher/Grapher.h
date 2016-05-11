@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "UserInterface.h"
 #include "NodeView.h"
+#include "InputBox.h"
 class Grapher
 {
 	public:
@@ -19,6 +20,7 @@ class Grapher
 		bool close = false;
 		InputManager inputManager;
 		UserInterface ui;
+		InputBox ibox;
 		//ImageManager imageManager;
 		NodeView* nodeView = NULL;
 		sf::RenderWindow window;

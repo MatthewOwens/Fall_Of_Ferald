@@ -5,8 +5,8 @@ UserInterface::UserInterface()
 	// Defining the UI colors
 	colors["button"] = sf::Color(142, 196, 137);
 	colors["buttonHighlight"] = sf::Color(179,80,80);
-	colors["graphBG"] = sf::Color(31,31,31);
-	colors["background"] = sf::Color(43,43,43);
+	colors["background"] = sf::Color(31,31,31);
+	colors["graphBG"] = sf::Color(43,43,43);
 
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
@@ -15,8 +15,8 @@ UserInterface::UserInterface()
 	buttons["test"] = new Button(sf::Vector2f(50,20), colors["button"],1);
 	buttons["test"]->setPosition(sf::Vector2f(100, 100));
 
-	buttons["kek"] = new Button(sf::Vector2f(50,20), colors["buton"],1);
-	buttons["kek"]->setPosition(sf::Vector2f(100, 200));
+	buttons["node"] = new Button(sf::Vector2f(70,20), colors["buton"],1);
+	buttons["node"]->setPosition(sf::Vector2f(100, 200));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -26,10 +26,10 @@ UserInterface::UserInterface()
 
 void UserInterface::initBG(const sf::Vector2u& windowSize)
 {
-	sf::Vector2f bgSize(windowSize.x - 500, windowSize.y - 20);
+	sf::Vector2f bgSize(300, windowSize.y - 20);
 	graphBG = sf::RectangleShape(bgSize);
 	graphBG.setFillColor(colors["graphBG"]);
-	graphBG.setPosition(10,10);
+	graphBG.setPosition(windowSize.x - 310,10);
 }
 
 UserInterface::~UserInterface()
