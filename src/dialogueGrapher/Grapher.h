@@ -2,7 +2,6 @@
 #define GRAPHER_H
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
-//#include "UserInterface.h"
 #include <map>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -21,18 +20,19 @@ class Grapher
 		void run();
 	
 	private:
+		enum InputState {NONE, NAME, SAVE, LOAD};
 		void update();
 		void render();
 
 		bool close = false;
 		InputManager inputManager;
 		InputBox ibox;
+		InputState inputState;
 		sf::Text moduleName;
 		sf::Font font;
 		sf::RectangleShape graphBG;
 		std::map<std::string, sf::Color> colors;
 		std::map<std::string, Button*> buttons;
-		//ImageManager imageManager;
 		NodeView* nodeView = NULL;
 		sf::RenderWindow window;
 		sf::Event event;

@@ -19,6 +19,7 @@ class InputBox
 		inline bool isSelected() { return selected; }
 		inline std::string getString() { return text.getString(); }
 		void setSelected(bool val); 
+		inline void clear() { text.setString("");}
 	private:
 		sf::Text text;
 		sf::RectangleShape baseBox;

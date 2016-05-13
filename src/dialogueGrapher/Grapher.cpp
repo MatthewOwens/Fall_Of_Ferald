@@ -8,7 +8,8 @@ Grapher::Grapher()
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
 	nodeView = new NodeView("test", 0, sf::Vector2f(500,50), font);
-	ibox = InputBox(sf::Vector2f(300,300), sf::Vector2f(100,25), font);
+	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
+	inputState = InputState::NONE;
 
 	// Defining the UI colors
 	colors["button"] = sf::Color(142, 196, 137);
@@ -16,19 +17,6 @@ Grapher::Grapher()
 	colors["background"] = sf::Color(31,31,31);
 	colors["graphBG"] = sf::Color(43,43,43);
 
-
-	// Initilising the buttons
-	buttons["test"] = new Button(sf::Vector2f(50,20), colors["button"],1);
-	buttons["test"]->setPosition(sf::Vector2f(100, 100));
-
-	buttons["node"] = new Button(sf::Vector2f(70,20), colors["buton"],1);
-	buttons["node"]->setPosition(sf::Vector2f(100, 200));
-
-	// Setting the button text
-	for(auto i : buttons)
-		i.second->setText(i.first, font);
-
-	//moduleName = ("untitled", font, 20);
 	moduleName.setString("untitled");
 	moduleName.setFont(font);
 	moduleName.setCharacterSize(20);
@@ -39,6 +27,17 @@ Grapher::Grapher()
 	graphBG.setFillColor(colors["graphBG"]);
 	graphBG.setPosition(window.getSize().x - 310,10);
 	moduleName.setPosition(graphBG.getPosition());
+
+	// Initilising the buttons
+	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
+	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 310, 100));
+
+	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["buton"],1);
+	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 310, 200));
+
+	// Setting the button text
+	for(auto i : buttons)
+		i.second->setText(i.first, font);
 }
 
 Grapher::~Grapher()
@@ -90,8 +89,20 @@ void Grapher::update()
 					}
 					else if(event.text.unicode == 13) //Return
 					{
-						moduleName.setString(ibox.getString());
+						// Choosing what to update
+						switch (inputState)
+						{
+							case NAME:
+								moduleName.setString(ibox.getString());
+								break;
+							case SAVE:
+								break;
+							case LOAD:
+								break;
+						}
+						inputState = InputState::NONE;
 						ibox.setSelected(false);
+						ibox.clear();
 					}
 				}
 				break;
@@ -105,7 +116,19 @@ void Grapher::update()
 		i.second->update(&inputManager);
 
 		if(i.second->isHeld() || i.second->isPressed())
+		{
 			i.second->setColor(colors["background"]);
+
+			// Flagging the input box as selected if needed
+			if(i.first != "n.node" && i.first != "load")
+				ibox.setSelected(true);
+
+			// Updating the input state based on what button was pressed
+			if(i.first == "m.name")
+			{
+				inputState = InputState::NAME;
+			}
+		}
 		else i.second->setColor(colors["button"]);
 
 		if(i.second->isMouseOver())
@@ -120,9 +143,9 @@ void Grapher::render()
 	//window.clear(sf::Color(43,43,43));
 	window.clear(sf::Color(31,31,31));
 	nodeView->render(window);
-	ibox.render(window);
 	window.draw(graphBG);
 	window.draw(moduleName);
+	ibox.render(window);
 
 	for(auto i : buttons)
 		i.second->draw(&window);
