@@ -29,6 +29,13 @@ void InputBox::addCharacter(const std::string& character)
 	text.setString(str + character);
 }
 
+void InputBox::removeCharacter()
+{
+	std::string str = text.getString();
+	str = str.erase(str.size() - 1);
+	text.setString(str);
+}
+
 void InputBox::checkClicked(const sf::Vector2f& mousePos)
 {
 	selected = baseBox.getGlobalBounds().contains(mousePos);

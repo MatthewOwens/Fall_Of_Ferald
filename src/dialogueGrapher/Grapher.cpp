@@ -46,7 +46,12 @@ void Grapher::update()
 			case sf::Event::TextEntered:
 			{
 				if(ibox.isSelected())
-					ibox.addCharacter(static_cast<char>(event.text.unicode));
+				{
+					if(event.text.unicode < 128 && event.text.unicode > 37)
+						ibox.addCharacter(static_cast<char>(event.text.unicode));
+					else if(event.text.unicode == 8) //Backspace
+						ibox.removeCharacter();
+				}
 				break;
 			}
 		}
