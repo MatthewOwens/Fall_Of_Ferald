@@ -32,6 +32,9 @@ void InputBox::addCharacter(const std::string& character)
 void InputBox::removeCharacter()
 {
 	std::string str = text.getString();
+	if(str.size() == 0)
+		return;
+
 	str = str.erase(str.size() - 1);
 	text.setString(str);
 }
