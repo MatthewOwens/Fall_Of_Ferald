@@ -1,4 +1,5 @@
 #include "Grapher.h"
+#include <iostream>
 Grapher::Grapher()
 {
 	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
@@ -27,6 +28,8 @@ void Grapher::run()
 
 void Grapher::update()
 {
+	sf::Event event;
+
 	// Updating our key input
 	inputManager.update(window);
 
@@ -35,6 +38,19 @@ void Grapher::update()
 
 	if(inputManager.pressedOnce(sf::Mouse::Left))
 		ibox.checkClicked(inputManager.getMousePosition());
+
+	while(window.pollEvent(event))
+	{
+		switch(event.type)
+		{
+			case sf::Event::TextEntered:
+			{
+				if(ibox.isSelected())
+					ibox.addCharacter(static_cast<char>(event.text.unicode));
+				break;
+			}
+		}
+	}
 	
 	ui.update(&inputManager);
 }

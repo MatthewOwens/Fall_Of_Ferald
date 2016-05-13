@@ -19,22 +19,8 @@ InputManager::~InputManager()
 
 void InputManager::update(sf::RenderWindow& window)
 {
-	sf::Event event;
-	while(window.pollEvent(event))
-	{
-		switch(event.type)
-		{
-			case sf::Event::GainedFocus:
-				focus = true;
-				break;
-			case sf::Event::LostFocus:
-				focus = false;
-				break;
-		}
-	}
-
 	// Only update if we have focus
-	if(!focus)
+	if(!window.isOpen())
 		return;
 	
 	// Updating the keyboard state
