@@ -11,6 +11,7 @@ InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const
 	text = sf::Text("", font, 20);
 	text.setColor(sf::Color::Black);
 	text.setPosition(baseBox.getPosition());
+	selected = false;
 }
 
 InputBox::~InputBox()
@@ -56,4 +57,14 @@ void InputBox::render(sf::RenderWindow& window)
 {
 	window.draw(baseBox);
 	window.draw(text);
+}
+
+void InputBox::setSelected(bool val)
+{
+	if(val)
+		baseBox.setOutlineColor(sf::Color(179,80,80));
+	else
+		baseBox.setOutlineColor(sf::Color::White);
+
+	selected = val;
 }
