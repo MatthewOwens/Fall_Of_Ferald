@@ -37,6 +37,35 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	}
 }
 
+void NodeView::move(const sf::Vector2f& vector)
+{
+	for(int i = 0; i < 3; ++i)
+	{
+		rects[i].move(vector);
+		texts[i].move(vector);
+	}
+}
+
+sf::FloatRect NodeView::getGlobalBounds()
+{
+	return rects[0].getGlobalBounds();
+}
+
+bool NodeView::removeRequired(const sf::Vector2f& mousePos)
+{
+	if(rects[0].getGlobalBounds().contains(mousePos))
+	{
+		delete node;
+		node = NULL;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
 void NodeView::render(sf::RenderWindow& window)
 {
 	for(int i = 0; i < 3; ++i)

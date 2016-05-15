@@ -7,7 +7,7 @@ Grapher::Grapher()
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
-	nodeView = new NodeView("test", 0, sf::Vector2f(500,50), font);
+	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	inputState = InputState::NONE;
 
@@ -42,8 +42,13 @@ Grapher::Grapher()
 
 Grapher::~Grapher()
 {
-	delete nodeView;
-	nodeView = NULL;
+	/*delete nodeView;
+	nodeView = NULL;*/
+	for(auto i : nodeViews)
+	{
+		delete i;
+		i = NULL;
+	}
 }
 
 void Grapher::run()
@@ -110,24 +115,30 @@ void Grapher::update()
 		}
 	}
 
-	// Checking if any of the buttons have been pressed
+	// Checking if any of the buttons have been clicked
 	for(auto i : buttons)
 	{
 		i.second->update(&inputManager);
 
-		if(i.second->isHeld() || i.second->isPressed())
+		if(i.second->isPressed())
 		{
 			i.second->setColor(colors["background"]);
 
 			// Flagging the input box as selected if needed
-			if(i.first != "n.node" && i.first != "load")
+			if(i.first != "n.node")
 				ibox.setSelected(true);
 
 			// Updating the input state based on what button was pressed
 			if(i.first == "m.name")
-			{
 				inputState = InputState::NAME;
-			}
+			else if(i.first == "save")
+				inputState = InputState::SAVE;
+			else if(i.first == "load")
+				inputState = InputState::LOAD;
+			else
+				nodeViews.push_back(new NodeView(moduleName.getString(),
+					nodeViews.size(), sf::Vector2f(500,50), font));
+
 		}
 		else i.second->setColor(colors["button"]);
 
@@ -135,14 +146,48 @@ void Grapher::update()
 			i.second->setHighlight(colors["buttonHighlight"]);
 		else i.second->clearHighlight();
 	}
-	
+
+	// Removing node if needed
+	if(inputManager.pressedOnce(sf::Mouse::Right))
+	{
+		for(auto i = nodeViews.begin(); i != nodeViews.end(); )
+		{
+			if((*i)->removeRequired(inputManager.getMousePosition()))
+			{
+				delete *i;
+				*i = NULL;
+
+				i = nodeViews.erase(i);
+
+				//TODO: Recheck IDs
+			}
+			else ++i;
+		}
+	}
+
+	// Moving nodes
+	if(inputManager.buttonHeld(sf::Mouse::Left))
+	{
+		for(auto i : nodeViews)
+		{
+			if(i->getGlobalBounds().contains(inputManager.getMousePosition()))
+			{
+				i->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
+				break;
+			}
+		}
+	}
 }
 
 void Grapher::render()
 {
 	//window.clear(sf::Color(43,43,43));
 	window.clear(sf::Color(31,31,31));
-	nodeView->render(window);
+	//nodeView->render(window);
+
+	for(auto i : nodeViews)
+		i->render(window);
+
 	window.draw(graphBG);
 	window.draw(moduleName);
 	ibox.render(window);

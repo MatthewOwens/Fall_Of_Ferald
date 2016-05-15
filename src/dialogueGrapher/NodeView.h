@@ -13,8 +13,12 @@ class NodeView
 		NodeView(const std::string& moduleID, int nodeCount,
 				 const sf::Vector2f position, const sf::Font& font);
 		~NodeView();
+		NodeView(){}
 		void render(sf::RenderWindow& window);
 		void setScale(float scale);
+		bool removeRequired(const sf::Vector2f& mousePos);
+		void move(const sf::Vector2f& vector);
+		sf::FloatRect getGlobalBounds();
 	private:
 		// Enum for accessing the text and rect arrays
 		enum {ID, HEADER, BODY};

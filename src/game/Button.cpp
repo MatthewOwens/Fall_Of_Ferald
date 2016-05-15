@@ -66,7 +66,7 @@ void Button::update(InputManager* inputManager)
 	if(mouseOver)
 	{
 		held = inputManager->buttonHeld(sf::Mouse::Button::Left);
-		pressed = inputManager->buttonHeld(sf::Mouse::Button::Left);
+		pressed = inputManager->pressedOnce(sf::Mouse::Button::Left);
 	}
 	else
 	{

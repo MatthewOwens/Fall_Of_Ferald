@@ -1,4 +1,5 @@
 #include "Node.h"
+#include <iostream>
 
 Node::Node(std::string identifier)
 {
