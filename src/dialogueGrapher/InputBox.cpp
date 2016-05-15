@@ -12,6 +12,7 @@ InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const
 	text.setColor(sf::Color::Black);
 	text.setPosition(baseBox.getPosition());
 	selected = false;
+	active = true;
 }
 
 InputBox::~InputBox()
@@ -55,8 +56,11 @@ void InputBox::checkClicked(const sf::Vector2f& mousePos)
 
 void InputBox::render(sf::RenderWindow& window)
 {
-	window.draw(baseBox);
-	window.draw(text);
+	if(active)
+	{
+		window.draw(baseBox);
+		window.draw(text);
+	}
 }
 
 void InputBox::setSelected(bool val)

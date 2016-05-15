@@ -39,6 +39,7 @@ class Grapher
 		sf::RenderWindow window;
 		sf::Event event;
 		int nodeCount;
+		float scale;
 		NodeView* selectedNode;
 };
 #endif//GRAPHER_H

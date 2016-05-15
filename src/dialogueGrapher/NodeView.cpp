@@ -46,6 +46,18 @@ void NodeView::move(const sf::Vector2f& vector)
 	}
 }
 
+void NodeView::setScale(float scale)
+{
+	if(scale < 0)
+		return;
+
+	for(int i = 0; i < 3; ++i)
+	{
+		rects[i].setScale(scale, scale);
+		texts[i].setScale(scale, scale);
+	}
+}
+
 sf::FloatRect NodeView::getGlobalBounds()
 {
 	return rects[0].getGlobalBounds();

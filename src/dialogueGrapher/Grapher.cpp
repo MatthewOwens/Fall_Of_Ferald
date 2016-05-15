@@ -8,10 +8,12 @@ Grapher::Grapher()
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
 	nodeCount = 0;
+	scale = 1.f;
 	selectedNode = NULL;
 
 	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
+	ibox.setActive(false);
 	inputState = InputState::NONE;
 
 	// Defining the UI colors
@@ -110,9 +112,19 @@ void Grapher::update()
 						}
 						inputState = InputState::NONE;
 						ibox.setSelected(false);
+						ibox.setActive(false);
 						ibox.clear();
 					}
 				}
+				break;
+			}
+
+			case sf::Event::MouseWheelScrolled:
+			{
+				scale += (0.1 * event.mouseWheelScroll.delta);
+
+				for(auto i : nodeViews)
+					i->setScale(scale);
 				break;
 			}
 			
@@ -129,7 +141,6 @@ void Grapher::update()
 			{
 				if(event.mouseButton.button == sf::Mouse::Left)
 				{
-					std::cout << "LMB Pressed!" << std::endl;
 					// Selecting a node
 					for(auto i : nodeViews)
 					{
@@ -150,11 +161,15 @@ void Grapher::update()
 
 							// Flagging the input box as selected if needed
 							if(i.first != "n.node")
+							{
 								ibox.setSelected(true);
+								ibox.setActive(true);
+							}
 
 							// Updating the input state based on what button was pressed
 							if(i.first == "m.name")
 								inputState = InputState::NAME;
+
 							else if(i.first == "save")
 								inputState = InputState::SAVE;
 							else if(i.first == "load")
@@ -171,9 +186,6 @@ void Grapher::update()
 						}
 						else i.second->setColor(colors["button"]);
 
-						if(i.second->isMouseOver())
-							i.second->setHighlight(colors["buttonHighlight"]);
-						else i.second->clearHighlight();
 					}
 				}
 				else if(event.mouseButton.button == sf::Mouse::Right)
@@ -203,6 +215,13 @@ void Grapher::update()
 	if(selectedNode)
 	{
 		selectedNode->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
+	}
+
+	for(auto i : buttons)
+	{
+		if(i.second->isMouseOver())
+			i.second->setHighlight(colors["buttonHighlight"]);
+		else i.second->clearHighlight();
 	}
 }
 

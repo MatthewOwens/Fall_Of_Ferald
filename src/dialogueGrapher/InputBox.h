@@ -17,6 +17,7 @@ class InputBox
 		void render(sf::RenderWindow& window);
 		void checkClicked(const sf::Vector2f& mousePos);
 		inline bool isSelected() { return selected; }
+		inline void setActive(bool active) { this->active = active; }
 		inline std::string getString() { return text.getString(); }
 		void setSelected(bool val); 
 		inline void clear() { text.setString("");}
@@ -24,5 +25,6 @@ class InputBox
 		sf::Text text;
 		sf::RectangleShape baseBox;
 		bool selected;
+		bool active;
 };
 #endif//INPUTBOX_H
