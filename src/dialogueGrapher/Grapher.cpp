@@ -10,6 +10,7 @@ Grapher::Grapher()
 	nodeCount = 0;
 	scale = 1.f;
 	selectedNode = NULL;
+	movingView = false;
 
 	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
@@ -133,6 +134,7 @@ void Grapher::update()
 				if(event.mouseButton.button == sf::Mouse::Left)
 				{
 					selectedNode = NULL;
+					movingView = false;
 				}
 				break;
 			}
@@ -148,6 +150,12 @@ void Grapher::update()
 						{
 							selectedNode = i;
 						}
+					}
+
+					if(!selectedNode)
+					{
+						if(!graphBG.getGlobalBounds().contains(inputManager.getMousePosition()))
+							movingView = true;
 					}
 
 					// Checking if any of the buttons have been clicked
@@ -215,6 +223,11 @@ void Grapher::update()
 	if(selectedNode)
 	{
 		selectedNode->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
+	}
+	else if(movingView)
+	{
+		for(auto i : nodeViews)
+			i->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
 	}
 
 	for(auto i : buttons)

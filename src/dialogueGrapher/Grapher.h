@@ -40,6 +40,7 @@ class Grapher
 		sf::Event event;
 		int nodeCount;
 		float scale;
+		bool movingView;
 		NodeView* selectedNode;
 };
 #endif//GRAPHER_H
