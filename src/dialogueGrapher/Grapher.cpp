@@ -7,6 +7,9 @@ Grapher::Grapher()
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
+	nodeCount = 0;
+	selectedNode = NULL;
+
 	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	inputState = InputState::NONE;
@@ -112,70 +115,94 @@ void Grapher::update()
 				}
 				break;
 			}
-		}
-	}
-
-	// Checking if any of the buttons have been clicked
-	for(auto i : buttons)
-	{
-		i.second->update(&inputManager);
-
-		if(i.second->isPressed())
-		{
-			i.second->setColor(colors["background"]);
-
-			// Flagging the input box as selected if needed
-			if(i.first != "n.node")
-				ibox.setSelected(true);
-
-			// Updating the input state based on what button was pressed
-			if(i.first == "m.name")
-				inputState = InputState::NAME;
-			else if(i.first == "save")
-				inputState = InputState::SAVE;
-			else if(i.first == "load")
-				inputState = InputState::LOAD;
-			else
-				nodeViews.push_back(new NodeView(moduleName.getString(),
-					nodeViews.size(), sf::Vector2f(500,50), font));
-
-		}
-		else i.second->setColor(colors["button"]);
-
-		if(i.second->isMouseOver())
-			i.second->setHighlight(colors["buttonHighlight"]);
-		else i.second->clearHighlight();
-	}
-
-	// Removing node if needed
-	if(inputManager.pressedOnce(sf::Mouse::Right))
-	{
-		for(auto i = nodeViews.begin(); i != nodeViews.end(); )
-		{
-			if((*i)->removeRequired(inputManager.getMousePosition()))
+			
+			case sf::Event::MouseButtonReleased:
 			{
-				delete *i;
-				*i = NULL;
-
-				i = nodeViews.erase(i);
-
-				//TODO: Recheck IDs
+				if(event.mouseButton.button == sf::Mouse::Left)
+				{
+					selectedNode = NULL;
+				}
+				break;
 			}
-			else ++i;
+
+			case sf::Event::MouseButtonPressed:
+			{
+				if(event.mouseButton.button == sf::Mouse::Left)
+				{
+					std::cout << "LMB Pressed!" << std::endl;
+					// Selecting a node
+					for(auto i : nodeViews)
+					{
+						if(i->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+						{
+							selectedNode = i;
+						}
+					}
+
+					// Checking if any of the buttons have been clicked
+					for(auto i : buttons)
+					{
+						i.second->update(&inputManager);
+
+						if(i.second->isPressed())
+						{
+							i.second->setColor(colors["background"]);
+
+							// Flagging the input box as selected if needed
+							if(i.first != "n.node")
+								ibox.setSelected(true);
+
+							// Updating the input state based on what button was pressed
+							if(i.first == "m.name")
+								inputState = InputState::NAME;
+							else if(i.first == "save")
+								inputState = InputState::SAVE;
+							else if(i.first == "load")
+								inputState = InputState::LOAD;
+							else
+							{
+								nodeViews.push_back(new NodeView(moduleName.getString(),
+									nodeCount, sf::Vector2f(500,50), font));
+
+								// Tracking the total nodes created to prevent repeated IDs
+								nodeCount++;
+							}
+
+						}
+						else i.second->setColor(colors["button"]);
+
+						if(i.second->isMouseOver())
+							i.second->setHighlight(colors["buttonHighlight"]);
+						else i.second->clearHighlight();
+					}
+				}
+				else if(event.mouseButton.button == sf::Mouse::Right)
+				{
+					// Removing node if needed
+					if(inputManager.pressedOnce(sf::Mouse::Right))
+					{
+						for(auto i = nodeViews.begin(); i != nodeViews.end(); )
+						{
+							if((*i)->removeRequired(inputManager.getMousePosition()))
+							{
+								delete *i;
+								*i = NULL;
+
+								i = nodeViews.erase(i);
+							}
+							else ++i;
+						}
+					}
+				}
+			}
+			break;
 		}
 	}
 
 	// Moving nodes
-	if(inputManager.buttonHeld(sf::Mouse::Left))
+	if(selectedNode)
 	{
-		for(auto i : nodeViews)
-		{
-			if(i->getGlobalBounds().contains(inputManager.getMousePosition()))
-			{
-				i->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
-				break;
-			}
-		}
+		selectedNode->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
 	}
 }
 

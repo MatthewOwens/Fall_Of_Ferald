@@ -38,5 +38,7 @@ class Grapher
 		std::list<NodeView*> nodeViews;
 		sf::RenderWindow window;
 		sf::Event event;
+		int nodeCount;
+		NodeView* selectedNode;
 };
 #endif//GRAPHER_H
