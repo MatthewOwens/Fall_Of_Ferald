@@ -10,9 +10,16 @@
 #include <list>
 #include <map>
 #include "NodeView.h"
-#include "InputManager.h"
 #include "InputBox.h"
+
+// If compiling with cmake & make
+#ifndef _WIN32
+#include "InputManager.h"
 #include "Button.h"
+#else
+#include "../game/InputManager.h"
+#include "../game/Button.h"
+#endif
 class Grapher
 {
 	public:
