@@ -13,6 +13,7 @@ class Node
 		void addConnector(Connector outgoing);
 		void setHeader(std::string header);
 		void setBody(std::string body);
+		void setID(const std::string& id);
 
 		std::string* getChosenConnectorText();
 

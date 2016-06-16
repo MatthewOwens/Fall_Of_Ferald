@@ -16,6 +16,7 @@ class NodeView
 		NodeView(){}
 		void render(sf::RenderWindow& window);
 		void setScale(float scale);
+		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);
 		sf::FloatRect getGlobalBounds();

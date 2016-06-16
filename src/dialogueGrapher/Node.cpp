@@ -13,6 +13,13 @@ Node::~Node()
 {
 }
 
+void Node::setID(const std::string& id)
+{
+	identifier = id;
+
+	// TODO: backprop. to update connector IDs
+}
+
 // Checks if we can resolve the node without player intervention
 bool Node::resolveable(std::map<std::string, bool> localFlags,
 			  		   std::map<std::string, bool> globalFlags)

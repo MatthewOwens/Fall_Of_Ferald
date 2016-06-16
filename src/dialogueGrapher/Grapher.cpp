@@ -38,8 +38,11 @@ Grapher::Grapher()
 	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
 	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 310, 100));
 
-	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["buton"],1);
+	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["button"],1);
 	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 310, 200));
+
+	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 310, 300));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -103,12 +106,22 @@ void Grapher::update()
 						// Choosing what to update
 						switch (inputState)
 						{
-							case NAME:
-								moduleName.setString(ibox.getString());
+						case NAME:
+						{
+							 moduleName.setString(ibox.getString());
+
+							 // TODO: Set names
+							 int count = 0;
+							 for (auto i : nodeViews)
+							 {
+								 i->setID(moduleName.getString(), count);
+								 count++;
+							 }
+							 break;
+						}
+						case SAVE:
 								break;
-							case SAVE:
-								break;
-							case LOAD:
+						case LOAD:
 								break;
 						}
 						inputState = InputState::NONE;
@@ -135,6 +148,9 @@ void Grapher::update()
 				{
 					selectedNode = NULL;
 					movingView = false;
+
+					for (auto i : buttons)
+						i.second->setColor(colors["button"]);
 				}
 				break;
 			}
@@ -167,6 +183,9 @@ void Grapher::update()
 						{
 							i.second->setColor(colors["background"]);
 
+							if (i.first == "exit")
+								exit(0);
+
 							// Flagging the input box as selected if needed
 							if(i.first != "n.node")
 							{
@@ -192,7 +211,6 @@ void Grapher::update()
 							}
 
 						}
-						else i.second->setColor(colors["button"]);
 
 					}
 				}

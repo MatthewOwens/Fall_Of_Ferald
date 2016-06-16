@@ -37,6 +37,16 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	}
 }
 
+void NodeView::setID(const std::string& moduleID, int nodeNumber)
+{
+	if (node)
+	{
+		std::string newID = moduleID + std::to_string(nodeNumber);
+		node->setID(newID);
+		texts[ID].setString(newID);
+	}
+}
+
 void NodeView::move(const sf::Vector2f& vector)
 {
 	for(int i = 0; i < 3; ++i)
