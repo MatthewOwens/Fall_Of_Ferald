@@ -2,11 +2,11 @@
 #include <sstream>
 #include <iostream>
 #include "Unit.h"
-#include "SaveManager.h"
+//#include "SaveManager.h"
 
 Level::Level(const std::string& mapPath, const std::string& tileSheetPath, ImageManager* imageManager)
 {
-	SaveManager saveManager;
+	//SaveManager saveManager;
     std::ifstream inFile(mapPath);
     std::istringstream subString;
     std::string line;

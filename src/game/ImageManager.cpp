@@ -34,6 +34,7 @@ void ImageManager::loadImage(const std::string& filename, const std::string& nam
     if (!tempTexture.loadFromFile(filename))
     {
         std::cout << "Error loading " << filename << std::endl;
+		std::cin.get();
     }
 
     images[name] = tempTexture;

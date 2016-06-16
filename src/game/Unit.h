@@ -56,9 +56,7 @@ class Unit
             int modifier;       // The modifier to be applied to the stat
         };
 
-		std::string statNames[9] = {"health", "strength", "magic", "skill",
-										 "speed", "defense", "resistance", "luck",
-										 "moveRange"};
+		static const std::string statNames[9];
 
     private:
 		sf::Sprite sprite;

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <deque>
+#include <random>
 
 #if defined (__gnu_linux__)
 	#include <sys/stat.h>
@@ -151,6 +152,11 @@ Unit* AI::selectTarget(std::list<Unit*>& possibleTargets, Unit& currentUnit)
 			killChance = true;
 			if(hitChance >= 100)
 				certainKill = true;
+		}
+		else
+		{
+			killChance = false;
+			certainKill = false;
 		}
 		
 		// Calculating the final heuristic

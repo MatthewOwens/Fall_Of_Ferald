@@ -267,10 +267,11 @@ void UserInterface::highlightTile(int x, int y, sf::Color colour, int tileSize)
 void UserInterface::clearHighlight(sf::Color colour)
 {
 	//for(int i = 0; i < highlights.size() ; )
+	//std::vector<TileHighlight>::iterator i;
 	for(auto i = highlights.begin(); i != highlights.end() ; )
 	{
 		if(i->getColour() == colour)
-			highlights.erase(i);
+			i = highlights.erase(i);
 		else i++;
 	}
 }

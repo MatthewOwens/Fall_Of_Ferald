@@ -1,6 +1,13 @@
 #include "Unit.h"
 #include <iostream>
 
+#ifndef __GNUC__
+#endif
+
+const std::string Unit::statNames[9] = {"health", "strength", "magic", "skill",
+								 "speed", "defense", "resistance", "luck",
+								 "moveRange"};
+
 // Constructor
 Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int strength, int magic, int skill,
 	int speed, int defense, int resistance, int luck, int moveRange, int _x, int _y)
