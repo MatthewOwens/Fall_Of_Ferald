@@ -27,5 +27,6 @@ Currently in the prototype stage.
 * Implement Connector creation & deletion
 * Fix NodeView scaling
 * Fix NodeView selection not clearing until escape is pressed
+* Increase NodeView sizes to fit text
 * Implement wxWidgets to handle file dialogues
 * Implement exportion of modules to JSON with jsoncpp
