@@ -13,10 +13,18 @@ Currently in the prototype stage.
 * Super Basic AI
 * 2D Camera
 
-## TODO
+## TODO - Game
 * Make some sprites that don't look awful
-* Dialogue Grapher tool
-* Implement dialog trees
+* Replace current dialogue parser with one that supports json output from
+  DialogueGrapher
+* Implement a way to navigate the directed diagraphs outputted by DialogueGrapher
 * Rework inventory system
 * Bind camera to map
 * Realign camera on state change
+
+## TODO - DialogueGrapher
+* Stop connectors from breaking on Node::setID
+* Replace sf::Rects and sf::Text objects in NodeView with InputBox objects
+* Fix NodeView scaling
+* Implement wxWidgets to handle file dialogues
+* Implement exportion of modules to JSON with jsoncpp
