@@ -10,9 +10,28 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 
 	// Default sizes
 	size = sf::Vector2f(100, 100);
-	sf::Vector2f textboxSize(size.x - (2 * spacing), size.y / 2 - (2*spacing));
+	sf::Vector2f iboxSize(size.x - (2 * spacing), size.y / 2 - (2*spacing));
+	sf::Vector2f iboxPos = this->position;
 
-	for(int i = 0; i < 3; ++i)
+	// Initilising the base rectangle
+	baseRect = sf::RectangleShape(size);
+	baseRect.setPosition(this->position);
+	baseRect.setPosition(this->position.x, this->position.y);
+	baseRect.setFillColor(sf::Color(100, 32, 32));
+	idText = sf::Text(moduleID + std::to_string(nodeCount), font);
+	idText.setPosition(this->position);
+	idText.move(0, -35);
+
+	// Creating the header input box
+	iboxPos.x += spacing;
+	iboxPos.y += spacing;
+	headerInput = InputBox(iboxPos, iboxSize, font);
+
+	// Creating the body input box
+	iboxPos = headerInput.getPosition();
+	iboxPos.y += (iboxSize.y + spacing * 2);
+	bodyInput = InputBox(iboxPos, iboxSize, font);
+	/*for(int i = 0; i < 3; ++i)
 	{
 		rects[i] = sf::RectangleShape(position);
 		rects[i].setPosition(this->position);
@@ -34,7 +53,7 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 								 (this->position.y * i) + spacing);
 			rects[i].setSize(textboxSize);
 		}
-	}
+	}*/
 }
 
 void NodeView::setID(const std::string& moduleID, int nodeNumber)
@@ -43,17 +62,16 @@ void NodeView::setID(const std::string& moduleID, int nodeNumber)
 	{
 		std::string newID = moduleID + std::to_string(nodeNumber);
 		node->setID(newID);
-		texts[ID].setString(newID);
+		idText.setString(newID);
 	}
 }
 
 void NodeView::move(const sf::Vector2f& vector)
 {
-	for(int i = 0; i < 3; ++i)
-	{
-		rects[i].move(vector);
-		texts[i].move(vector);
-	}
+	baseRect.move(vector);
+	idText.move(vector);
+	headerInput.move(vector);
+	bodyInput.move(vector);
 }
 
 void NodeView::setScale(float scale)
@@ -61,21 +79,20 @@ void NodeView::setScale(float scale)
 	if(scale < 0)
 		return;
 
-	for(int i = 0; i < 3; ++i)
-	{
-		rects[i].setScale(scale, scale);
-		texts[i].setScale(scale, scale);
-	}
+	baseRect.setScale(scale, scale);
+	idText.setScale(baseRect.getScale());
+	headerInput.setScale(baseRect.getScale());
+	bodyInput.setScale(baseRect.getScale());
 }
 
 sf::FloatRect NodeView::getGlobalBounds()
 {
-	return rects[0].getGlobalBounds();
+	return baseRect.getGlobalBounds();
 }
 
 bool NodeView::removeRequired(const sf::Vector2f& mousePos)
 {
-	if(rects[0].getGlobalBounds().contains(mousePos))
+	if(baseRect.getGlobalBounds().contains(mousePos))
 	{
 		delete node;
 		node = NULL;
@@ -90,11 +107,10 @@ bool NodeView::removeRequired(const sf::Vector2f& mousePos)
 
 void NodeView::render(sf::RenderWindow& window)
 {
-	for(int i = 0; i < 3; ++i)
-	{
-		window.draw(rects[i]);
-		window.draw(texts[i]);
-	}
+	window.draw(baseRect);
+	window.draw(idText);
+	headerInput.render(window);
+	bodyInput.render(window);
 }
 
 NodeView::~NodeView()
