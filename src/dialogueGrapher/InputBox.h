@@ -22,9 +22,12 @@ class InputBox : public sf::RectangleShape
 		inline void clear() { text.setString("");}
 		inline void setString(std::string str) { text.setString(str); }
 
-		// Overriding sf::RectangleShape's move functions
+		// Overriding sf::RectangleShape's functions
 		void move(const sf::Vector2f& offset);
 		void move(float offsetX, float offsetY);
+
+		void setScale(const sf::Vector2f& factor);
+		void setScale(float factorX, float factorY);
 	private:
 		sf::Text text;
 		bool selected;

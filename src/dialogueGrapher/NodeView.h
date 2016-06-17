@@ -40,5 +40,6 @@ class NodeView
 		sf::Vector2f position;
 		sf::Vector2f size;
 		const float spacing = 5.f;
+		const float textSpacingY = -35.f;
 };
 #endif//NODEVIEW_H

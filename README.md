@@ -25,7 +25,6 @@ Currently in the prototype stage.
 ## TODO - DialogueGrapher
 * Stop connectors from breaking on Node::setID
 * Implement Connector creation & deletion
-* Fix NodeView scaling
 * Fix NodeView selection not clearing until escape is pressed
 * Increase NodeView sizes to fit text
 * Implement wxWidgets to handle file dialogues

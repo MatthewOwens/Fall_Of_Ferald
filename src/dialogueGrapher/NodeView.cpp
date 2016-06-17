@@ -21,7 +21,7 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	baseRect.setFillColor(sf::Color(100, 32, 32));
 	idText = sf::Text(moduleID + std::to_string(nodeCount), font);
 	idText.setPosition(this->position);
-	idText.move(0, -35);
+	idText.move(0, textSpacingY);
 
 	// Creating the header input box
 	iboxPos.x += spacing;
@@ -77,13 +77,28 @@ void NodeView::move(const sf::Vector2f& vector)
 
 void NodeView::setScale(float scale)
 {
-	if(scale < 0)
+	if(scale < 0.1f)
 		return;
 
 	baseRect.setScale(scale, scale);
-	idText.setScale(baseRect.getScale());
-	headerInput.setScale(baseRect.getScale());
-	bodyInput.setScale(baseRect.getScale());
+	const sf::Vector2f& basePos = baseRect.getPosition();
+	//sf::Vector2f basePos = sf::Vector2f(baseRect.getGlobalBounds().left, baseRect.getGlobalBounds().top);
+
+	// Repositioning to the base so that we can realign with the spacing*scale later
+	idText.setPosition(basePos);
+	headerInput.setPosition(basePos);
+	bodyInput.setPosition(basePos);
+
+	// Scaling
+	//baseRect.setScale(scale, scale);
+	idText.setScale(scale, scale);
+	headerInput.setScale(scale, scale);
+	bodyInput.setScale(scale, scale);
+
+	// Repositioning
+	idText.move(0, textSpacingY * scale);
+	headerInput.move(spacing*scale, spacing*scale);
+	bodyInput.move(spacing*scale, 2*spacing*scale + headerInput.getLocalBounds().height * scale);
 }
 
 sf::FloatRect NodeView::getGlobalBounds()

@@ -66,6 +66,18 @@ void InputBox::move(float offsetX, float offsetY)
 	text.move(offsetX, offsetY);
 }
 
+void InputBox::setScale(const sf::Vector2f& offset)
+{
+	RectangleShape::setScale(offset);
+	text.setScale(offset);
+}
+
+void InputBox::setScale(float factorX, float factorY)
+{
+	RectangleShape::setScale(factorX, factorY);
+	text.setScale(factorX, factorY);
+}
+
 void InputBox::render(sf::RenderWindow& window)
 {
 	if(active)
