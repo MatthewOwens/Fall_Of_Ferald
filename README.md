@@ -14,18 +14,17 @@ Currently in the prototype stage.
 * 2D Camera
 
 ## TODO - Game
-* Make some sprites that don't look awful
+* Bind camera to map
 * Replace current dialogue parser with one that supports json output from
   DialogueGrapher
 * Implement a way to navigate the directed diagraphs outputted by DialogueGrapher
 * Rework inventory system
-* Bind camera to map
-* Realign camera on state change
+* Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
+* Implement Connector creation & deletion
 * Stop connectors from breaking on Node::setID
 * Implement tab selection in NodeView
-* Implement Connector creation & deletion
 * Fix NodeView selection not clearing until escape is pressed
 * Implement wxWidgets to handle file dialogues
 * Implement exportion of modules to JSON with jsoncpp
