@@ -24,6 +24,7 @@ Currently in the prototype stage.
 
 ## TODO - DialogueGrapher
 * Stop connectors from breaking on Node::setID
+* Implement Connector creation & deletion
 * Replace sf::Rects and sf::Text objects in NodeView with InputBox objects
 * Fix NodeView scaling
 * Implement wxWidgets to handle file dialogues
