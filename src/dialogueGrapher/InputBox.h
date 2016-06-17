@@ -1,10 +1,9 @@
 #ifndef INPUTBOX_H
 #define INPUTBOX_H
-//#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-class InputBox
+class InputBox : public sf::RectangleShape
 {
 	public:
 		InputBox(){}
@@ -23,7 +22,6 @@ class InputBox
 		inline void clear() { text.setString("");}
 	private:
 		sf::Text text;
-		sf::RectangleShape baseBox;
 		bool selected;
 		bool active;
 };

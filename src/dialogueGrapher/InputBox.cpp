@@ -1,16 +1,17 @@
 #include "InputBox.h"
 
 InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font)
+: RectangleShape(size)
 {
-	baseBox = sf::RectangleShape(size);
-	baseBox.setOutlineThickness(3);
-	baseBox.setFillColor(sf::Color::White);
-	baseBox.setOutlineColor(sf::Color::White);
-	baseBox.move(position);
+	setOutlineThickness(3);
+	setFillColor(sf::Color::White);
+	setOutlineColor(sf::Color::White);
+	//move(position);
+	setPosition(position);
 
 	text = sf::Text("", font, 20);
 	text.setColor(sf::Color::Black);
-	text.setPosition(baseBox.getPosition());
+	text.setPosition(position);
 	selected = false;
 	active = true;
 }
@@ -43,22 +44,22 @@ void InputBox::removeCharacter()
 
 void InputBox::checkClicked(const sf::Vector2f& mousePos)
 {
-	selected = baseBox.getGlobalBounds().contains(mousePos);
+	selected = getGlobalBounds().contains(mousePos);
 
 	if(selected)
 	{
-		baseBox.setOutlineColor(sf::Color(179,80,80));
+		setOutlineColor(sf::Color(179,80,80));
 
 	}
 	else
-		baseBox.setOutlineColor(sf::Color::White);
+		setOutlineColor(sf::Color::White);
 }
 
 void InputBox::render(sf::RenderWindow& window)
 {
 	if(active)
 	{
-		window.draw(baseBox);
+		window.draw(*this);
 		window.draw(text);
 	}
 }
@@ -66,9 +67,9 @@ void InputBox::render(sf::RenderWindow& window)
 void InputBox::setSelected(bool val)
 {
 	if(val)
-		baseBox.setOutlineColor(sf::Color(179,80,80));
+		setOutlineColor(sf::Color(179,80,80));
 	else
-		baseBox.setOutlineColor(sf::Color::White);
+		setOutlineColor(sf::Color::White);
 
 	selected = val;
 }
