@@ -79,8 +79,28 @@ void Grapher::update()
 	// Updating our key input
 	inputManager.update(window);
 
-	if(inputManager.pressedOnce("cancel"))
-		close = true;
+	if (inputManager.pressedOnce("cancel"))
+	{
+		if (selectedInputBox)
+		{
+			if (ibox.isSelected())
+			{
+				ibox.setActive(false);
+				ibox.setSelected(false);
+				ibox.clear();
+			}
+			else if (selectedNode)
+			{
+				// Reverting the edited textbox
+				selectedInputBox->setString(selectedNode->getUnsavedInput());
+			}
+
+			selectedInputBox->setSelected(false);
+			selectedInputBox = NULL;
+		}
+
+		selectedNode = NULL;
+	}
 
 	if (inputManager.pressedOnce(sf::Mouse::Left))
 	{

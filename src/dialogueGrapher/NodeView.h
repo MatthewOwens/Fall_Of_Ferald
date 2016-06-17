@@ -22,6 +22,7 @@ class NodeView
 		void move(const sf::Vector2f& vector);
 		void update();
 		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);
+		std::string getUnsavedInput();
 		sf::FloatRect getGlobalBounds();
 	private:
 		// Enum for accessing the text and rect arrays

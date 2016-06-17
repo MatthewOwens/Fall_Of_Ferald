@@ -20,6 +20,7 @@ class InputBox : public sf::RectangleShape
 		inline void setActive(bool active) { this->active = active; }
 		inline std::string getString() { return text.getString(); }
 		inline void clear() { text.setString("");}
+		inline void setString(std::string str) { text.setString(str); }
 
 		// Overriding sf::RectangleShape's move functions
 		void move(const sf::Vector2f& offset);

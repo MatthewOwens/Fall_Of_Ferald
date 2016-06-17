@@ -1,4 +1,5 @@
 #include "NodeView.h"
+#include <iostream>
 
 // Determines the node ID using the current module ID and the number of
 // nodes in the module
@@ -112,12 +113,30 @@ InputBox* NodeView::getSelectedInputBox(const sf::Vector2f& mousePos)
 	else return NULL;
 }
 
+// Returns the header/body value saved in Node if either input box is selected
+std::string NodeView::getUnsavedInput()
+{
+	if (!node)
+		return "";
+
+	if (headerInput.isSelected())
+		return node->getHeader();
+	else if (bodyInput.isSelected())
+		return node->getBody();
+	else return "";
+}
+
 void NodeView::update()
 {
 	if (node)
 	{
 		node->setHeader(headerInput.getString());
 		node->setBody(bodyInput.getString());
+
+		// DEBUG
+		std::cout << node->getIdentifier() << ":" << std::endl;
+		std::cout << "\tHEADER: " << node->getHeader() << std::endl;
+		std::cout << "\tBODY: " << node->getBody() << std::endl;
 	}
 }
 
