@@ -7,7 +7,7 @@ class InputBox : public sf::RectangleShape
 {
 	public:
 		InputBox(){}
-		InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font);
+		InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font, bool scalable = true);
 		~InputBox();
 		void addCharacter(const char& character);
 		void addCharacter(const std::string& character);
@@ -32,5 +32,6 @@ class InputBox : public sf::RectangleShape
 		sf::Text text;
 		bool selected;
 		bool active;
+		bool scalable;
 };
 #endif//INPUTBOX_H

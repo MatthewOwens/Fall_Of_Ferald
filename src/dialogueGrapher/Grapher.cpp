@@ -14,7 +14,7 @@ Grapher::Grapher()
 	movingView = false;
 
 	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
-	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
+	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font, false);
 	ibox.setActive(false);
 
 	// Defining the UI colors

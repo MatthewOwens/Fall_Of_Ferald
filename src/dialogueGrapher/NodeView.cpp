@@ -32,29 +32,6 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	iboxPos = headerInput.getPosition();
 	iboxPos.y += (iboxSize.y + spacing * 2);
 	bodyInput = InputBox(iboxPos, iboxSize, font);
-	/*for(int i = 0; i < 3; ++i)
-	{
-		rects[i] = sf::RectangleShape(position);
-		rects[i].setPosition(this->position);
-
-		texts[i] = sf::Text("", font);
-		texts[i].setPosition(this->position);
-
-		// Base box & text
-		if(i == 0)
-		{
-			rects[i].setSize(size);
-			rects[i].setFillColor(sf::Color(100,32,32));
-			texts[i].setString(node->getIdentifier());
-			texts[i].setPosition(this->position.x, this->position.y - 35);
-		}
-		else
-		{
-			rects[i].setPosition(this->position.x + spacing,
-								 (this->position.y * i) + spacing);
-			rects[i].setSize(textboxSize);
-		}
-	}*/
 }
 
 void NodeView::setID(const std::string& moduleID, int nodeNumber)

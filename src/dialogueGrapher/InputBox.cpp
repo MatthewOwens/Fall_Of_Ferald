@@ -1,6 +1,6 @@
 #include "InputBox.h"
 
-InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font)
+InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font, bool scalable)
 : RectangleShape(size)
 {
 	setOutlineThickness(3);
@@ -12,6 +12,7 @@ InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const
 	text = sf::Text("", font, 20);
 	text.setColor(sf::Color::Black);
 	text.setPosition(position);
+	this->scalable = scalable;
 	selected = false;
 	active = true;
 }
