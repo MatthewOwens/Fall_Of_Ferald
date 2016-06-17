@@ -120,6 +120,34 @@ std::string NodeView::getUnsavedInput()
 
 void NodeView::update()
 {
+	float maxTextWidth;
+
+	// Finding the max text width
+	if (headerInput.getString().length() > bodyInput.getString().length())
+		maxTextWidth = headerInput.getTextWidth();
+	else
+		maxTextWidth = bodyInput.getTextWidth();
+
+	// Ensuring that there's always space for one more character
+	maxTextWidth += headerInput.getCharacterSize();
+
+	// Do we need to resize?
+	if (maxTextWidth < baseRect.getSize().x)
+	{
+		baseRect.setSize(sf::Vector2f(100 + spacing, baseRect.getSize().y));
+		headerInput.setSize(sf::Vector2f(100 - spacing, headerInput.getSize().y));
+		bodyInput.setSize(sf::Vector2f(100 - spacing, bodyInput.getSize().y));
+		return;
+	}
+
+	// Resizing
+	baseRect.setSize(sf::Vector2f(maxTextWidth, baseRect.getSize().y));
+	headerInput.setSize(sf::Vector2f(maxTextWidth, headerInput.getSize().y));
+	bodyInput.setSize(sf::Vector2f(maxTextWidth, bodyInput.getSize().y));
+}
+
+void NodeView::updateNodeText()
+{
 	if (node)
 	{
 		node->setHeader(headerInput.getString());

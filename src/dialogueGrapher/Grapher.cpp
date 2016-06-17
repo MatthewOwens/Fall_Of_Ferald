@@ -14,7 +14,7 @@ Grapher::Grapher()
 	movingView = false;
 
 	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
-	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font, false);
+	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	ibox.setActive(false);
 
 	// Defining the UI colors
@@ -28,21 +28,21 @@ Grapher::Grapher()
 	moduleName.setCharacterSize(20);
 	moduleName.setColor(sf::Color::White);
 
-	sf::Vector2f bgSize(300, window.getSize().y - 20);
+	sf::Vector2f bgSize(300, window.getSize().y);
 	graphBG = sf::RectangleShape(bgSize);
 	graphBG.setFillColor(colors["graphBG"]);
-	graphBG.setPosition(window.getSize().x - 310,10);
+	graphBG.setPosition(window.getSize().x - 300,0);
 	moduleName.setPosition(graphBG.getPosition());
 
 	// Initilising the buttons
 	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
-	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 310, 100));
+	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 300, 100));
 
 	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["button"],1);
-	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 310, 200));
+	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 300, 200));
 
 	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
-	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 310, 300));
+	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 300, 300));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -160,7 +160,7 @@ void Grapher::update()
 							else // If it's one of the nodeView input boxes
 							{
 								selectedInputBox->setSelected(false);
-								selectedNode->update();
+								selectedNode->updateNodeText();
 
 								// Deselecting
 								selectedNode = NULL;
@@ -288,6 +288,10 @@ void Grapher::update()
 			i.second->setHighlight(colors["buttonHighlight"]);
 		else i.second->clearHighlight();
 	}
+
+	// Updating NodeView objects
+	for (auto i : nodeViews)
+		i->update();
 }
 
 void Grapher::render()

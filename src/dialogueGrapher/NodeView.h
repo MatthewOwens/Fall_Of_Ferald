@@ -20,6 +20,7 @@ class NodeView
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);
+		void updateNodeText();
 		void update();
 		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);
 		std::string getUnsavedInput();
