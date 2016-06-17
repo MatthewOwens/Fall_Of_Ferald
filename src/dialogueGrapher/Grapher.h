@@ -28,20 +28,17 @@ class Grapher
 		void run();
 	
 	private:
-		enum InputState {NONE, NAME, SAVE, LOAD};
 		void update();
 		void render();
 
 		bool close = false;
 		InputManager inputManager;
 		InputBox ibox;
-		InputState inputState;
 		sf::Text moduleName;
 		sf::Font font;
 		sf::RectangleShape graphBG;
 		std::map<std::string, sf::Color> colors;
 		std::map<std::string, Button*> buttons;
-		//NodeView* nodeView = NULL;
 		std::list<NodeView*> nodeViews;
 		sf::RenderWindow window;
 		sf::Event event;
@@ -49,5 +46,6 @@ class Grapher
 		float scale;
 		bool movingView;
 		NodeView* selectedNode;
+		InputBox* selectedInputBox;
 };
 #endif//GRAPHER_H

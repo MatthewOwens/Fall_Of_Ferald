@@ -20,6 +20,8 @@ class NodeView
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);
+		void update();
+		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);
 		sf::FloatRect getGlobalBounds();
 	private:
 		// Enum for accessing the text and rect arrays

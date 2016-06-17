@@ -103,6 +103,23 @@ bool NodeView::removeRequired(const sf::Vector2f& mousePos)
 		return false;
 	}
 }
+InputBox* NodeView::getSelectedInputBox(const sf::Vector2f& mousePos)
+{
+	if (headerInput.checkClicked(mousePos))
+		return &headerInput;
+	else if (bodyInput.checkClicked(mousePos))
+		return &bodyInput;
+	else return NULL;
+}
+
+void NodeView::update()
+{
+	if (node)
+	{
+		node->setHeader(headerInput.getString());
+		node->setBody(bodyInput.getString());
+	}
+}
 
 
 void NodeView::render(sf::RenderWindow& window)
@@ -118,4 +135,3 @@ NodeView::~NodeView()
 	delete node;
 	node = 0;
 }
-

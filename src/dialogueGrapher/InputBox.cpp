@@ -42,17 +42,28 @@ void InputBox::removeCharacter()
 	text.setString(str);
 }
 
-void InputBox::checkClicked(const sf::Vector2f& mousePos)
+bool InputBox::checkClicked(const sf::Vector2f& mousePos)
 {
 	selected = getGlobalBounds().contains(mousePos);
 
 	if(selected)
-	{
 		setOutlineColor(sf::Color(179,80,80));
-
-	}
 	else
 		setOutlineColor(sf::Color::White);
+
+	return selected;
+}
+
+void InputBox::move(const sf::Vector2f& offset)
+{
+	RectangleShape::move(offset);
+	text.move(offset);
+}
+
+void InputBox::move(float offsetX, float offsetY)
+{
+	RectangleShape::move(offsetX, offsetY);
+	text.move(offsetX, offsetY);
 }
 
 void InputBox::render(sf::RenderWindow& window)

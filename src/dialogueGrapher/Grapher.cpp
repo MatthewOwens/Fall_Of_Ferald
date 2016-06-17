@@ -10,12 +10,12 @@ Grapher::Grapher()
 	nodeCount = 0;
 	scale = 1.f;
 	selectedNode = NULL;
+	selectedInputBox = NULL;
 	movingView = false;
 
 	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	ibox.setActive(false);
-	inputState = InputState::NONE;
 
 	// Defining the UI colors
 	colors["button"] = sf::Color(142, 196, 137);
@@ -82,8 +82,24 @@ void Grapher::update()
 	if(inputManager.pressedOnce("cancel"))
 		close = true;
 
-	if(inputManager.pressedOnce(sf::Mouse::Left))
-		ibox.checkClicked(inputManager.getMousePosition());
+	if (inputManager.pressedOnce(sf::Mouse::Left))
+	{
+		if (ibox.checkClicked(inputManager.getMousePosition()))
+			selectedInputBox = &ibox;
+		else
+		{
+			for (auto i : nodeViews)
+			{
+				selectedInputBox = i->getSelectedInputBox(inputManager.getMousePosition());
+
+				if (selectedInputBox)
+				{
+					selectedInputBox->setSelected(true);
+					break;
+				}
+			}
+		}
+	}
 
 	while(window.pollEvent(event))
 	{
@@ -91,43 +107,46 @@ void Grapher::update()
 		{
 			case sf::Event::TextEntered:
 			{
-				if(ibox.isSelected())
+				if(selectedInputBox)
 				{
 					if(event.text.unicode < 128 && event.text.unicode > 31)
 					{
-						ibox.addCharacter(static_cast<char>(event.text.unicode));
+						selectedInputBox->addCharacter(static_cast<char>(event.text.unicode));
 					}
 					else if(event.text.unicode == 8) //Backspace
 					{
-						ibox.removeCharacter();
+						selectedInputBox->removeCharacter();
 					}
 					else if(event.text.unicode == 13) //Return
 					{
-						// Choosing what to update
-						switch (inputState)
+						// If there's an InputBox selected
+						if (selectedInputBox)
 						{
-						case NAME:
-						{
-							 moduleName.setString(ibox.getString());
+							// If it's the module's inputbox
+							if (ibox.isSelected())
+							{
+								moduleName.setString(ibox.getString());
 
-							 // TODO: Set names
-							 int count = 0;
-							 for (auto i : nodeViews)
-							 {
-								 i->setID(moduleName.getString(), count);
-								 count++;
-							 }
-							 break;
+								int count = 0;
+								for (auto i : nodeViews)
+								{
+									i->setID(moduleName.getString(), count);
+									count++;
+								}
+								ibox.setSelected(false);
+								ibox.setActive(false);
+								ibox.clear();
+							}
+							else // If it's one of the nodeView input boxes
+							{
+								selectedInputBox->setSelected(false);
+								selectedNode->update();
+
+								// Deselecting
+								selectedNode = NULL;
+								selectedInputBox = NULL;
+							}
 						}
-						case SAVE:
-								break;
-						case LOAD:
-								break;
-						}
-						inputState = InputState::NONE;
-						ibox.setSelected(false);
-						ibox.setActive(false);
-						ibox.clear();
 					}
 				}
 				break;
@@ -146,7 +165,9 @@ void Grapher::update()
 			{
 				if(event.mouseButton.button == sf::Mouse::Left)
 				{
-					selectedNode = NULL;
+					if (!selectedInputBox)
+						selectedNode = NULL;
+
 					movingView = false;
 
 					for (auto i : buttons)
@@ -187,21 +208,14 @@ void Grapher::update()
 								exit(0);
 
 							// Flagging the input box as selected if needed
-							if(i.first != "n.node")
+							if(i.first == "m.name")
 							{
 								ibox.setSelected(true);
 								ibox.setActive(true);
+								selectedInputBox = &ibox;
 							}
 
-							// Updating the input state based on what button was pressed
-							if(i.first == "m.name")
-								inputState = InputState::NAME;
-
-							else if(i.first == "save")
-								inputState = InputState::SAVE;
-							else if(i.first == "load")
-								inputState = InputState::LOAD;
-							else
+							if (i.first == "n.node")
 							{
 								nodeViews.push_back(new NodeView(moduleName.getString(),
 									nodeCount, sf::Vector2f(500,50), font));

@@ -14,12 +14,16 @@ class InputBox : public sf::RectangleShape
 		void removeCharacter();
 
 		void render(sf::RenderWindow& window);
-		void checkClicked(const sf::Vector2f& mousePos);
+		bool checkClicked(const sf::Vector2f& mousePos);
+		void setSelected(bool val); 
 		inline bool isSelected() { return selected; }
 		inline void setActive(bool active) { this->active = active; }
 		inline std::string getString() { return text.getString(); }
-		void setSelected(bool val); 
 		inline void clear() { text.setString("");}
+
+		// Overriding sf::RectangleShape's move functions
+		void move(const sf::Vector2f& offset);
+		void move(float offsetX, float offsetY);
 	private:
 		sf::Text text;
 		bool selected;
