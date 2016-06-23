@@ -5,6 +5,7 @@
 #include "Node.h"
 #include "InputBox.h"
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -16,7 +17,7 @@ class NodeView
 				 const sf::Vector2f position, const sf::Font& font);
 		~NodeView();
 		NodeView(){}
-		void render(sf::RenderWindow& window);
+		void render(sf::RenderWindow& window, bool showNames = true);
 		void setScale(float scale);
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
@@ -28,6 +29,8 @@ class NodeView
 		sf::FloatRect getGlobalBounds();
 		const std::string& getID();
 		const sf::Vector2f& getPosition();
+		inline const sf::Vector2f& getInletPos() { return circles[0].getPosition(); }
+		//inline const sf::Vector2f& getOutletPos() { return circles[1].getPosition(); }
 		bool addConnector(const Connector& connector, const sf::Vector2f& lineTarget);
 	private:
 		// Enum for accessing the text and rect arrays
@@ -35,6 +38,7 @@ class NodeView
 
 		Node* node = NULL;
 		sf::RectangleShape baseRect;
+		sf::CircleShape circles[2];	//0 - inlet, 1 - outlet
 		sf::Text idText;
 		InputBox headerInput;
 		InputBox bodyInput;
@@ -44,5 +48,6 @@ class NodeView
 		sf::VertexArray lines;
 		const float spacing = 5.f;
 		const float textSpacingY = -35.f;
+		const float circleSize = 5.f;
 };
 #endif//NODEVIEW_H

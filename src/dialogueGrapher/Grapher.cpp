@@ -12,6 +12,7 @@ Grapher::Grapher()
 	selectedNode = NULL;
 	selectedInputBox = NULL;
 	movingView = false;
+	showNodeNames = true;
 
 	for (int i = 0; i < 2; ++i)
 		connectingNodes[i] = NULL;
@@ -45,6 +46,9 @@ Grapher::Grapher()
 
 	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
 	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 290, 300));
+
+	buttons["n.names"] = new Button(sf::Vector2f(95, 20), colors["button"], 1);
+	buttons["n.names"]->setPosition(sf::Vector2f(window.getSize().x - 150, 200));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -223,7 +227,7 @@ void Grapher::update()
 								std::cout << "Flags are under construction!" << std::endl;
 							else
 							{
-								if (connectingNodes[0]->addConnector(connection, connectingNodes[1]->getPosition()))
+								if (connectingNodes[0]->addConnector(connection, connectingNodes[1]->getInletPos()))
 									std::cout << "Connection completed successfully!" << std::endl;
 								else std::cout << "Connection failed!" << std::endl;
 							}
@@ -285,6 +289,8 @@ void Grapher::update()
 								nodeCount++;
 							}
 
+							if (i.first == "n.names")
+								showNodeNames = !showNodeNames;
 						}
 
 					}
@@ -353,7 +359,7 @@ void Grapher::render()
 	window.clear(sf::Color(31,31,31));
 
 	for(auto i : nodeViews)
-		i->render(window);
+		i->render(window, showNodeNames);
 
 	window.draw(graphBG);
 	window.draw(moduleName);

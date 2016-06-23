@@ -23,6 +23,16 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	idText.setPosition(this->position);
 	idText.move(0, textSpacingY);
 
+	// Initilising the inlet & outlets
+	for (int i = 0; i < 2; ++i)
+	{
+		circles[i] = sf::CircleShape(circleSize);
+		circles[i].setFillColor(sf::Color::Magenta);
+		circles[i].setPosition(this->position);
+	}
+	circles[0].move(-circleSize, size.y / 2 - circleSize / 2);
+	circles[1].move(size.x, size.y / 2 - circleSize / 2);
+
 	// Creating the header input box
 	iboxPos.x += spacing;
 	iboxPos.y += spacing;
@@ -52,6 +62,9 @@ void NodeView::move(const sf::Vector2f& vector)
 	idText.move(vector);
 	headerInput.move(vector);
 	bodyInput.move(vector);
+
+	for (int i = 0; i < 2; ++i)
+		circles[i].move(vector);
 }
 
 void NodeView::setScale(float scale)
@@ -66,16 +79,22 @@ void NodeView::setScale(float scale)
 	idText.setPosition(basePos);
 	headerInput.setPosition(basePos);
 	bodyInput.setPosition(basePos);
+	circles[0].setPosition(basePos);
+	circles[1].setPosition(basePos);
 
 	// Scaling
 	idText.setScale(scale, scale);
 	headerInput.setScale(scale, scale);
 	bodyInput.setScale(scale, scale);
+	circles[0].setScale(scale, scale);
+	circles[1].setScale(scale, scale);
 
 	// Repositioning
 	idText.move(0, textSpacingY * scale);
 	headerInput.move(spacing*scale, spacing*scale);
 	bodyInput.move(spacing*scale, 2*spacing*scale + headerInput.getLocalBounds().height * scale);
+	circles[0].move(-circleSize * scale, (size.y / 2 - circleSize / 2) * scale);
+	circles[1].move(size.x * scale, (size.y / 2 - circleSize / 2) * scale);
 }
 
 sf::FloatRect NodeView::getGlobalBounds()
@@ -179,20 +198,29 @@ bool NodeView::addConnector(const Connector& connector, const sf::Vector2f& line
 	else
 	{
 		node->addConnector(connector);
-		lines.append(baseRect.getPosition());
-		lines[lines.getVertexCount() - 1].color = sf::Color(179, 80, 80);
+		lines.append(circles[1].getPosition());
+		//lines[lines.getVertexCount() - 1].color = sf::Color(179, 80, 80);
+		lines[lines.getVertexCount() - 1].color = sf::Color::Blue;
 
 		lines.append(lineTarget);
-		lines[lines.getVertexCount() - 1].color = sf::Color::White;
+		//lines[lines.getVertexCount() - 1].color = sf::Color::White;
+		//lines[lines.getVertexCount() - 1].color = sf::Color(142, 196, 137);
+		lines[lines.getVertexCount() - 1].color = sf::Color::Cyan;
 		return true;
 	}
 }
 
 
-void NodeView::render(sf::RenderWindow& window)
+void NodeView::render(sf::RenderWindow& window, bool showNames)
 {
+	for (int i = 0; i < 2; ++i)
+		window.draw(circles[i]);
+
 	window.draw(baseRect);
-	window.draw(idText);
+
+	if (showNames)
+		window.draw(idText);
+
 	headerInput.render(window);
 	bodyInput.render(window);
 	window.draw(lines);

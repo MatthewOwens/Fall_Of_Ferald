@@ -22,7 +22,6 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Implement Connector inlets/outlets
 * Implement Connector deletion
 * Fix scaling
 * Stop connectors from breaking on Node::setID

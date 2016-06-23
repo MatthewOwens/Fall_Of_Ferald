@@ -46,6 +46,7 @@ class Grapher
 		int nodeCount;
 		float scale;
 		bool movingView;
+		bool showNodeNames;
 
 		NodeView* selectedNode;
 		InputBox* selectedInputBox;
