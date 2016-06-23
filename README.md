@@ -5,14 +5,6 @@ Fall Of Ferald
 SRPG based on the SRPG_Engine repo that was developed prior.
 Currently in the prototype stage.
 
-## Completed Features
-* Rudimentary levels
-* Tooltips
-* Dialogue Boxes
-* Units
-* Super Basic AI
-* 2D Camera
-
 ## TODO - Game
 * Bind camera to map
 * Replace current dialogue parser with one that supports json output from
