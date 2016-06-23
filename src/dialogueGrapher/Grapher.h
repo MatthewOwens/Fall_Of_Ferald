@@ -33,19 +33,24 @@ class Grapher
 
 		bool close = false;
 		InputManager inputManager;
-		InputBox ibox;
-		sf::Text moduleName;
+		InputBox ibox;	// The InputBox used to get input for this class
+		sf::Text moduleName;	// Name of the module being edited, defaults to untitled
 		sf::Font font;
-		sf::RectangleShape graphBG;
-		std::map<std::string, sf::Color> colors;
-		std::map<std::string, Button*> buttons;
-		std::list<NodeView*> nodeViews;
+		sf::RectangleShape graphBG;	// Box to the left of the screen, just there
+									// so we have a place to put the UI
+		std::map<std::string, sf::Color> colors;	// UI Colors
+		std::map<std::string, Button*> buttons;		// UI Buttons
+		std::list<NodeView*> nodeViews;		// Representations of the nodes in this module
 		sf::RenderWindow window;
 		sf::Event event;
 		int nodeCount;
 		float scale;
 		bool movingView;
+
 		NodeView* selectedNode;
 		InputBox* selectedInputBox;
+
+		NodeView* connectingNodes[2];	// Array of pointers for storing the nodes
+										// are to be connected with a new connection
 };
 #endif//GRAPHER_H

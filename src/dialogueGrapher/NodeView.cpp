@@ -59,7 +59,6 @@ void NodeView::setScale(float scale)
 
 	baseRect.setScale(scale, scale);
 	const sf::Vector2f& basePos = baseRect.getPosition();
-	//sf::Vector2f basePos = sf::Vector2f(baseRect.getGlobalBounds().left, baseRect.getGlobalBounds().top);
 
 	// Repositioning to the base so that we can realign with the spacing*scale later
 	idText.setPosition(basePos);
@@ -67,7 +66,6 @@ void NodeView::setScale(float scale)
 	bodyInput.setPosition(basePos);
 
 	// Scaling
-	//baseRect.setScale(scale, scale);
 	idText.setScale(scale, scale);
 	headerInput.setScale(scale, scale);
 	bodyInput.setScale(scale, scale);
@@ -81,6 +79,13 @@ void NodeView::setScale(float scale)
 sf::FloatRect NodeView::getGlobalBounds()
 {
 	return baseRect.getGlobalBounds();
+}
+
+const std::string& NodeView::getID()
+{
+	if (node)
+		return node->getIdentifier();
+	else return "";
 }
 
 bool NodeView::removeRequired(const sf::Vector2f& mousePos)
@@ -157,6 +162,17 @@ void NodeView::updateNodeText()
 		std::cout << node->getIdentifier() << ":" << std::endl;
 		std::cout << "\tHEADER: " << node->getHeader() << std::endl;
 		std::cout << "\tBODY: " << node->getBody() << std::endl;
+	}
+}
+
+bool NodeView::addConnector(const Connector& connector)
+{
+	if (node == NULL)
+		return false;
+	else
+	{
+		node->addConnector(connector);
+		return true;
 	}
 }
 

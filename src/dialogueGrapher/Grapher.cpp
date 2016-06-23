@@ -13,8 +13,10 @@ Grapher::Grapher()
 	selectedInputBox = NULL;
 	movingView = false;
 
-	//nodeViews.push_back(new NodeView("test", nodeViews.count(), sf::Vector2f(500,50), font));
-	ibox = InputBox(sf::Vector2f(window.getSize().x - 300,window.getSize().y - 50), sf::Vector2f(280,25), font);
+	for (int i = 0; i < 2; ++i)
+		connectingNodes[i] = NULL;
+
+	ibox = InputBox(sf::Vector2f(window.getSize().x - 290,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	ibox.setActive(false);
 
 	// Defining the UI colors
@@ -36,13 +38,13 @@ Grapher::Grapher()
 
 	// Initilising the buttons
 	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
-	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 300, 100));
+	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 290, 100));
 
 	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["button"],1);
-	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 300, 200));
+	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 290, 200));
 
 	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
-	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 300, 300));
+	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 290, 300));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -193,6 +195,45 @@ void Grapher::update()
 					for (auto i : buttons)
 						i.second->setColor(colors["button"]);
 				}
+				else if (event.mouseButton.button == sf::Mouse::Middle)
+				{
+					// If we're making a connection
+					if (connectingNodes[0] != NULL)
+					{
+						for (auto i : nodeViews)
+						{
+							if (i->getGlobalBounds().contains(inputManager.getMousePosition())
+							 && i != connectingNodes[0])
+							{
+								connectingNodes[1] = i;
+
+								std::cout << "connecting " << connectingNodes[0]->getID();
+								std::cout << " and " << connectingNodes[1]->getID() << std::endl;
+								break;
+							}
+						}
+
+						if (connectingNodes[1] == NULL)
+							std::cout << "No node to connect to!" << std::endl;
+						else
+						{
+							Connector connection(connectingNodes[1]->getID());
+
+							if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+								std::cout << "Flags are under construction!" << std::endl;
+							else
+							{
+								if (connectingNodes[1]->addConnector(connection))
+									std::cout << "Connection completed successfully!" << std::endl;
+								else std::cout << "Connection failed!" << std::endl;
+							}
+						}
+
+						// Clearing the connections
+						connectingNodes[0] = NULL;
+						connectingNodes[1] = NULL;
+					}
+				}
 				break;
 			}
 
@@ -250,21 +291,34 @@ void Grapher::update()
 				}
 				else if(event.mouseButton.button == sf::Mouse::Right)
 				{
-					// Removing node if needed
-					if(inputManager.pressedOnce(sf::Mouse::Right))
+					for(auto i = nodeViews.begin(); i != nodeViews.end(); )
 					{
-						for(auto i = nodeViews.begin(); i != nodeViews.end(); )
+						if((*i)->removeRequired(inputManager.getMousePosition()))
 						{
-							if((*i)->removeRequired(inputManager.getMousePosition()))
-							{
-								delete *i;
-								*i = NULL;
+							delete *i;
+							*i = NULL;
 
-								i = nodeViews.erase(i);
-							}
-							else ++i;
+							i = nodeViews.erase(i);
+						}
+						else ++i;
+					}
+				}
+				else if (event.mouseButton.button == sf::Mouse::Middle)
+				{
+					connectingNodes[0] = NULL;
+
+					for (auto i : nodeViews)
+					{
+						if (i->getGlobalBounds().contains(inputManager.getMousePosition()))
+						{
+							std::cout << "Node Connection started" << std::endl;
+							connectingNodes[0] = i;
+							break;
 						}
 					}
+
+					if (connectingNodes[0] == NULL)
+						std::cout << "No nodeview found!" << std::endl;
 				}
 			}
 			break;

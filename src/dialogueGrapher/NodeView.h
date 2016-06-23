@@ -25,6 +25,8 @@ class NodeView
 		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);
 		std::string getUnsavedInput();
 		sf::FloatRect getGlobalBounds();
+		const std::string& getID();
+		bool addConnector(const Connector& connector);
 	private:
 		// Enum for accessing the text and rect arrays
 		enum {ID, HEADER, BODY};
@@ -34,9 +36,6 @@ class NodeView
 		sf::Text idText;
 		InputBox headerInput;
 		InputBox bodyInput;
-
-		/*sf::RectangleShape rects[3];
-		sf::Text texts[3];*/
 
 		sf::Vector2f position;
 		sf::Vector2f size;

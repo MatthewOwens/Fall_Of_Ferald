@@ -22,9 +22,11 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Implement Connector creation & deletion
+* Implement Connector visualisation
+* Implement Connector deletion
 * Stop connectors from breaking on Node::setID
 * Implement tab selection in NodeView
 * Fix NodeView selection not clearing until escape is pressed
 * Implement wxWidgets to handle file dialogues
 * Implement exportion of modules to JSON with jsoncpp
+* Fix NodeView scaling bug when nodeviews are created at different scales
