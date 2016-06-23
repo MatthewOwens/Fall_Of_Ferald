@@ -7,6 +7,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 #include <string>
 class NodeView
 {
@@ -26,7 +27,8 @@ class NodeView
 		std::string getUnsavedInput();
 		sf::FloatRect getGlobalBounds();
 		const std::string& getID();
-		bool addConnector(const Connector& connector);
+		const sf::Vector2f& getPosition();
+		bool addConnector(const Connector& connector, const sf::Vector2f& lineTarget);
 	private:
 		// Enum for accessing the text and rect arrays
 		enum {ID, HEADER, BODY};
@@ -39,6 +41,7 @@ class NodeView
 
 		sf::Vector2f position;
 		sf::Vector2f size;
+		sf::VertexArray lines;
 		const float spacing = 5.f;
 		const float textSpacingY = -35.f;
 };

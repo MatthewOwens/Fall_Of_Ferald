@@ -32,6 +32,8 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	iboxPos = headerInput.getPosition();
 	iboxPos.y += (iboxSize.y + spacing * 2);
 	bodyInput = InputBox(iboxPos, iboxSize, font);
+
+	lines = sf::VertexArray(sf::Lines, 0);
 }
 
 void NodeView::setID(const std::string& moduleID, int nodeNumber)
@@ -86,6 +88,11 @@ const std::string& NodeView::getID()
 	if (node)
 		return node->getIdentifier();
 	else return "";
+}
+
+const sf::Vector2f& NodeView::getPosition()
+{
+	return baseRect.getPosition();
 }
 
 bool NodeView::removeRequired(const sf::Vector2f& mousePos)
@@ -165,13 +172,18 @@ void NodeView::updateNodeText()
 	}
 }
 
-bool NodeView::addConnector(const Connector& connector)
+bool NodeView::addConnector(const Connector& connector, const sf::Vector2f& lineTarget)
 {
 	if (node == NULL)
 		return false;
 	else
 	{
 		node->addConnector(connector);
+		lines.append(baseRect.getPosition());
+		lines[lines.getVertexCount() - 1].color = sf::Color(179, 80, 80);
+
+		lines.append(lineTarget);
+		lines[lines.getVertexCount() - 1].color = sf::Color::White;
 		return true;
 	}
 }
@@ -183,6 +195,7 @@ void NodeView::render(sf::RenderWindow& window)
 	window.draw(idText);
 	headerInput.render(window);
 	bodyInput.render(window);
+	window.draw(lines);
 }
 
 NodeView::~NodeView()

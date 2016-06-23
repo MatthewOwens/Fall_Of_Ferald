@@ -223,7 +223,7 @@ void Grapher::update()
 								std::cout << "Flags are under construction!" << std::endl;
 							else
 							{
-								if (connectingNodes[1]->addConnector(connection))
+								if (connectingNodes[0]->addConnector(connection, connectingNodes[1]->getPosition()))
 									std::cout << "Connection completed successfully!" << std::endl;
 								else std::cout << "Connection failed!" << std::endl;
 							}
@@ -350,9 +350,7 @@ void Grapher::update()
 
 void Grapher::render()
 {
-	//window.clear(sf::Color(43,43,43));
 	window.clear(sf::Color(31,31,31));
-	//nodeView->render(window);
 
 	for(auto i : nodeViews)
 		i->render(window);
