@@ -14,9 +14,12 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Implement Connector deletion
-* Fix scaling
 * Stop connectors from breaking on Node::setID
+* Implement Connector deletion
+* Implement module and global scale flags
+* Implement Connector flag editing
+* Implement differing node choices
+* Fix scaling
 * Implement tab selection in NodeView
 * Fix NodeView selection not clearing until escape is pressed
 * Implement wxWidgets to handle file dialogues
