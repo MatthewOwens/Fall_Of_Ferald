@@ -221,7 +221,7 @@ void Grapher::update()
 							std::cout << "No node to connect to!" << std::endl;
 						else
 						{
-							Connector connection(connectingNodes[1]->getID());
+							Connector connection(connectingNodes[0]->getNode(), connectingNodes[1]->getNode());
 
 							if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
 								std::cout << "Flags are under construction!" << std::endl;
@@ -301,6 +301,15 @@ void Grapher::update()
 					{
 						if((*i)->removeRequired(inputManager.getMousePosition()))
 						{
+							// Ensuring that nodes connected to i are disconnected cleanly
+							for (auto j : nodeViews)
+							{
+								if (j != *i)
+								{
+									j->removeConnector(*i);
+								}
+							}
+
 							delete *i;
 							*i = NULL;
 

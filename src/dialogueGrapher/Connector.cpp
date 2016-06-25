@@ -1,16 +1,30 @@
 #include "Connector.h"
+#include <iostream>
 
-Connector::Connector(std::string nextNodeID, int priority)
+Connector::Connector(Node* startNode, Node* endNode, int priority)
 {
-	this->nextNodeID = nextNodeID;
+	if (!endNode || !startNode)
+	{
+		std::cerr << "Error, invalid node connection!" << std::endl;
+		exit(1);
+	}
+
+	this->startNode = startNode;
+	this->endNode = endNode;
 	this->priority = priority;
 	choiceText = "";
 }
 
-Connector::Connector(std::string nextNodeID, std::string choiceText,
+Connector::Connector(Node* startNode, Node* endNode, std::string choiceText,
 					 int priority)
 {
-	this->nextNodeID = nextNodeID;
+	if (!endNode || !startNode)
+	{
+		std::cerr << "Error, invalid node connection!" << std::endl;
+		exit(1);
+	}
+	this->startNode = startNode;
+	this->endNode = endNode;
 	this->choiceText = choiceText;
 	this->priority = priority;
 }

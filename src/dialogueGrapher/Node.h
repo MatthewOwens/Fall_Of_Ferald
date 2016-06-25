@@ -23,7 +23,7 @@ class Node
 		const std::string& getIdentifier() { return identifier; }
 		const std::string& getHeader() { return header; }
 		const std::string& getBody() { return body; }
-		const std::vector<Connector>& getConnections() { return connections; }
+		std::vector<Connector>& getConnections() { return connections; }
 	protected:
 		std::string identifier;	// Unique to this node in all modules
 		std::string header;		// Usually a character's name

@@ -118,8 +118,6 @@ bool NodeView::removeRequired(const sf::Vector2f& mousePos)
 {
 	if(baseRect.getGlobalBounds().contains(mousePos))
 	{
-		delete node;
-		node = NULL;
 		return true;
 	}
 	else
@@ -210,6 +208,44 @@ bool NodeView::addConnector(const Connector& connector, const sf::Vector2f& line
 	}
 }
 
+void NodeView::removeConnector(NodeView* target)
+{
+	Node* targetNode = target->getNode();
+	bool connectorRemoved = false;
+
+	std::vector<Connector>& conns = node->getConnections();
+	for (auto i = conns.begin(); i != conns.end();)
+	{
+		if (i->getEnd() == targetNode)
+		{
+			i = conns.erase(i);
+			connectorRemoved = true;
+			break; // Target erased, no need to continue
+		}
+		else ++i;
+	}
+
+	// Removing errant lines if we need to
+	if (!connectorRemoved)
+		return;
+
+	int toRemove = 0;
+	sf::VertexArray tmpLines = lines;
+
+	for (; toRemove < lines.getVertexCount() - 1; toRemove++)	// Finding the vertices we need to remove
+	{
+		if (lines[toRemove].position == target->getInletPos())
+			break;
+	}
+
+	lines.clear();
+	for (int i = 0; i < tmpLines.getVertexCount() - 1; ++i)
+	{
+		if (i != toRemove && i != toRemove - 1)
+			lines.append(tmpLines[i]);
+	}
+}
+
 
 void NodeView::render(sf::RenderWindow& window, bool showNames)
 {
@@ -229,5 +265,5 @@ void NodeView::render(sf::RenderWindow& window, bool showNames)
 NodeView::~NodeView()
 {
 	delete node;
-	node = 0;
+	node = NULL;
 }

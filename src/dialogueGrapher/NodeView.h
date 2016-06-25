@@ -16,7 +16,6 @@ class NodeView
 		NodeView(const std::string& moduleID, int nodeCount,
 				 const sf::Vector2f position, const sf::Font& font);
 		~NodeView();
-		NodeView(){}
 		void render(sf::RenderWindow& window, bool showNames = true);
 		void setScale(float scale);
 		void setID(const std::string& moduleID, int nodeNumber);
@@ -29,9 +28,11 @@ class NodeView
 		sf::FloatRect getGlobalBounds();
 		const std::string& getID();
 		const sf::Vector2f& getPosition();
+		inline Node* getNode() { return node; }
 		inline const sf::Vector2f& getInletPos() { return circles[0].getPosition(); }
 		//inline const sf::Vector2f& getOutletPos() { return circles[1].getPosition(); }
 		bool addConnector(const Connector& connector, const sf::Vector2f& lineTarget);
+		void removeConnector(NodeView* target);
 	private:
 		// Enum for accessing the text and rect arrays
 		enum {ID, HEADER, BODY};

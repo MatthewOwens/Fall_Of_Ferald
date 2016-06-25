@@ -14,7 +14,6 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Stop connectors from breaking on Node::setID
 * Implement Connector deletion
 * Implement module and global scale flags
 * Implement Connector flag editing

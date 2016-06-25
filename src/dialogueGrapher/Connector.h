@@ -13,17 +13,19 @@ class Connector
 	friend class Node;
 
 	public:
-		Connector(std::string nextNodeID, int priority = -1);
-		Connector(std::string nextNodeID, std::string choiceText,
+		Connector(Node* startNode, Node* endNode, int priority = -1);
+		Connector(Node* startNode, Node* endNode, std::string choiceText,
 				  int priority = -1);
 		~Connector();
 		void addFlag(std::string flag, bool state);
+		Node* const getEnd() { return endNode; }
 
 	protected:
 		bool conditionsMet(std::map<std::string, bool>& localFlags,
 						   std::map<std::string, bool>& globalFlags);
 	//private:
-		std::string nextNodeID;
+		Node* startNode;
+		Node* endNode;
 		std::string choiceText;
 		std::map<std::string, bool> flags;
 		int priority;	// priority values <0 are auto resolved
