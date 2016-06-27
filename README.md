@@ -14,8 +14,10 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
+* Fix connectors breaking on move
 * Implement Connector deletion
-* Implement module and global scale flags
+* Implement module scale flags
+* Implement global scale flags
 * Implement Connector flag editing
 * Implement wxWidgets to handle file dialogues
 * Implement exportion of modules to JSON with jsoncpp
