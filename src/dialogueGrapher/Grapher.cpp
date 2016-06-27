@@ -69,6 +69,7 @@ Grapher::~Grapher()
 void Grapher::run()
 {
 	window.setFramerateLimit(60);
+	inputManager.addBinding("tab_confirm", sf::Keyboard::Tab);
 
 	// main loop
 	while(!close)
@@ -106,6 +107,17 @@ void Grapher::update()
 		}
 
 		selectedNode = NULL;
+	}
+
+	// Tab switching 
+	if (inputManager.pressedOnce("tab_confirm") &&
+		selectedInputBox != NULL &&
+		selectedNode != NULL)
+	{
+		selectedNode->updateNodeText();
+		selectedInputBox->setSelected(false);
+		selectedInputBox = selectedNode->getOtherInputBox(selectedInputBox);
+		selectedInputBox->setSelected(true);
 	}
 
 	if (inputManager.pressedOnce(sf::Mouse::Left))

@@ -246,6 +246,17 @@ void NodeView::removeConnector(NodeView* target)
 	}
 }
 
+InputBox* NodeView::getOtherInputBox(InputBox* selected)
+{
+	// Checking to ensure that selected is one of this instance's
+	// InputBox's
+	if (selected != &headerInput && selected != &bodyInput)
+		return selected;	// Ensuring that the pointer is unchanged
+	else if (selected == &headerInput)
+		return &bodyInput;
+	else return &headerInput;
+}
+
 
 void NodeView::render(sf::RenderWindow& window, bool showNames)
 {

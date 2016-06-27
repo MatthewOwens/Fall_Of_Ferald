@@ -24,6 +24,7 @@ class NodeView
 		void updateNodeText();
 		void update();
 		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);
+		InputBox* getOtherInputBox(InputBox* selected);
 		std::string getUnsavedInput();
 		sf::FloatRect getGlobalBounds();
 		const std::string& getID();
