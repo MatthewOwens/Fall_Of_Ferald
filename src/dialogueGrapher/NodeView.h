@@ -17,7 +17,6 @@ class NodeView
 				 const sf::Vector2f position, const sf::Font& font);
 		~NodeView();
 		void render(sf::RenderWindow& window, bool showNames = true);
-		void setScale(float scale);
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);

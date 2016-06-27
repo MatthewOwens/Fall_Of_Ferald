@@ -67,36 +67,6 @@ void NodeView::move(const sf::Vector2f& vector)
 		circles[i].move(vector);
 }
 
-void NodeView::setScale(float scale)
-{
-	if(scale < 0.1f)
-		scale = 0.1f;
-
-	baseRect.setScale(scale, scale);
-	const sf::Vector2f& basePos = baseRect.getPosition();
-
-	// Repositioning to the base so that we can realign with the spacing*scale later
-	idText.setPosition(basePos);
-	headerInput.setPosition(basePos);
-	bodyInput.setPosition(basePos);
-	circles[0].setPosition(basePos);
-	circles[1].setPosition(basePos);
-
-	// Scaling
-	idText.setScale(scale, scale);
-	headerInput.setScale(scale, scale);
-	bodyInput.setScale(scale, scale);
-	circles[0].setScale(scale, scale);
-	circles[1].setScale(scale, scale);
-
-	// Repositioning
-	idText.move(0, textSpacingY * scale);
-	headerInput.move(spacing*scale, spacing*scale);
-	bodyInput.move(spacing*scale, 2*spacing*scale + headerInput.getLocalBounds().height * scale);
-	circles[0].move(-circleSize * scale, (size.y / 2 - circleSize / 2) * scale);
-	circles[1].move(size.x * scale, (size.y / 2 - circleSize / 2) * scale);
-}
-
 sf::FloatRect NodeView::getGlobalBounds()
 {
 	return baseRect.getGlobalBounds();

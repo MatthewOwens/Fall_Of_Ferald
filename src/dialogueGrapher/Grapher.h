@@ -32,6 +32,7 @@ class Grapher
 		void render();
 
 		bool close = false;
+		sf::View graphView;
 		InputManager inputManager;
 		InputBox ibox;	// The InputBox used to get input for this class
 		sf::Text moduleName;	// Name of the module being edited, defaults to untitled

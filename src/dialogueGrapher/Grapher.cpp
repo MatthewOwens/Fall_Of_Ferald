@@ -37,6 +37,9 @@ Grapher::Grapher()
 	graphBG.setPosition(window.getSize().x - 300,0);
 	moduleName.setPosition(graphBG.getPosition());
 
+	// Setting the view
+	graphView.reset(sf::FloatRect(0,0,window.getSize().x, window.getSize().y));
+
 	// Initilising the buttons
 	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
 	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 290, 100));
@@ -57,8 +60,6 @@ Grapher::Grapher()
 
 Grapher::~Grapher()
 {
-	/*delete nodeView;
-	nodeView = NULL;*/
 	for(auto i : nodeViews)
 	{
 		delete i;
@@ -85,6 +86,7 @@ void Grapher::update()
 
 	// Updating our key input
 	inputManager.update(window);
+	sf::Vector2f viewPos = window.mapPixelToCoords((sf::Vector2i)inputManager.getMousePosition(), graphView);
 
 	if (inputManager.pressedOnce("cancel"))
 	{
@@ -122,13 +124,13 @@ void Grapher::update()
 
 	if (inputManager.pressedOnce(sf::Mouse::Left))
 	{
-		if (ibox.checkClicked(inputManager.getMousePosition()))
+		if (ibox.checkClicked(viewPos))
 			selectedInputBox = &ibox;
 		else
 		{
 			for (auto i : nodeViews)
 			{
-				selectedInputBox = i->getSelectedInputBox(inputManager.getMousePosition());
+				selectedInputBox = i->getSelectedInputBox(viewPos);
 
 				if (selectedInputBox)
 				{
@@ -191,13 +193,14 @@ void Grapher::update()
 			}
 
 			case sf::Event::MouseWheelScrolled:
-			{
-				scale += (0.1 * event.mouseWheelScroll.delta);
+				if (event.mouseWheelScroll.delta < 0)
+					scale = 0.90f;
+				else if (event.mouseWheelScroll.delta > 0)
+					scale = 1.10f;
+				else scale = 1.f;
 
-				for(auto i : nodeViews)
-					i->setScale(scale);
+				graphView.zoom(scale);
 				break;
-			}
 			
 			case sf::Event::MouseButtonReleased:
 			{
@@ -218,7 +221,7 @@ void Grapher::update()
 					{
 						for (auto i : nodeViews)
 						{
-							if (i->getGlobalBounds().contains(inputManager.getMousePosition())
+							if (i->getGlobalBounds().contains(viewPos)
 							 && i != connectingNodes[0])
 							{
 								connectingNodes[1] = i;
@@ -260,7 +263,7 @@ void Grapher::update()
 					// Selecting a node
 					for(auto i : nodeViews)
 					{
-						if(i->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+						if(i->getGlobalBounds().contains(viewPos))
 						{
 							selectedNode = i;
 						}
@@ -268,7 +271,7 @@ void Grapher::update()
 
 					if(!selectedNode)
 					{
-						if(!graphBG.getGlobalBounds().contains(inputManager.getMousePosition()))
+						if(!graphBG.getGlobalBounds().contains(viewPos))
 							movingView = true;
 					}
 
@@ -294,8 +297,9 @@ void Grapher::update()
 
 							if (i.first == "n.node")
 							{
+								sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50,50), graphView);
 								nodeViews.push_back(new NodeView(moduleName.getString(),
-									nodeCount, sf::Vector2f(500,50), font));
+									nodeCount, spawnPos, font));
 								nodeViews.back()->setScale(scale);
 
 								// Tracking the total nodes created to prevent repeated IDs
@@ -312,7 +316,7 @@ void Grapher::update()
 				{
 					for(auto i = nodeViews.begin(); i != nodeViews.end(); )
 					{
-						if((*i)->removeRequired(inputManager.getMousePosition()))
+						if((*i)->removeRequired(viewPos))
 						{
 							// Ensuring that nodes connected to i are disconnected cleanly
 							for (auto j : nodeViews)
@@ -337,7 +341,7 @@ void Grapher::update()
 
 					for (auto i : nodeViews)
 					{
-						if (i->getGlobalBounds().contains(inputManager.getMousePosition()))
+						if (i->getGlobalBounds().contains(viewPos))
 						{
 							std::cout << "Node Connection started" << std::endl;
 							connectingNodes[0] = i;
@@ -360,8 +364,7 @@ void Grapher::update()
 	}
 	else if(movingView)
 	{
-		for(auto i : nodeViews)
-			i->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
+			graphView.move(inputManager.getPrevMousePosition() - inputManager.getMousePosition());
 	}
 
 	for(auto i : buttons)
@@ -380,8 +383,11 @@ void Grapher::render()
 {
 	window.clear(sf::Color(31,31,31));
 
+	window.setView(graphView);
 	for(auto i : nodeViews)
 		i->render(window, showNodeNames);
+
+	window.setView(window.getDefaultView());
 
 	window.draw(graphBG);
 	window.draw(moduleName);
