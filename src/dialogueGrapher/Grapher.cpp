@@ -296,6 +296,7 @@ void Grapher::update()
 							{
 								nodeViews.push_back(new NodeView(moduleName.getString(),
 									nodeCount, sf::Vector2f(500,50), font));
+								nodeViews.back()->setScale(scale);
 
 								// Tracking the total nodes created to prevent repeated IDs
 								nodeCount++;

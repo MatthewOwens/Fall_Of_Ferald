@@ -70,7 +70,7 @@ void NodeView::move(const sf::Vector2f& vector)
 void NodeView::setScale(float scale)
 {
 	if(scale < 0.1f)
-		return;
+		scale = 0.1f;
 
 	baseRect.setScale(scale, scale);
 	const sf::Vector2f& basePos = baseRect.getPosition();
