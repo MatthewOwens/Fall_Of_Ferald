@@ -69,21 +69,25 @@ void NodeView::move(const sf::Vector2f& vector)
 
 void NodeView::updateLines(const std::list<NodeView*>& nodeViews)
 {
+	if (lines.getVertexCount() == 0)
+		return;
+
 	std::vector<Connector> conns = node->getConnections();
 
-	for (int i = 0; i < conns.size(); ++i)
+	for (int i = 0; i < lines.getVertexCount(); ++i)
 	{
-		Node* target = conns[i].getEnd();
-
-		for (auto j : nodeViews)
+		if (i % 2 == 0)	// line start point
+			lines[i].position = circles[1].getPosition();
+		else
 		{
-			if (j->getNode() == target)
+			Node* target = conns[i / 2].getEnd();
+			for (auto j : nodeViews)
 			{
-				lines[i].position = circles[1].getPosition();
-
-				if (i != 0)
-					lines[i * 2].position = j->getInletPos();
-				else lines[1].position = j->getInletPos();
+				if (j->getNode() == target)
+				{
+					lines[i].position = j->getInletPos();
+					break;
+				}
 			}
 		}
 	}
