@@ -363,7 +363,7 @@ void Grapher::update()
 	}
 	else if(movingView)
 	{
-			graphView.move(inputManager.getPrevMousePosition() - inputManager.getMousePosition());
+		graphView.move(inputManager.getPrevMousePosition() - inputManager.getMousePosition());
 	}
 
 	for(auto i : buttons)
@@ -375,7 +375,10 @@ void Grapher::update()
 
 	// Updating NodeView objects
 	for (auto i : nodeViews)
+	{
 		i->update();
+		i->updateLines(nodeViews);
+	}
 }
 
 void Grapher::render()

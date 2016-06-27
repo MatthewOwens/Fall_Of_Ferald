@@ -67,6 +67,28 @@ void NodeView::move(const sf::Vector2f& vector)
 		circles[i].move(vector);
 }
 
+void NodeView::updateLines(const std::list<NodeView*>& nodeViews)
+{
+	std::vector<Connector> conns = node->getConnections();
+
+	for (int i = 0; i < conns.size(); ++i)
+	{
+		Node* target = conns[i].getEnd();
+
+		for (auto j : nodeViews)
+		{
+			if (j->getNode() == target)
+			{
+				lines[i].position = circles[1].getPosition();
+
+				if (i != 0)
+					lines[i * 2].position = j->getInletPos();
+				else lines[1].position = j->getInletPos();
+			}
+		}
+	}
+}
+
 sf::FloatRect NodeView::getGlobalBounds()
 {
 	return baseRect.getGlobalBounds();

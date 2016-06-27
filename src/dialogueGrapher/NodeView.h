@@ -10,6 +10,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <string>
+#include <list>
 class NodeView
 {
 	public:
@@ -20,6 +21,7 @@ class NodeView
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);
+		void updateLines(const std::list<NodeView*>& nodeViews);
 		void updateNodeText();
 		void update();
 		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);
