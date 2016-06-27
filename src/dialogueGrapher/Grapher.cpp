@@ -300,7 +300,6 @@ void Grapher::update()
 								sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50,50), graphView);
 								nodeViews.push_back(new NodeView(moduleName.getString(),
 									nodeCount, spawnPos, font));
-								nodeViews.back()->setScale(scale);
 
 								// Tracking the total nodes created to prevent repeated IDs
 								nodeCount++;
