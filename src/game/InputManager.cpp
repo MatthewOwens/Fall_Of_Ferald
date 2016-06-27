@@ -1,5 +1,6 @@
 #include "InputManager.h"
 #include <iostream>
+#include <functional>
 
 InputManager::InputManager()
 {
@@ -81,4 +82,52 @@ bool InputManager::validKeyDown()
         }
     }
     return false;
+}
+
+// Returns true if the binding was successfully added, false if the key is already bound.
+bool InputManager::addBinding(const std::string& bind, sf::Keyboard::Key key)
+{
+	//auto bindSearch = keyBinds.find(key);
+	auto keySearch = std::find_if(keyBinds.begin(), keyBinds.end(),
+								   std::bind2nd(MapFind(), key));
+
+	if (keySearch == keyBinds.end())
+	{
+		keyBinds[bind] = key;
+		return true;
+	}
+	else
+	{
+		std::cerr << "Cannot bind key " << key << " to " << bind << ", key is already bound!" << std::endl;
+		return false;
+	}
+}
+
+// Returns true if the binding was removed successfully, false if there was no such binding
+bool InputManager::removeBinding(const std::string& bind)
+{
+	auto it = keyBinds.find(bind);
+	bool foundKeys = false;
+
+	while (it != keyBinds.end())
+	{
+		keyBinds.erase(it);
+		it = keyBinds.find(bind);	// Searching again
+	}
+	return foundKeys;
+}
+
+// Returns true if the binding was removed successfully, false if there was no such binding
+bool InputManager::removeBinding(sf::Keyboard::Key key)
+{
+	bool foundValues = false;
+	auto keySearch = std::find_if(keyBinds.begin(), keyBinds.end(),
+								   std::bind2nd(MapFind(), key));
+
+	if (keySearch != keyBinds.end())
+	{
+		keyBinds.erase(keySearch);
+		return true;
+	}
+	else return false;
 }

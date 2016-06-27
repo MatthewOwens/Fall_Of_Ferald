@@ -17,6 +17,9 @@ class InputManager
         bool validKeyDown();
 		inline sf::Vector2f getMousePosition() { return mousePosition; }
 		inline sf::Vector2f getPrevMousePosition() { return previousMousePosition; }
+		bool addBinding(const std::string& bind, sf::Keyboard::Key key);
+		bool removeBinding(const std::string& bind);
+		bool removeBinding(sf::Keyboard::Key key);
     private:
         bool pressedKeys[sf::Keyboard::KeyCount];
 		bool pressedMouseButtons[sf::Mouse::ButtonCount];
@@ -27,6 +30,14 @@ class InputManager
 		sf::Vector2f previousMousePosition;
 
 		bool focus = true;
+
+		struct MapFind : public std::binary_function<std::pair<std::string, sf::Keyboard::Key>, sf::Keyboard::Key, bool>
+		{
+			bool operator()(const std::pair<std::string, sf::Keyboard::Key>& p, sf::Keyboard::Key value)
+			{
+				return p.second == value;
+			}
+		};
 };
 
 #endif // INPUTMANAGER_H
