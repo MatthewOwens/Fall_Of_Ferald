@@ -17,6 +17,5 @@ Currently in the prototype stage.
 * Implement Connector deletion
 * Implement module and global scale flags
 * Implement Connector flag editing
-* Fix scaling
 * Implement wxWidgets to handle file dialogues
 * Implement exportion of modules to JSON with jsoncpp
