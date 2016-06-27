@@ -19,7 +19,6 @@ Currently in the prototype stage.
 * Implement Connector flag editing
 * Implement differing node choices
 * Fix scaling
-* Implement tab selection in NodeView
 * Fix NodeView selection not clearing until escape is pressed
 * Implement wxWidgets to handle file dialogues
 * Implement exportion of modules to JSON with jsoncpp
