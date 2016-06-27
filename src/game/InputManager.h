@@ -33,7 +33,7 @@ class InputManager
 
 		struct MapFind : public std::binary_function<std::pair<std::string, sf::Keyboard::Key>, sf::Keyboard::Key, bool>
 		{
-			bool operator()(const std::pair<std::string, sf::Keyboard::Key>& p, sf::Keyboard::Key value)
+			bool operator()(const std::pair<std::string, sf::Keyboard::Key>& p, sf::Keyboard::Key value) const
 			{
 				return p.second == value;
 			}

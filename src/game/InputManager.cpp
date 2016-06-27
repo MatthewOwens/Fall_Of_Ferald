@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 
+
 InputManager::InputManager()
 {
     keyBinds["up"] = sf::Keyboard::W;
