@@ -212,6 +212,12 @@ std::string NodeView::getUnsavedInput()
 		return node->getBody();
 	else return "";
 }
+void NodeView::setPosition(const sf::Vector2f& newPos)
+{
+	sf::Vector2f moveVec = newPos - position;
+	move(moveVec);
+	//baseRect.setPosition(newPos);
+}
 
 void NodeView::update()
 {

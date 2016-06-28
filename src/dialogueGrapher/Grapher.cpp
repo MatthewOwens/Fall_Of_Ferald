@@ -1,5 +1,6 @@
 #include "Grapher.h"
 #include <iostream>
+#include <algorithm>
 Grapher::Grapher()
 {
 	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
@@ -433,6 +434,8 @@ void Grapher::update()
 void Grapher::populateGraph(const std::vector<Node*>& nodes)
 {
 	sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50,50), graphView);
+	std::list<NodeView*> openSet;
+	std::vector<NodeView*> closedSet;
 
 	// Clearing any preexisting nodeViews
 	for (auto i = nodeViews.begin(); i != nodeViews.end(); ++i)
@@ -445,7 +448,6 @@ void Grapher::populateGraph(const std::vector<Node*>& nodes)
 	for (int i = 0; i < 2; ++i)
 		connectingNodes[i] = NULL;
 
-	// TODO: Set positions
 	for (auto i : nodes)
 	{
 		nodeViews.push_back(new NodeView(spawnPos, font, i));
@@ -456,6 +458,44 @@ void Grapher::populateGraph(const std::vector<Node*>& nodes)
 		i->populateLines(nodeViews);
 		i->update();
 	}
+
+	// Positioning the nodeViews correctly
+	openSet.push_back(nodeViews.front());
+	sf::Vector2f gap(50, 150);
+
+	while (!openSet.empty())
+	{
+		std::vector<Connector>& conns = openSet.front()->getNode()->getConnections();
+		int connCount = 0;
+
+		for (auto conn : conns)
+		{
+			for (auto nodeView : nodeViews)
+			{
+				/* If the nodeview associated with conn isn't in the open or closed sets
+				 * reposition the nodeView and push it to the open set
+				*/
+				if (conn.getEnd() == nodeView->getNode() &&
+					std::find(openSet.begin(), openSet.end(), nodeView) == openSet.end() &&
+					std::find(closedSet.begin(), closedSet.end(), nodeView) == closedSet.end())
+				{
+					nodeView->setPosition(openSet.front()->getOutletPos());
+					nodeView->move(sf::Vector2f(gap.x, gap.y * connCount));
+					openSet.push_back(nodeView);
+					break;
+				}
+			}
+
+			connCount++;
+		}
+		openSet.pop_front();
+	}
+
+	for (auto i : nodeViews)
+		i->updateLines(nodeViews);
+
+
+	nodeCount = nodeViews.size();
 }
 
 void Grapher::render()

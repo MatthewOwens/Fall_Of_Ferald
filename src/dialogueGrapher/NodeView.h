@@ -24,6 +24,7 @@ class NodeView
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);
+		void setPosition(const sf::Vector2f& newPos);
 		void updateLines(const std::list<NodeView*>& nodeViews);
 		void populateLines(const std::list<NodeView*>& nodeViews);
 		void updateNodeText();
@@ -36,7 +37,7 @@ class NodeView
 		const sf::Vector2f& getPosition();
 		inline Node* getNode() { return node; }
 		inline const sf::Vector2f& getInletPos() { return circles[0].getPosition(); }
-		//inline const sf::Vector2f& getOutletPos() { return circles[1].getPosition(); }
+		inline const sf::Vector2f& getOutletPos() { return circles[1].getPosition(); }
 		bool addConnector(const Connector& connector, const sf::Vector2f& lineTarget);
 		void removeConnector(NodeView* target);
 	private:

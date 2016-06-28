@@ -14,7 +14,6 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Set NodeView positions on loading a module file
 * Implement Connector deletion
 * Implement module scale flags
 * Implement global scale flags
