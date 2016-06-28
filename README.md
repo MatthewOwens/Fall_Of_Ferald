@@ -15,6 +15,7 @@ Currently in the prototype stage.
 
 ## TODO - DialogueGrapher
 * Set NodeView positions on loading a module file
+* Fix NodeView movement at scales other than 1.f
 * Implement Connector deletion
 * Implement module scale flags
 * Implement global scale flags
