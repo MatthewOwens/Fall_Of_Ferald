@@ -16,12 +16,16 @@ class NodeView
 	public:
 		NodeView(const std::string& moduleID, int nodeCount,
 				 const sf::Vector2f position, const sf::Font& font);
+
+		NodeView(const sf::Vector2f position, const sf::Font& font,
+				 Node* node);
 		~NodeView();
 		void render(sf::RenderWindow& window, bool showNames = true);
 		void setID(const std::string& moduleID, int nodeNumber);
 		bool removeRequired(const sf::Vector2f& mousePos);
 		void move(const sf::Vector2f& vector);
 		void updateLines(const std::list<NodeView*>& nodeViews);
+		void populateLines(const std::list<NodeView*>& nodeViews);
 		void updateNodeText();
 		void update();
 		InputBox* getSelectedInputBox(const sf::Vector2f& mousePos);

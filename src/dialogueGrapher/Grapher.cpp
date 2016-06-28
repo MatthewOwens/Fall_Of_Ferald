@@ -3,7 +3,7 @@
 Grapher::Grapher()
 {
 	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
-	fileManager.loadDialogue("testModule.json");
+	//fileManager.loadDialogue("testModule.json");
 
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
@@ -53,6 +53,9 @@ Grapher::Grapher()
 
 	buttons["n.names"] = new Button(sf::Vector2f(95, 20), colors["button"], 1);
 	buttons["n.names"]->setPosition(sf::Vector2f(window.getSize().x - 150, 200));
+
+	buttons["load"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["load"]->setPosition(sf::Vector2f(window.getSize().x - 290, 400));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -166,17 +169,39 @@ void Grapher::update()
 							// If it's the module's inputbox
 							if (ibox.isSelected())
 							{
-								moduleName.setString(ibox.getString());
-
-								int count = 0;
-								for (auto i : nodeViews)
+								switch (inState)
 								{
-									i->setID(moduleName.getString(), count);
-									count++;
+									case NAME:
+									{
+										 moduleName.setString(ibox.getString());
+
+										 int count = 0;
+										 for (auto i : nodeViews)
+										 {
+											 i->setID(moduleName.getString(), count);
+											 count++;
+										 }
+										 break;
+									}
+									case LOAD:
+									{
+										 std::string newName;
+										 populateGraph(fileManager.loadDialogue(ibox.getString(), newName));
+										 moduleName.setString(newName);
+										 break;
+									}
+									case SAVE:
+									{
+										 std::cout << "Under construction!" << std::endl;
+										 break;
+									}
 								}
+
+								// Clearing the box and InputState
 								ibox.setSelected(false);
 								ibox.setActive(false);
 								ibox.clear();
+								inState = NONE;
 							}
 							else // If it's one of the nodeView input boxes
 							{
@@ -294,6 +319,7 @@ void Grapher::update()
 								ibox.setSelected(true);
 								ibox.setActive(true);
 								selectedInputBox = &ibox;
+								inState = NAME;
 							}
 
 							if (i.first == "n.node")
@@ -304,6 +330,14 @@ void Grapher::update()
 
 								// Tracking the total nodes created to prevent repeated IDs
 								nodeCount++;
+							}
+
+							if (i.first == "load")
+							{
+								ibox.setSelected(true);
+								ibox.setActive(true);
+								selectedInputBox = &ibox;
+								inState = LOAD;
 							}
 
 							if (i.first == "n.names")
@@ -379,6 +413,34 @@ void Grapher::update()
 	{
 		i->update();
 		i->updateLines(nodeViews);
+	}
+}
+
+void Grapher::populateGraph(const std::vector<Node*>& nodes)
+{
+	sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50,50), graphView);
+
+	// Clearing any preexisting nodeViews
+	for (auto i = nodeViews.begin(); i != nodeViews.end(); ++i)
+	{
+		delete (*i);
+		(*i) = NULL;
+		i = nodeViews.erase(i);
+	}
+
+	for (int i = 0; i < 2; ++i)
+		connectingNodes[i] = NULL;
+
+	// TODO: Set positions
+	for (auto i : nodes)
+	{
+		nodeViews.push_back(new NodeView(spawnPos, font, i));
+	}
+
+	for (auto i : nodeViews)
+	{
+		i->populateLines(nodeViews);
+		i->update();
 	}
 }
 

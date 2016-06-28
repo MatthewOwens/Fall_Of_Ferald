@@ -46,6 +46,54 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	lines = sf::VertexArray(sf::Lines, 0);
 }
 
+NodeView::NodeView(const sf::Vector2f position, const sf::Font& font,
+				   Node* node)
+{
+	this->position = position;
+	this->node = node;
+
+	// Default sizes
+	size = sf::Vector2f(100, 100);
+	sf::Vector2f iboxSize(size.x - (2 * spacing), size.y / 2 - (2*spacing));
+	sf::Vector2f iboxPos = this->position;
+
+	// Initilising the base rectangle
+	baseRect = sf::RectangleShape(size);
+	baseRect.setPosition(this->position);
+	baseRect.setPosition(this->position.x, this->position.y);
+	baseRect.setFillColor(sf::Color(100, 32, 32));
+	idText = sf::Text(node->getIdentifier(), font);
+	idText.setPosition(this->position);
+	idText.move(0, textSpacingY);
+
+	// Initilising the inlet & outlets
+	for (int i = 0; i < 2; ++i)
+	{
+		circles[i] = sf::CircleShape(circleSize);
+		circles[i].setFillColor(sf::Color::Magenta);
+		circles[i].setPosition(this->position);
+	}
+	circles[0].move(-circleSize, size.y / 2 - circleSize / 2);
+	circles[1].move(size.x, size.y / 2 - circleSize / 2);
+
+	// Creating the header input box
+	iboxPos.x += spacing;
+	iboxPos.y += spacing;
+	headerInput = InputBox(iboxPos, iboxSize, font);
+
+	// Creating the body input box
+	iboxPos = headerInput.getPosition();
+	iboxPos.y += (iboxSize.y + spacing * 2);
+	bodyInput = InputBox(iboxPos, iboxSize, font);
+
+	lines = sf::VertexArray(sf::Lines, 0);
+
+	// Setting our strings
+	headerInput.setString(node->getHeader());
+	bodyInput.setString(node->getBody());
+	idText.setString(node->getIdentifier());
+}
+
 void NodeView::setID(const std::string& moduleID, int nodeNumber)
 {
 	if (node)
@@ -88,6 +136,28 @@ void NodeView::updateLines(const std::list<NodeView*>& nodeViews)
 					lines[i].position = j->getInletPos();
 					break;
 				}
+			}
+		}
+	}
+}
+
+void NodeView::populateLines(const std::list<NodeView*>& nodeViews)
+{
+	std::vector<Connector> conns = node->getConnections();
+
+	for (auto i : conns)
+	{
+		Node* target = i.getEnd();
+		for (auto j : nodeViews)
+		{
+			if (j->getNode() == target)
+			{
+				lines.append(circles[0].getPosition());
+				lines[lines.getVertexCount() - 1].color = sf::Color::Blue;
+
+				lines.append(j->getInletPos());
+				lines[lines.getVertexCount() - 1].color = sf::Color::Cyan;
+				break;
 			}
 		}
 	}
@@ -169,6 +239,9 @@ void NodeView::update()
 	baseRect.setSize(sf::Vector2f(maxTextWidth, baseRect.getSize().y));
 	headerInput.setSize(sf::Vector2f(maxTextWidth, headerInput.getSize().y));
 	bodyInput.setSize(sf::Vector2f(maxTextWidth, bodyInput.getSize().y));
+
+	const sf::FloatRect& rect = baseRect.getGlobalBounds();
+	circles[1].setPosition(sf::Vector2f(rect.left + rect.width, rect.top + rect.height / 2));
 }
 
 void NodeView::updateNodeText()

@@ -24,6 +24,7 @@
 class Grapher
 {
 	public:
+		enum InputState{ NONE, NAME, LOAD, SAVE };
 		Grapher();
 		~Grapher();
 		void run();
@@ -31,8 +32,10 @@ class Grapher
 	private:
 		void update();
 		void render();
+		void populateGraph(const std::vector<Node*>& nodes);
 
 		bool close = false;
+		InputState inState = NONE;
 		sf::View graphView;
 		InputManager inputManager;
 		FileManager fileManager;
