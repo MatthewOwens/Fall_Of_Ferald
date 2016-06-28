@@ -3,6 +3,7 @@
 Grapher::Grapher()
 {
 	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
+	fileManager.loadDialogue("testModule.json");
 
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");

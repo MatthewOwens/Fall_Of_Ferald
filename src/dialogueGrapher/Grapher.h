@@ -11,6 +11,7 @@
 #include <map>
 #include "NodeView.h"
 #include "InputBox.h"
+#include "FileManager.h"
 
 // If compiling with cmake & make
 #ifndef _WIN32
@@ -34,6 +35,7 @@ class Grapher
 		bool close = false;
 		sf::View graphView;
 		InputManager inputManager;
+		FileManager fileManager;
 		InputBox ibox;	// The InputBox used to get input for this class
 		sf::Text moduleName;	// Name of the module being edited, defaults to untitled
 		sf::Font font;
