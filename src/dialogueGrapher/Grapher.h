@@ -50,6 +50,7 @@ class Grapher
 		sf::RenderWindow window;
 		sf::Event event;
 		int nodeCount;
+		float scaleFactor;
 		float scale;
 		bool movingView;
 		bool showNodeNames;

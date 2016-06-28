@@ -9,6 +9,7 @@ Grapher::Grapher()
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
 
 	nodeCount = 0;
+	scaleFactor = 1.f;
 	scale = 1.f;
 	selectedNode = NULL;
 	selectedInputBox = NULL;
@@ -220,12 +221,21 @@ void Grapher::update()
 
 			case sf::Event::MouseWheelScrolled:
 				if (event.mouseWheelScroll.delta < 0)
-					scale = 0.90f;
+				{
+					scaleFactor = 0.90f;
+					scale *= scaleFactor;
+				}
 				else if (event.mouseWheelScroll.delta > 0)
-					scale = 1.10f;
-				else scale = 1.f;
+				{
+					scaleFactor = 1.10f;
+					scale *= scaleFactor;
+				}
+				else
+				{
+					scaleFactor = 1.f;
+				}
 
-				graphView.zoom(scale);
+				graphView.zoom(scaleFactor);
 				break;
 			
 			case sf::Event::MouseButtonReleased:
@@ -394,7 +404,11 @@ void Grapher::update()
 	// Moving nodes
 	if(selectedNode)
 	{
-		selectedNode->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
+		std::cout << scale << std::endl;
+		sf::Vector2f moveVec = inputManager.getMousePosition() - inputManager.getPrevMousePosition();
+		moveVec *= scale;
+		selectedNode->move(moveVec);
+		//selectedNode->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
 	}
 	else if(movingView)
 	{
