@@ -32,7 +32,7 @@ class Grapher
 	private:
 		void update();
 		void render();
-		void populateGraph(const std::vector<Node*>& nodes);
+		int populateGraph(const std::vector<Node*>& nodes);
 
 		bool close = false;
 		InputState inState = NONE;

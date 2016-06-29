@@ -18,7 +18,9 @@ class Connector
 				  int priority = -1);
 		~Connector();
 		void addFlag(std::string flag, bool state);
-		Node* const getEnd() { return endNode; }
+		inline Node* const getEnd() { return endNode; }
+		inline const std::string& getChoiceText() { return choiceText; }
+		inline int getPriority() { return priority; }
 
 	protected:
 		bool conditionsMet(std::map<std::string, bool>& localFlags,

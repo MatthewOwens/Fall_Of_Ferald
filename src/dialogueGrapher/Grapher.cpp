@@ -188,8 +188,10 @@ void Grapher::update()
 									case LOAD:
 									{
 										 std::string newName;
-										 populateGraph(fileManager.loadDialogue(ibox.getString(), newName));
-										 moduleName.setString(newName);
+										 if (populateGraph(fileManager.loadDialogue(ibox.getString(), newName)) == 0)
+											 moduleName.setString(newName);
+										 else
+											 std::cerr << "file " << ibox.getString() << " contained no nodes!" << std::endl;
 										 break;
 									}
 									case SAVE:
@@ -431,17 +433,22 @@ void Grapher::update()
 	}
 }
 
-void Grapher::populateGraph(const std::vector<Node*>& nodes)
+int Grapher::populateGraph(const std::vector<Node*>& nodes)
 {
+	if (nodes.size() == 0)
+	{
+		std::cerr << "no nodes in file!" << std::endl;
+		return 1;
+	}
+
 	sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50,50), graphView);
 	std::list<NodeView*> openSet;
 	std::vector<NodeView*> closedSet;
 
 	// Clearing any preexisting nodeViews
-	for (auto i = nodeViews.begin(); i != nodeViews.end(); ++i)
+	for (auto i = nodeViews.begin(); i != nodeViews.end(); )
 	{
-		delete (*i);
-		(*i) = NULL;
+		delete *i;
 		i = nodeViews.erase(i);
 	}
 
@@ -496,6 +503,7 @@ void Grapher::populateGraph(const std::vector<Node*>& nodes)
 
 
 	nodeCount = nodeViews.size();
+	return 0;
 }
 
 void Grapher::render()

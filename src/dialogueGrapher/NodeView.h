@@ -15,9 +15,9 @@ class NodeView
 {
 	public:
 		NodeView(const std::string& moduleID, int nodeCount,
-				 const sf::Vector2f position, const sf::Font& font);
+				 const sf::Vector2f position, sf::Font& font);
 
-		NodeView(const sf::Vector2f position, const sf::Font& font,
+		NodeView(const sf::Vector2f position, sf::Font& font,
 				 Node* node);
 		~NodeView();
 		void render(sf::RenderWindow& window, bool showNames = true);
@@ -38,13 +38,14 @@ class NodeView
 		inline Node* getNode() { return node; }
 		inline const sf::Vector2f& getInletPos() { return circles[0].getPosition(); }
 		inline const sf::Vector2f& getOutletPos() { return circles[1].getPosition(); }
-		bool addConnector(const Connector& connector, const sf::Vector2f& lineTarget);
+		bool addConnector(Connector& connector, const sf::Vector2f& lineTarget);
 		void removeConnector(NodeView* target);
 	private:
 		// Enum for accessing the text and rect arrays
 		enum {ID, HEADER, BODY};
 
 		Node* node = NULL;
+		sf::Font* font = NULL;
 		sf::RectangleShape baseRect;
 		sf::CircleShape circles[2];	//0 - inlet, 1 - outlet
 		sf::Text idText;
@@ -54,6 +55,8 @@ class NodeView
 		sf::Vector2f position;
 		sf::Vector2f size;
 		sf::VertexArray lines;
+		std::vector<sf::Text> connectorTexts;
+		std::vector<sf::Text> connectorPriorities;
 		const float spacing = 5.f;
 		const float textSpacingY = -35.f;
 		const float circleSize = 5.f;

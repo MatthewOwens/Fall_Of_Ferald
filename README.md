@@ -14,6 +14,7 @@ Currently in the prototype stage.
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
+* Fix connector text rotation
 * Implement Connector deletion
 * Implement module scale flags
 * Implement global scale flags

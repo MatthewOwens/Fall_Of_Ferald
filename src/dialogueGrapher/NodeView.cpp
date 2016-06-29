@@ -4,10 +4,11 @@
 // Determines the node ID using the current module ID and the number of
 // nodes in the module
 NodeView::NodeView(const std::string& moduleID, int nodeCount,
-				   const sf::Vector2f position, const sf::Font& font)
+				   const sf::Vector2f position, sf::Font& font)
 {
 	node = new Node(moduleID + std::to_string(nodeCount));
 	this->position = position;
+	this->font = &font;
 
 	// Default sizes
 	size = sf::Vector2f(100, 100);
@@ -46,11 +47,12 @@ NodeView::NodeView(const std::string& moduleID, int nodeCount,
 	lines = sf::VertexArray(sf::Lines, 0);
 }
 
-NodeView::NodeView(const sf::Vector2f position, const sf::Font& font,
+NodeView::NodeView(const sf::Vector2f position, sf::Font& font,
 				   Node* node)
 {
 	this->position = position;
 	this->node = node;
+	this->font = &font;
 
 	// Default sizes
 	size = sf::Vector2f(100, 100);
@@ -137,6 +139,19 @@ void NodeView::updateLines(const std::list<NodeView*>& nodeViews)
 					break;
 				}
 			}
+
+			sf::Vector2f lineVec = lines[i].position - lines[i - 1].position;
+			sf::Vector2f lineVecPerp = sf::Vector2f(-lineVec.y, lineVec.x);
+			float perpLength = std::sqrt((lineVecPerp.x * lineVecPerp.x) + (lineVecPerp.y * lineVecPerp.y));
+
+			// Converting lineVecPerp to a unit vector
+			lineVecPerp /= perpLength;
+
+			// Mid point of lineVec
+			sf::Vector2f mid = (lines[i].position + lines[i - 1].position) / 2.f;
+
+			connectorTexts[i/2].setPosition(mid + lineVecPerp * 20.f);
+			connectorPriorities[i/2].setPosition(mid - lineVecPerp * 20.f);
 		}
 	}
 }
@@ -157,6 +172,22 @@ void NodeView::populateLines(const std::list<NodeView*>& nodeViews)
 
 				lines.append(j->getInletPos());
 				lines[lines.getVertexCount() - 1].color = sf::Color::Cyan;
+
+				sf::Vector2f lineVec = lines[lines.getVertexCount() - 1].position - lines[lines.getVertexCount() - 2].position;
+				sf::Vector2f lineVecPerp = sf::Vector2f(-lineVec.y, lineVec.x);
+				float perpLength = std::sqrt((lineVecPerp.x * lineVecPerp.x) + (lineVecPerp.y * lineVecPerp.y));
+
+				// Converting lineVecPerp to a unit vector
+				lineVecPerp /= perpLength;
+
+				// Mid point of lineVec
+				sf::Vector2f mid = (lines[lines.getVertexCount() - 1].position + lines[lines.getVertexCount() - 2].position) / 2.f;
+
+				connectorTexts.push_back(sf::Text(i.getChoiceText(), *font, 8));
+				connectorTexts.back().setPosition(mid - lineVecPerp * 20.f);
+
+				connectorPriorities.push_back(sf::Text(std::to_string(i.getPriority()), *font, 8));
+				connectorPriorities.back().setPosition(mid + lineVecPerp * 20.f);
 				break;
 			}
 		}
@@ -256,15 +287,10 @@ void NodeView::updateNodeText()
 	{
 		node->setHeader(headerInput.getString());
 		node->setBody(bodyInput.getString());
-
-		// DEBUG
-		std::cout << node->getIdentifier() << ":" << std::endl;
-		std::cout << "\tHEADER: " << node->getHeader() << std::endl;
-		std::cout << "\tBODY: " << node->getBody() << std::endl;
 	}
 }
 
-bool NodeView::addConnector(const Connector& connector, const sf::Vector2f& lineTarget)
+bool NodeView::addConnector(Connector& connector, const sf::Vector2f& lineTarget)
 {
 	if (node == NULL)
 		return false;
@@ -272,13 +298,26 @@ bool NodeView::addConnector(const Connector& connector, const sf::Vector2f& line
 	{
 		node->addConnector(connector);
 		lines.append(circles[1].getPosition());
-		//lines[lines.getVertexCount() - 1].color = sf::Color(179, 80, 80);
 		lines[lines.getVertexCount() - 1].color = sf::Color::Blue;
 
 		lines.append(lineTarget);
-		//lines[lines.getVertexCount() - 1].color = sf::Color::White;
-		//lines[lines.getVertexCount() - 1].color = sf::Color(142, 196, 137);
 		lines[lines.getVertexCount() - 1].color = sf::Color::Cyan;
+
+		sf::Vector2f lineVec = lines[lines.getVertexCount() - 1].position - lines[lines.getVertexCount() - 2].position;
+		sf::Vector2f lineVecPerp = sf::Vector2f(-lineVec.y, lineVec.x);
+		float perpLength = std::sqrt((lineVecPerp.x * lineVecPerp.x) + (lineVecPerp.y * lineVecPerp.y));
+
+		// Converting lineVecPerp to a unit vector
+		lineVecPerp /= perpLength;
+
+		// Mid point of lineVec
+		sf::Vector2f mid = (lines[lines.getVertexCount() - 1].position + lines[lines.getVertexCount() - 2].position) / 2.f;
+
+		connectorTexts.push_back(sf::Text(connector.getChoiceText(), *font, 8));
+		connectorTexts.back().setPosition(mid - lineVecPerp * 20.f);
+
+		connectorPriorities.push_back(sf::Text(std::to_string(connector.getPriority()), *font, 8));
+		connectorPriorities.back().setPosition(mid + lineVecPerp * 20.f);
 		return true;
 	}
 }
@@ -346,6 +385,12 @@ void NodeView::render(sf::RenderWindow& window, bool showNames)
 	headerInput.render(window);
 	bodyInput.render(window);
 	window.draw(lines);
+
+	for (int i = 0; i < connectorPriorities.size(); ++i)
+	{
+		window.draw(connectorPriorities[i]);
+		window.draw(connectorTexts[i]);
+	}
 }
 
 NodeView::~NodeView()

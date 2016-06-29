@@ -118,7 +118,10 @@ std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std:
 					break;	// Skipping to the next connection
 				}
 
-				Connector connection(finalNodes[i], connectionTarget, conns[j]["priority"].asInt());
+				Connector connection(finalNodes[i],
+									connectionTarget,
+									conns[j]["choiceText"].asString(),
+									conns[j]["priority"].asInt());
 
 				// Populating the flags if need be
 				for (int k = 0; k < flags.size(); ++k)
