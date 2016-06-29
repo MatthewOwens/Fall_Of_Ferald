@@ -20,7 +20,9 @@ class Connector
 		void addFlag(std::string flag, bool state);
 		inline Node* const getEnd() { return endNode; }
 		inline const std::string& getChoiceText() { return choiceText; }
+		inline void setChoiceText(std::string& str) { choiceText = str; }
 		inline int getPriority() { return priority; }
+		inline void setPriority(int prio) { priority = prio; }
 		inline std::map<std::string, bool>& getFlags() { return flags; }
 
 	protected:
