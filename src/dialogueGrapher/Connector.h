@@ -21,6 +21,7 @@ class Connector
 		inline Node* const getEnd() { return endNode; }
 		inline const std::string& getChoiceText() { return choiceText; }
 		inline int getPriority() { return priority; }
+		inline std::map<std::string, bool>& getFlags() { return flags; }
 
 	protected:
 		bool conditionsMet(std::map<std::string, bool>& localFlags,

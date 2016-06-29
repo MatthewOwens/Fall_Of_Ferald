@@ -59,6 +59,9 @@ Grapher::Grapher()
 	buttons["load"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
 	buttons["load"]->setPosition(sf::Vector2f(window.getSize().x - 290, 400));
 
+	buttons["save"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["save"]->setPosition(sf::Vector2f(window.getSize().x - 290, 500));
+
 	// Setting the button text
 	for(auto i : buttons)
 		i.second->setText(i.first, font);
@@ -196,7 +199,13 @@ void Grapher::update()
 									}
 									case SAVE:
 									{
-										 std::cout << "Under construction!" << std::endl;
+										 std::vector<Node*> nodes;
+										 for (auto i : nodeViews)
+											 nodes.push_back(i->getNode());
+
+										 if (fileManager.saveDialogue(ibox.getString(), moduleName.getString(), nodes))
+											 std::cout << "File saved successfully!" << std::endl;
+
 										 break;
 									}
 								}
@@ -351,6 +360,14 @@ void Grapher::update()
 								ibox.setActive(true);
 								selectedInputBox = &ibox;
 								inState = LOAD;
+							}
+
+							if (i.first == "save")
+							{
+								ibox.setSelected(true);
+								ibox.setActive(true);
+								selectedInputBox = &ibox;
+								inState = SAVE;
 							}
 
 							if (i.first == "n.names")

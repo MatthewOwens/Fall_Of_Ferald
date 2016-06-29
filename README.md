@@ -19,4 +19,3 @@ Currently in the prototype stage.
 * Implement global scale flags
 * Implement Connector flag editing
 * Implement wxWidgets to handle file dialogues
-* Implement exportion of modules to JSON with jsoncpp

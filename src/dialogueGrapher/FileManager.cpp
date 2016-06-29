@@ -137,6 +137,67 @@ std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std:
 
 	return finalNodes;
 }
+bool FileManager::saveDialogue(const std::string& moduleFile, const std::string& moduleName, std::vector<Node*> nodes)
+{
+	std::ofstream ofs(dialogueFolder + moduleFile);
+	Json::StyledWriter writer;
+
+	Json::Value obj;
+	Json::Value nodeArr(Json::arrayValue);
+	if (ofs.good())
+	{
+		obj["module"] = moduleName;
+
+		// Populating the node array
+		for (auto i : nodes)
+		{
+			Json::Value nodeValue(Json::objectValue);
+			Json::Value connArr(Json::arrayValue);
+
+			nodeValue["id"] = i->getIdentifier();
+			nodeValue["header"] = i->getHeader();
+			nodeValue["body"] = i->getBody();
+
+			// Populating the node's connections array
+			for (auto j : i->getConnections())
+			{
+				Json::Value connValue(Json::objectValue);
+				Json::Value flagArr(Json::arrayValue);
+
+				connValue["targetID"] = j.getEnd()->getIdentifier();
+				connValue["choiceText"] = j.getChoiceText();
+				connValue["priority"] = j.getPriority();
+
+				// Populating the connection's flag array
+				for (auto k : j.getFlags())
+				{
+					Json::Value flagValue(Json::objectValue);
+					flagValue["key"] = k.first;
+					flagValue["value"] = k.second;
+
+					flagArr.append(flagValue);
+				}
+
+				connValue["flags"] = flagArr;
+				connArr.append(connValue);
+			}
+
+			nodeValue["connectors"] = connArr;
+			nodeArr.append(nodeValue);
+		}
+		obj["nodes"] = nodeArr;
+
+		// Writing out to the file
+		ofs << obj << std::endl;
+		ofs.close();
+		return true;
+	}
+	else
+	{
+		std::cerr << "Could not open " << dialogueFolder + moduleFile << " for writing!" << std::endl;
+		return false;
+	}
+}
 
 FileManager::~FileManager()
 {
