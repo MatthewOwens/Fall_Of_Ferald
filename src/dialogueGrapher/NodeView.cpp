@@ -150,7 +150,10 @@ void NodeView::updateLines(const std::list<NodeView*>& nodeViews)
 			// Mid point of lineVec
 			sf::Vector2f mid = (lines[i].position + lines[i - 1].position) / 2.f;
 
+			connectorTexts[i/2].setRotation(std::atan2(lineVec.y, lineVec.x) * 180/3.14152);
 			connectorTexts[i/2].setPosition(mid + lineVecPerp * 20.f);
+
+			connectorPriorities[i/2].setRotation(std::atan2(lineVec.y, lineVec.x) * 180/3.14152);
 			connectorPriorities[i/2].setPosition(mid - lineVecPerp * 20.f);
 		}
 	}
@@ -173,21 +176,8 @@ void NodeView::populateLines(const std::list<NodeView*>& nodeViews)
 				lines.append(j->getInletPos());
 				lines[lines.getVertexCount() - 1].color = sf::Color::Cyan;
 
-				sf::Vector2f lineVec = lines[lines.getVertexCount() - 1].position - lines[lines.getVertexCount() - 2].position;
-				sf::Vector2f lineVecPerp = sf::Vector2f(-lineVec.y, lineVec.x);
-				float perpLength = std::sqrt((lineVecPerp.x * lineVecPerp.x) + (lineVecPerp.y * lineVecPerp.y));
-
-				// Converting lineVecPerp to a unit vector
-				lineVecPerp /= perpLength;
-
-				// Mid point of lineVec
-				sf::Vector2f mid = (lines[lines.getVertexCount() - 1].position + lines[lines.getVertexCount() - 2].position) / 2.f;
-
-				connectorTexts.push_back(sf::Text(i.getChoiceText(), *font, 8));
-				connectorTexts.back().setPosition(mid - lineVecPerp * 20.f);
-
-				connectorPriorities.push_back(sf::Text(std::to_string(i.getPriority()), *font, 8));
-				connectorPriorities.back().setPosition(mid + lineVecPerp * 20.f);
+				connectorTexts.push_back(sf::Text(i.getChoiceText(), *font, 12));
+				connectorPriorities.push_back(sf::Text(std::to_string(i.getPriority()), *font, 12));
 				break;
 			}
 		}
@@ -303,21 +293,8 @@ bool NodeView::addConnector(Connector& connector, const sf::Vector2f& lineTarget
 		lines.append(lineTarget);
 		lines[lines.getVertexCount() - 1].color = sf::Color::Cyan;
 
-		sf::Vector2f lineVec = lines[lines.getVertexCount() - 1].position - lines[lines.getVertexCount() - 2].position;
-		sf::Vector2f lineVecPerp = sf::Vector2f(-lineVec.y, lineVec.x);
-		float perpLength = std::sqrt((lineVecPerp.x * lineVecPerp.x) + (lineVecPerp.y * lineVecPerp.y));
-
-		// Converting lineVecPerp to a unit vector
-		lineVecPerp /= perpLength;
-
-		// Mid point of lineVec
-		sf::Vector2f mid = (lines[lines.getVertexCount() - 1].position + lines[lines.getVertexCount() - 2].position) / 2.f;
-
-		connectorTexts.push_back(sf::Text(connector.getChoiceText(), *font, 8));
-		connectorTexts.back().setPosition(mid - lineVecPerp * 20.f);
-
-		connectorPriorities.push_back(sf::Text(std::to_string(connector.getPriority()), *font, 8));
-		connectorPriorities.back().setPosition(mid + lineVecPerp * 20.f);
+		connectorTexts.push_back(sf::Text(connector.getChoiceText(), *font, 12));
+		connectorPriorities.push_back(sf::Text(std::to_string(connector.getPriority()), *font, 12));
 		return true;
 	}
 }

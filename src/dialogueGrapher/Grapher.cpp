@@ -407,7 +407,6 @@ void Grapher::update()
 	// Moving nodes
 	if(selectedNode)
 	{
-		std::cout << scale << std::endl;
 		sf::Vector2f moveVec = inputManager.getMousePosition() - inputManager.getPrevMousePosition();
 		moveVec *= scale;
 		selectedNode->move(moveVec);
@@ -468,7 +467,7 @@ int Grapher::populateGraph(const std::vector<Node*>& nodes)
 
 	// Positioning the nodeViews correctly
 	openSet.push_back(nodeViews.front());
-	sf::Vector2f gap(50, 150);
+	sf::Vector2f gap(150, 300);
 
 	while (!openSet.empty())
 	{
