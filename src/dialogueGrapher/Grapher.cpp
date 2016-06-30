@@ -151,31 +151,6 @@ void Grapher::update()
 		selectedInputBox->setSelected(true);
 	}
 
-	/*if (inputManager.pressedOnce(sf::Mouse::Left))
-	{
-		if (ibox.checkClicked(viewPos))
-			selectedInputBox = &ibox;
-		else
-		{
-			ibox.clear();
-			ibox.setActive(false);
-
-			for (auto i : nodeViews)
-			{
-				selectedInputBox = i->getSelectedInputBox(viewPos);
-
-				if (selectedInputBox)
-				{
-					selectedInputBox->setSelected(true);
-					break;
-				}
-			}
-		}
-
-		if (connEdit != NULL)
-			connEdit->updateSelection(inputManager.getMousePosition());
-	}*/
-
 	while(window.pollEvent(event))
 	{
 		switch(event.type)

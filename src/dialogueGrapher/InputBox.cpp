@@ -6,7 +6,6 @@ InputBox::InputBox(const sf::Vector2f& position, const sf::Vector2f& size, const
 	setOutlineThickness(3);
 	setFillColor(sf::Color::White);
 	setOutlineColor(sf::Color::White);
-	//move(position);
 	setPosition(position);
 
 	text = sf::Text("", font, 20);

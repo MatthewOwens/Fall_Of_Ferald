@@ -99,8 +99,8 @@ void ConnectionEditor::updateSelection(const sf::Vector2f& mousePos)
 
 void ConnectionEditor::render(sf::RenderWindow& window)
 {
-	for (auto i : iboxes)
-		window.draw(i);
+	for (int i = 0; i < iboxes.size(); ++i)
+		iboxes[i].render(window);
 }
 
 ConnectionEditor::~ConnectionEditor()
