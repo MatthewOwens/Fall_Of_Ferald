@@ -45,22 +45,22 @@ Grapher::Grapher()
 
 	// Initilising the buttons
 	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
-	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 290, 100));
+	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 100, 100));
 
 	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["button"],1);
-	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 290, 200));
-
-	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
-	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 290, 300));
+	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 290, 100));
 
 	buttons["n.names"] = new Button(sf::Vector2f(95, 20), colors["button"], 1);
-	buttons["n.names"]->setPosition(sf::Vector2f(window.getSize().x - 150, 200));
+	buttons["n.names"]->setPosition(sf::Vector2f(window.getSize().x - 200, 100));
+
+	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 100, 50));
 
 	buttons["load"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
-	buttons["load"]->setPosition(sf::Vector2f(window.getSize().x - 290, 400));
+	buttons["load"]->setPosition(sf::Vector2f(window.getSize().x - 290, 50));
 
 	buttons["save"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
-	buttons["save"]->setPosition(sf::Vector2f(window.getSize().x - 290, 500));
+	buttons["save"]->setPosition(sf::Vector2f(window.getSize().x - 200, 50));
 
 	// Setting the button text
 	for(auto i : buttons)
@@ -154,6 +154,9 @@ void Grapher::update()
 	{
 		switch(event.type)
 		{
+			case sf::Event::Closed:
+			  exit(0);
+
 			case sf::Event::TextEntered:
 			{
 				if(selectedInputBox)
