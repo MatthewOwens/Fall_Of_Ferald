@@ -14,6 +14,7 @@ Grapher::Grapher()
 	scale = 1.f;
 	selectedNode = NULL;
 	selectedInputBox = NULL;
+	connEdit = NULL;
 	movingView = false;
 	showNodeNames = true;
 
@@ -317,6 +318,13 @@ void Grapher::update()
 						if(i->getGlobalBounds().contains(viewPos))
 						{
 							selectedNode = i;
+
+							if (clock.getElapsedTime().asMilliseconds() < 250)
+								graphBG.setFillColor(sf::Color::Blue);
+							else graphBG.setFillColor(colors["graphBG"]);
+
+							clock.restart();
+
 						}
 					}
 

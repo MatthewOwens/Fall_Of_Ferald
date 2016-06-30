@@ -12,6 +12,7 @@
 #include "NodeView.h"
 #include "InputBox.h"
 #include "FileManager.h"
+#include "ConnectionEditor.h"
 
 // If compiling with cmake & make
 #ifndef _WIN32
@@ -60,5 +61,8 @@ class Grapher
 
 		NodeView* connectingNodes[2];	// Array of pointers for storing the nodes
 										// are to be connected with a new connection
+
+		ConnectionEditor* connEdit;
+		sf::Clock clock;
 };
 #endif//GRAPHER_H
