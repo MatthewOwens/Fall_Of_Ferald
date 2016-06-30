@@ -18,6 +18,8 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
+* Fix text not showing in ConnectionEditor::InputBox
+* Update NodeView::ConnectorTexts and Connector::Priorities on edits
 * Implement Connector deletion
 * Implement module scale flags
 * Implement global scale flags
