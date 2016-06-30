@@ -17,13 +17,17 @@ public:
 	void render(sf::RenderWindow& window);
 	void updateSelection(const sf::Vector2f& mousePos);
 
+	void updateText(int unicode);
+	void cancelEdits();
+	inline bool selectionExists() { return (selectedIndex == -1 ? false : true); }
+private:
+	std::vector<Connector>& conns;
+	const sf::Font& fnt;
+	std::vector<InputBox> iboxes;
+	int selectedIndex = -1;
+
 	void addCharacter(char in);
 	void removeCharacter();
 	void confirmEdits();
-	void cancelEdits();
-private:
-	std::vector<Connector>& conns;
-	std::vector<InputBox> iboxes;
-	int selectedIndex = -1;
 };
 #endif//CONNECTIONEDITOR_H

@@ -35,6 +35,19 @@ class Grapher
 		void render();
 		int populateGraph(const std::vector<Node*>& nodes);
 
+		// Helper functions to clean up the update() method
+		void onLeftClick(sf::Vector2f& viewPos);
+		void onLeftRelease();
+
+		void onMiddleClick(sf::Vector2f& viewPos);
+		void onMiddleRelease(sf::Vector2f& viewPos);
+
+		void onRightClick(sf::Vector2f& viewPos);
+		void onRightRelease();
+
+		void onTextEntered(int unicode);
+		void onMouseScroll(float delta);
+
 		bool close = false;
 		InputState inState = NONE;
 		sf::View graphView;
@@ -57,12 +70,14 @@ class Grapher
 		bool showNodeNames;
 
 		NodeView* selectedNode;
+		NodeView* clickedNode;
 		InputBox* selectedInputBox;
 
 		NodeView* connectingNodes[2];	// Array of pointers for storing the nodes
 										// are to be connected with a new connection
 
 		ConnectionEditor* connEdit;
+		sf::Vector2f connSpawn;
 		sf::Clock clock;
 };
 #endif//GRAPHER_H

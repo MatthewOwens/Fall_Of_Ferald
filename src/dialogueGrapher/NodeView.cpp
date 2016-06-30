@@ -214,11 +214,13 @@ bool NodeView::removeRequired(const sf::Vector2f& mousePos)
 }
 InputBox* NodeView::getSelectedInputBox(const sf::Vector2f& mousePos)
 {
+	InputBox* ret = NULL;
 	if (headerInput.checkClicked(mousePos))
-		return &headerInput;
-	else if (bodyInput.checkClicked(mousePos))
-		return &bodyInput;
-	else return NULL;
+		ret = &headerInput;
+	if (bodyInput.checkClicked(mousePos))
+		ret = &bodyInput;
+
+	return ret;
 }
 
 // Returns the header/body value saved in Node if either input box is selected

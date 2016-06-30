@@ -14,6 +14,7 @@ Grapher::Grapher()
 	scale = 1.f;
 	selectedNode = NULL;
 	selectedInputBox = NULL;
+	clickedNode = NULL;
 	connEdit = NULL;
 	movingView = false;
 	showNodeNames = true;
@@ -26,9 +27,9 @@ Grapher::Grapher()
 
 	// Defining the UI colors
 	colors["button"] = sf::Color(142, 196, 137);
-	colors["buttonHighlight"] = sf::Color(179,80,80);
 	colors["background"] = sf::Color(31,31,31);
 	colors["graphBG"] = sf::Color(43,43,43);
+	colors["buttonHighlight"] = sf::Color(179,80,80);
 
 	moduleName.setString("untitled");
 	moduleName.setFont(font);
@@ -45,27 +46,29 @@ Grapher::Grapher()
 	graphView.reset(sf::FloatRect(0,0,window.getSize().x, window.getSize().y));
 
 	// Initilising the buttons
-	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],1);
+	buttons["m.name"] = new Button(sf::Vector2f(90,20), colors["button"],2);
 	buttons["m.name"]->setPosition(sf::Vector2f(window.getSize().x - 100, 100));
 
-	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["button"],1);
+	buttons["n.node"] = new Button(sf::Vector2f(80,20), colors["button"],2);
 	buttons["n.node"]->setPosition(sf::Vector2f(window.getSize().x - 290, 100));
 
-	buttons["n.names"] = new Button(sf::Vector2f(95, 20), colors["button"], 1);
+	buttons["n.names"] = new Button(sf::Vector2f(95, 20), colors["button"],2);
 	buttons["n.names"]->setPosition(sf::Vector2f(window.getSize().x - 200, 100));
 
-	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["exit"] = new Button(sf::Vector2f(80, 20), colors["button"],2);
 	buttons["exit"]->setPosition(sf::Vector2f(window.getSize().x - 100, 50));
 
-	buttons["load"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["load"] = new Button(sf::Vector2f(80, 20), colors["button"],2);
 	buttons["load"]->setPosition(sf::Vector2f(window.getSize().x - 290, 50));
 
-	buttons["save"] = new Button(sf::Vector2f(80, 20), colors["button"], 1);
+	buttons["save"] = new Button(sf::Vector2f(80, 20), colors["button"],2);
 	buttons["save"]->setPosition(sf::Vector2f(window.getSize().x - 200, 50));
 
 	// Setting the button text
 	for(auto i : buttons)
 		i.second->setText(i.first, font);
+
+	connSpawn = sf::Vector2f(window.getSize().x - 290, 200);
 }
 
 Grapher::~Grapher()
@@ -94,6 +97,10 @@ void Grapher::update()
 {
 	sf::Event event;
 
+	if (selectedNode)
+		window.setTitle("Dialogue Grapher | SELECION");
+	else window.setTitle("Dialogue Grapher | NO SELECTION");
+
 	// Updating our key input
 	inputManager.update(window);
 	sf::Vector2f viewPos = window.mapPixelToCoords((sf::Vector2i)inputManager.getMousePosition(), graphView);
@@ -118,7 +125,19 @@ void Grapher::update()
 			selectedInputBox = NULL;
 		}
 
-		selectedNode = NULL;
+
+		if (connEdit != NULL)
+		{
+			if (connEdit->selectionExists())
+				connEdit->cancelEdits();
+			else
+			{
+				delete connEdit;
+				connEdit = NULL;
+
+				selectedNode = NULL;
+			}
+		}
 	}
 
 	// Tab switching 
@@ -132,12 +151,15 @@ void Grapher::update()
 		selectedInputBox->setSelected(true);
 	}
 
-	if (inputManager.pressedOnce(sf::Mouse::Left))
+	/*if (inputManager.pressedOnce(sf::Mouse::Left))
 	{
 		if (ibox.checkClicked(viewPos))
 			selectedInputBox = &ibox;
 		else
 		{
+			ibox.clear();
+			ibox.setActive(false);
+
 			for (auto i : nodeViews)
 			{
 				selectedInputBox = i->getSelectedInputBox(viewPos);
@@ -149,7 +171,10 @@ void Grapher::update()
 				}
 			}
 		}
-	}
+
+		if (connEdit != NULL)
+			connEdit->updateSelection(inputManager.getMousePosition());
+	}*/
 
 	while(window.pollEvent(event))
 	{
@@ -157,288 +182,44 @@ void Grapher::update()
 		{
 			case sf::Event::Closed:
 			  exit(0);
+			  break;
 
 			case sf::Event::TextEntered:
-			{
-				if(selectedInputBox)
-				{
-					if(event.text.unicode < 128 && event.text.unicode > 31)
-					{
-						selectedInputBox->addCharacter(static_cast<char>(event.text.unicode));
-					}
-					else if(event.text.unicode == 8) //Backspace
-					{
-						selectedInputBox->removeCharacter();
-					}
-					else if(event.text.unicode == 13) //Return
-					{
-						// If there's an InputBox selected
-						if (selectedInputBox)
-						{
-							// If it's the module's inputbox
-							if (ibox.isSelected())
-							{
-								switch (inState)
-								{
-									case NAME:
-									{
-										 moduleName.setString(ibox.getString());
-
-										 int count = 0;
-										 for (auto i : nodeViews)
-										 {
-											 i->setID(moduleName.getString(), count);
-											 count++;
-										 }
-										 break;
-									}
-									case LOAD:
-									{
-										 std::string newName;
-										 if (populateGraph(fileManager.loadDialogue(ibox.getString(), newName)) == 0)
-											 moduleName.setString(newName);
-										 else
-											 std::cerr << "file " << ibox.getString() << " contained no nodes!" << std::endl;
-										 break;
-									}
-									case SAVE:
-									{
-										 std::vector<Node*> nodes;
-										 for (auto i : nodeViews)
-											 nodes.push_back(i->getNode());
-
-										 if (fileManager.saveDialogue(ibox.getString(), moduleName.getString(), nodes))
-											 std::cout << "File saved successfully!" << std::endl;
-
-										 break;
-									}
-								}
-
-								// Clearing the box and InputState
-								ibox.setSelected(false);
-								ibox.setActive(false);
-								ibox.clear();
-								inState = NONE;
-							}
-							else // If it's one of the nodeView input boxes
-							{
-								selectedInputBox->setSelected(false);
-								selectedNode->updateNodeText();
-
-								// Deselecting
-								selectedNode = NULL;
-								selectedInputBox = NULL;
-							}
-						}
-					}
-				}
+				onTextEntered(event.text.unicode);
 				break;
-			}
 
 			case sf::Event::MouseWheelScrolled:
-				if (event.mouseWheelScroll.delta < 0)
-				{
-					scaleFactor = 0.90f;
-					scale *= scaleFactor;
-				}
-				else if (event.mouseWheelScroll.delta > 0)
-				{
-					scaleFactor = 1.10f;
-					scale *= scaleFactor;
-				}
-				else
-				{
-					scaleFactor = 1.f;
-				}
-
-				graphView.zoom(scaleFactor);
+				onMouseScroll(event.mouseWheelScroll.delta);
 				break;
 			
 			case sf::Event::MouseButtonReleased:
 			{
-				if(event.mouseButton.button == sf::Mouse::Left)
-				{
-					if (!selectedInputBox)
-						selectedNode = NULL;
-
-					movingView = false;
-
-					for (auto i : buttons)
-						i.second->setColor(colors["button"]);
-				}
-				else if (event.mouseButton.button == sf::Mouse::Middle)
-				{
-					// If we're making a connection
-					if (connectingNodes[0] != NULL)
-					{
-						for (auto i : nodeViews)
-						{
-							if (i->getGlobalBounds().contains(viewPos)
-							 && i != connectingNodes[0])
-							{
-								connectingNodes[1] = i;
-
-								std::cout << "connecting " << connectingNodes[0]->getID();
-								std::cout << " and " << connectingNodes[1]->getID() << std::endl;
-								break;
-							}
-						}
-
-						if (connectingNodes[1] == NULL)
-							std::cout << "No node to connect to!" << std::endl;
-						else
-						{
-							Connector connection(connectingNodes[0]->getNode(), connectingNodes[1]->getNode());
-
-							if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
-								std::cout << "Flags are under construction!" << std::endl;
-							else
-							{
-								if (connectingNodes[0]->addConnector(connection, connectingNodes[1]->getInletPos()))
-									std::cout << "Connection completed successfully!" << std::endl;
-								else std::cout << "Connection failed!" << std::endl;
-							}
-						}
-
-						// Clearing the connections
-						connectingNodes[0] = NULL;
-						connectingNodes[1] = NULL;
-					}
-				}
+			   if (event.mouseButton.button == sf::Mouse::Left)
+				   onLeftRelease();
+			   else if (event.mouseButton.button == sf::Mouse::Middle)
+				   onMiddleRelease(viewPos);
 				break;
 			}
 
 			case sf::Event::MouseButtonPressed:
 			{
 				if(event.mouseButton.button == sf::Mouse::Left)
-				{
-					// Selecting a node
-					for(auto i : nodeViews)
-					{
-						if(i->getGlobalBounds().contains(viewPos))
-						{
-							selectedNode = i;
-
-							if (clock.getElapsedTime().asMilliseconds() < 250)
-								graphBG.setFillColor(sf::Color::Blue);
-							else graphBG.setFillColor(colors["graphBG"]);
-
-							clock.restart();
-
-						}
-					}
-
-					if(!selectedNode)
-					{
-						if(!graphBG.getGlobalBounds().contains(viewPos))
-							movingView = true;
-					}
-
-					// Checking if any of the buttons have been clicked
-					for(auto i : buttons)
-					{
-						i.second->update(&inputManager);
-
-						if(i.second->isPressed())
-						{
-							i.second->setColor(colors["background"]);
-
-							if (i.first == "exit")
-								exit(0);
-
-							// Flagging the input box as selected if needed
-							if(i.first == "m.name")
-							{
-								ibox.setSelected(true);
-								ibox.setActive(true);
-								selectedInputBox = &ibox;
-								inState = NAME;
-							}
-
-							if (i.first == "n.node")
-							{
-								sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50,50), graphView);
-								nodeViews.push_back(new NodeView(moduleName.getString(),
-									nodeCount, spawnPos, font));
-
-								// Tracking the total nodes created to prevent repeated IDs
-								nodeCount++;
-							}
-
-							if (i.first == "load")
-							{
-								ibox.setSelected(true);
-								ibox.setActive(true);
-								selectedInputBox = &ibox;
-								inState = LOAD;
-							}
-
-							if (i.first == "save")
-							{
-								ibox.setSelected(true);
-								ibox.setActive(true);
-								selectedInputBox = &ibox;
-								inState = SAVE;
-							}
-
-							if (i.first == "n.names")
-								showNodeNames = !showNodeNames;
-						}
-
-					}
-				}
-				else if(event.mouseButton.button == sf::Mouse::Right)
-				{
-					for(auto i = nodeViews.begin(); i != nodeViews.end(); )
-					{
-						if((*i)->removeRequired(viewPos))
-						{
-							// Ensuring that nodes connected to i are disconnected cleanly
-							for (auto j : nodeViews)
-							{
-								if (j != *i)
-								{
-									j->removeConnector(*i);
-								}
-							}
-
-							delete *i;
-							*i = NULL;
-
-							i = nodeViews.erase(i);
-						}
-						else ++i;
-					}
-				}
+					onLeftClick(viewPos);
+				else if (event.mouseButton.button == sf::Mouse::Right)
+					onRightClick(viewPos);
 				else if (event.mouseButton.button == sf::Mouse::Middle)
-				{
-					connectingNodes[0] = NULL;
-
-					for (auto i : nodeViews)
-					{
-						if (i->getGlobalBounds().contains(viewPos))
-						{
-							std::cout << "Node Connection started" << std::endl;
-							connectingNodes[0] = i;
-							break;
-						}
-					}
-
-					if (connectingNodes[0] == NULL)
-						std::cout << "No nodeview found!" << std::endl;
-				}
+					onMiddleClick(viewPos);
 			}
 			break;
 		}
 	}
 
 	// Moving nodes
-	if(selectedNode)
+	if(clickedNode)
 	{
 		sf::Vector2f moveVec = inputManager.getMousePosition() - inputManager.getPrevMousePosition();
 		moveVec *= scale;
-		selectedNode->move(moveVec);
-		//selectedNode->move(inputManager.getMousePosition() - inputManager.getPrevMousePosition());
+		clickedNode->move(moveVec);
 	}
 	else if(movingView)
 	{
@@ -447,6 +228,8 @@ void Grapher::update()
 
 	for(auto i : buttons)
 	{
+		i.second->update(&inputManager);
+
 		if(i.second->isMouseOver())
 			i.second->setHighlight(colors["buttonHighlight"]);
 		else i.second->clearHighlight();
@@ -547,7 +330,318 @@ void Grapher::render()
 	window.draw(moduleName);
 	ibox.render(window);
 
+	if (connEdit != NULL)
+		connEdit->render(window);
+
 	for(auto i : buttons)
 		i.second->draw(&window);
 	window.display();
+}
+
+void Grapher::onTextEntered(int unicode)
+{
+	if (selectedInputBox)
+	{
+		if (unicode < 128 && unicode > 31)
+		{
+			selectedInputBox->addCharacter(static_cast<char>(unicode));
+		}
+		else if (unicode == 8) //Backspace
+		{
+			selectedInputBox->removeCharacter();
+		}
+		else if (unicode == 13) //Return
+		{
+			// If there's an InputBox selected
+			if (selectedInputBox)
+			{
+				// If it's the module's inputbox
+				if (ibox.isSelected())
+				{
+					switch (inState)
+					{
+						case NAME:
+						{
+									 moduleName.setString(ibox.getString());
+
+									 int count = 0;
+									 for (auto i : nodeViews)
+									 {
+										 i->setID(moduleName.getString(), count);
+										 count++;
+									 }
+									 break;
+						}
+						case LOAD:
+						{
+									 std::string newName;
+									 if (populateGraph(fileManager.loadDialogue(ibox.getString(), newName)) == 0)
+										 moduleName.setString(newName);
+									 else
+										 std::cerr << "file " << ibox.getString() << " contained no nodes!" << std::endl;
+									 break;
+						}
+						case SAVE:
+						{
+									 std::vector<Node*> nodes;
+									 for (auto i : nodeViews)
+										 nodes.push_back(i->getNode());
+
+									 if (fileManager.saveDialogue(ibox.getString(), moduleName.getString(), nodes))
+										 std::cout << "File saved successfully!" << std::endl;
+
+									 break;
+						}
+					}
+
+					// Clearing the box and InputState
+					ibox.setSelected(false);
+					ibox.setActive(false);
+					ibox.clear();
+					inState = NONE;
+				}
+				else if (connEdit == NULL)// If it's one of the nodeView input boxes
+				{
+					selectedInputBox->setSelected(false);
+					selectedNode->updateNodeText();
+
+					// Deselecting
+					selectedNode = NULL;
+					selectedInputBox = NULL;
+
+					if (connEdit)
+					{
+						delete connEdit;
+						connEdit = NULL;
+					}
+				}
+			}
+		}
+	}
+	else if (connEdit)
+		connEdit->updateText(unicode);
+}
+void Grapher::onMouseScroll(float delta)
+{
+	// TODO: CHECK 
+	if (delta < 0)
+	{
+		scaleFactor = 0.90f;
+		scale *= scaleFactor;
+	}
+	else if (delta > 0)
+	{
+		scaleFactor = 1.10f;
+		scale *= scaleFactor;
+	}
+	else
+	{
+		scaleFactor = 1.f;
+	}
+
+	graphView.zoom(scaleFactor);
+}
+
+void Grapher::onLeftRelease()
+{
+	clickedNode = NULL;
+	movingView = false;
+
+	for (auto i : buttons)
+		i.second->setColor(colors["button"]);
+}
+
+void Grapher::onMiddleRelease(sf::Vector2f& viewPos)
+{
+	// If we're making a connection
+	if (connectingNodes[0] != NULL)
+	{
+		for (auto i : nodeViews)
+		{
+			if (i->getGlobalBounds().contains(viewPos)
+				&& i != connectingNodes[0])
+			{
+				connectingNodes[1] = i;
+
+				std::cout << "connecting " << connectingNodes[0]->getID();
+				std::cout << " and " << connectingNodes[1]->getID() << std::endl;
+				break;
+			}
+		}
+
+		if (connectingNodes[1] == NULL)
+			std::cout << "No node to connect to!" << std::endl;
+		else
+		{
+			Connector connection(connectingNodes[0]->getNode(), connectingNodes[1]->getNode());
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+				std::cout << "Flags are under construction!" << std::endl;
+			else
+			{
+				if (connectingNodes[0]->addConnector(connection, connectingNodes[1]->getInletPos()))
+					std::cout << "Connection completed successfully!" << std::endl;
+				else std::cout << "Connection failed!" << std::endl;
+			}
+		}
+
+		// Clearing the connections
+		connectingNodes[0] = NULL;
+		connectingNodes[1] = NULL;
+	}
+}
+
+void Grapher::onLeftClick(sf::Vector2f& viewPos)
+{
+	for (auto i : nodeViews)
+	{
+		selectedInputBox = i->getSelectedInputBox(viewPos);
+	}
+
+	// If we've clicked in the graph
+	if (graphBG.getGlobalBounds().contains(inputManager.getMousePosition()))
+	{
+		if (connEdit != NULL)
+			connEdit->updateSelection(inputManager.getMousePosition());
+
+		if (ibox.checkClicked(viewPos))
+			selectedInputBox = &ibox;
+		else
+		{
+			ibox.clear();
+			ibox.setActive(false);
+		}
+	}
+	else
+	{
+
+		selectedNode = NULL;
+		if (connEdit)
+		{
+			delete connEdit;
+			connEdit = NULL;
+		}
+
+		// Selecting a node
+		for (auto i : nodeViews)
+		{
+			if (i->getGlobalBounds().contains(viewPos))
+			{
+				if (clock.getElapsedTime().asMilliseconds() < 250)
+					selectedNode = i;
+				else
+					clickedNode = i;
+			}
+		}
+
+		// Node double clicked
+		if (clock.getElapsedTime().asMilliseconds() < 250 && selectedNode != NULL)
+		{
+			if (selectedNode != NULL)
+				connEdit = new ConnectionEditor(selectedNode->getNode()->getConnections(), connSpawn, font);
+		}
+	}
+	clock.restart();
+
+	if (!selectedNode)
+	{
+		if (!graphBG.getGlobalBounds().contains(viewPos))
+			movingView = true;
+	}
+
+	// Checking if any of the buttons have been clicked
+	for (auto i : buttons)
+	{
+		i.second->update(&inputManager);
+
+		if (i.second->isPressed())
+		{
+			i.second->setColor(colors["background"]);
+
+			if (i.first == "exit")
+				exit(0);
+
+			// Flagging the input box as selected if needed
+			if (i.first == "m.name")
+			{
+				ibox.setSelected(true);
+				ibox.setActive(true);
+				selectedInputBox = &ibox;
+				inState = NAME;
+			}
+
+			if (i.first == "n.node")
+			{
+				sf::Vector2f spawnPos = window.mapPixelToCoords(sf::Vector2i(50, 50), graphView);
+				nodeViews.push_back(new NodeView(moduleName.getString(),
+					nodeCount, spawnPos, font));
+
+				// Tracking the total nodes created to prevent repeated IDs
+				nodeCount++;
+			}
+
+			if (i.first == "load")
+			{
+				ibox.setSelected(true);
+				ibox.setActive(true);
+				selectedInputBox = &ibox;
+				inState = LOAD;
+			}
+
+			if (i.first == "save")
+			{
+				ibox.setSelected(true);
+				ibox.setActive(true);
+				selectedInputBox = &ibox;
+				inState = SAVE;
+			}
+
+			if (i.first == "n.names")
+				showNodeNames = !showNodeNames;
+		}
+
+	}
+}
+
+void Grapher::onRightClick(sf::Vector2f& viewPos)
+{
+
+	for (auto i = nodeViews.begin(); i != nodeViews.end();)
+	{
+		if ((*i)->removeRequired(viewPos))
+		{
+			// Ensuring that nodes connected to i are disconnected cleanly
+			for (auto j : nodeViews)
+			{
+				if (j != *i)
+				{
+					j->removeConnector(*i);
+				}
+			}
+
+			delete *i;
+			*i = NULL;
+
+			i = nodeViews.erase(i);
+		}
+		else ++i;
+	}
+}
+
+void Grapher::onMiddleClick(sf::Vector2f& viewPos)
+{
+	connectingNodes[0] = NULL;
+
+	for (auto i : nodeViews)
+	{
+		if (i->getGlobalBounds().contains(viewPos))
+		{
+			std::cout << "Node Connection started" << std::endl;
+			connectingNodes[0] = i;
+			break;
+		}
+	}
+
+	if (connectingNodes[0] == NULL)
+		std::cout << "No nodeview found!" << std::endl;
 }

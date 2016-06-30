@@ -1,7 +1,7 @@
 #include "ConnectionEditor.h"
 
 ConnectionEditor::ConnectionEditor(std::vector<Connector>& connections, sf::Vector2f spawnPos, const sf::Font& font)
-:conns(connections)
+:conns(connections), fnt(font)
 {
 	sf::Vector2f stringBoxSize = sf::Vector2f(245, 25);
 	sf::Vector2f prioBoxSize = sf::Vector2f(25, 25);
@@ -25,6 +25,16 @@ ConnectionEditor::ConnectionEditor(std::vector<Connector>& connections, sf::Vect
 	selectedIndex = -1;
 }
 
+void ConnectionEditor::updateText(int unicode)
+{
+	if (unicode < 128 && unicode > 31)
+		addCharacter(static_cast<char>(unicode));
+	else if (unicode == 8) // backspace
+		removeCharacter();
+	else if (unicode == 13) // return
+		confirmEdits();
+}
+
 void ConnectionEditor::addCharacter(char in)
 {
 	if (selectedIndex == -1)
@@ -44,21 +54,34 @@ void ConnectionEditor::confirmEdits()
 {
 	if (selectedIndex == -1)
 		return;
+	else
+	{
+		if (selectedIndex % 2 == 0)	// string text box
+			conns[selectedIndex / 2].setChoiceText(iboxes[selectedIndex].getString());
+		else	// priority text box
+			conns[selectedIndex / 2].setPriority(std::stoi(iboxes[selectedIndex].getString()));
 
-	else if (selectedIndex % 2 == 0)	// string text box
-		conns[selectedIndex].setChoiceText(iboxes[selectedIndex].getString());
-	else	// priority text box
-		conns[selectedIndex / 2].setPriority(std::stoi(iboxes[selectedIndex].getString()));
+		iboxes[selectedIndex].setSelected(false);
+	}
+
+	selectedIndex = -1;
 }
 
 void ConnectionEditor::cancelEdits()
 {
 	if (selectedIndex == -1)
 		return;
-	else if (selectedIndex % 2 == 0)	// string text box
-		iboxes[selectedIndex].setString(conns[selectedIndex].getChoiceText());
-	else	// priority text box
-		iboxes[selectedIndex].setString(std::to_string(conns[selectedIndex].getPriority()));
+	else
+	{
+		if (selectedIndex % 2 == 0)	// string text box
+			iboxes[selectedIndex].setString(conns[selectedIndex / 2].getChoiceText());
+		else	// priority text box
+			iboxes[selectedIndex].setString(std::to_string(conns[selectedIndex / 2].getPriority()));
+
+		iboxes[selectedIndex].setSelected(false);
+	}
+
+	selectedIndex = -1;
 }
 
 void ConnectionEditor::updateSelection(const sf::Vector2f& mousePos)
