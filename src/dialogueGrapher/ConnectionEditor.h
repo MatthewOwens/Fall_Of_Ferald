@@ -5,13 +5,14 @@
 #include <SFML/Graphics/Font.hpp>
 #include "Connector.h"
 #include "InputBox.h"
+#include "NodeView.h"
 #include <iostream>
 #include <vector>
 
 class ConnectionEditor
 {
 public:
-	ConnectionEditor(std::vector<Connector>& connections, sf::Vector2f spawnPos, const sf::Font& font);
+	ConnectionEditor(NodeView* target, sf::Vector2f spawnPos, const sf::Font& font);
 	~ConnectionEditor();
 
 	void render(sf::RenderWindow& window);
@@ -22,7 +23,9 @@ public:
 	inline bool selectionExists() { return (selectedIndex == -1 ? false : true); }
 private:
 	std::vector<Connector>& conns;
-	const sf::Font& fnt;
+	std::vector<sf::Text>& prioTexts;
+	std::vector<sf::Text>& choiceTexts;
+
 	std::vector<InputBox> iboxes;
 	int selectedIndex = -1;
 

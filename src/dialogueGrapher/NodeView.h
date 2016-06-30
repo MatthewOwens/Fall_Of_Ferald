@@ -40,6 +40,9 @@ class NodeView
 		inline const sf::Vector2f& getOutletPos() { return circles[1].getPosition(); }
 		bool addConnector(Connector& connector, const sf::Vector2f& lineTarget);
 		void removeConnector(NodeView* target);
+
+		inline std::vector<sf::Text>& getPrioTexts() { return connectorPriorities; }
+		inline std::vector<sf::Text>& getChoiceTexts() { return connectorTexts; }
 	private:
 		// Enum for accessing the text and rect arrays
 		enum {ID, HEADER, BODY};

@@ -513,7 +513,7 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 		if (clock.getElapsedTime().asMilliseconds() < 250 && selectedNode != NULL)
 		{
 			if (selectedNode != NULL)
-				connEdit = new ConnectionEditor(selectedNode->getNode()->getConnections(), connSpawn, font);
+				connEdit = new ConnectionEditor(selectedNode, connSpawn, font);
 		}
 	}
 	clock.restart();

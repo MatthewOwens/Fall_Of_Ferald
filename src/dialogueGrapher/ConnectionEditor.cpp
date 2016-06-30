@@ -1,7 +1,9 @@
 #include "ConnectionEditor.h"
 
-ConnectionEditor::ConnectionEditor(std::vector<Connector>& connections, sf::Vector2f spawnPos, const sf::Font& font)
-:conns(connections), fnt(font)
+ConnectionEditor::ConnectionEditor(NodeView* target, sf::Vector2f spawnPos, const sf::Font& font)
+:conns(target->getNode()->getConnections()),
+ prioTexts(target->getPrioTexts()),
+ choiceTexts(target->getChoiceTexts())
 {
 	sf::Vector2f stringBoxSize = sf::Vector2f(245, 25);
 	sf::Vector2f prioBoxSize = sf::Vector2f(25, 25);
@@ -57,9 +59,25 @@ void ConnectionEditor::confirmEdits()
 	else
 	{
 		if (selectedIndex % 2 == 0)	// string text box
+		{
 			conns[selectedIndex / 2].setChoiceText(iboxes[selectedIndex].getString());
+			choiceTexts[selectedIndex / 2].setString(iboxes[selectedIndex].getString());
+		}
 		else	// priority text box
-			conns[selectedIndex / 2].setPriority(std::stoi(iboxes[selectedIndex].getString()));
+		{
+			/*if (iboxes[selectedIndex].getString().length() == 0)
+				iboxes[selectedIndex].setString("-1");*/
+			try
+			{
+				conns[selectedIndex / 2].setPriority(std::stoi(iboxes[selectedIndex].getString()));
+				prioTexts[selectedIndex / 2].setString(iboxes[selectedIndex].getString());
+			}
+			catch (...)
+			{
+				std::cerr << "Invalid argument - please enter a number" << std::endl;
+				iboxes[selectedIndex].setString(std::to_string(conns[selectedIndex / 2].getPriority()));
+			}
+		}
 
 		iboxes[selectedIndex].setSelected(false);
 	}
@@ -86,14 +104,27 @@ void ConnectionEditor::cancelEdits()
 
 void ConnectionEditor::updateSelection(const sf::Vector2f& mousePos)
 {
-	selectedIndex = -1;
+	//selectedIndex = -1;
+	bool selected = false;
 
 	for (int i = 0; i < iboxes.size(); ++i)
 	{
 		if (iboxes[i].checkClicked(mousePos))
 		{
+			if (selectedIndex != -1)
+				confirmEdits();
+
 			selectedIndex = i;
+			selected = true;
 		}
+	}
+
+	if (!selected)
+	{
+		if (selectedIndex != -1)
+			cancelEdits();
+
+		selectedIndex = -1;
 	}
 }
 
