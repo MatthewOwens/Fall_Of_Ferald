@@ -16,6 +16,7 @@ Grapher::Grapher()
 	selectedInputBox = NULL;
 	clickedNode = NULL;
 	connEdit = NULL;
+	flagEdit = NULL;
 	movingView = false;
 	showNodeNames = true;
 
@@ -79,6 +80,18 @@ Grapher::~Grapher()
 	{
 		delete i;
 		i = NULL;
+	}
+
+	if (connEdit != NULL)
+	{
+		delete connEdit;
+		connEdit = NULL;
+	}
+
+	if (flagEdit != NULL)
+	{
+		delete flagEdit;
+		flagEdit = NULL;
 	}
 }
 
@@ -310,6 +323,9 @@ void Grapher::render()
 	if (connEdit != NULL)
 		connEdit->render(window);
 
+	if (flagEdit != NULL)
+		flagEdit->render(window);
+
 	for(auto i : buttons)
 		i.second->draw(&window);
 	window.display();
@@ -479,7 +495,16 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 	if (graphBG.getGlobalBounds().contains(inputManager.getMousePosition()))
 	{
 		if (connEdit != NULL)
-			connEdit->updateSelection(inputManager.getMousePosition());
+		{
+			int sel = connEdit->updateSelection(inputManager);
+			if (sel != -1)
+			{
+				sf::Vector2f size(window.getSize().x - graphBG.getSize().x, window.getSize().y);
+
+				flagEdit = new FlagEditor(selectedNode->getNode()->getConnections()[sel],
+				lFlags, gFlags, size, font);
+			}
+		}
 
 		if (ibox.checkClicked(viewPos))
 			selectedInputBox = &ibox;

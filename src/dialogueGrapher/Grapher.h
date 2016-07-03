@@ -12,6 +12,7 @@
 #include "NodeView.h"
 #include "InputBox.h"
 #include "FileManager.h"
+#include "FlagEditor.h"
 #include "ConnectionEditor.h"
 
 // If compiling with cmake & make
@@ -74,6 +75,9 @@ class Grapher
 		bool movingView;
 		bool showNodeNames;
 
+		std::map<std::string, bool> lFlags;
+		std::map<std::string, bool> gFlags;
+
 		NodeView* selectedNode;
 		NodeView* clickedNode;
 		InputBox* selectedInputBox;
@@ -81,6 +85,7 @@ class Grapher
 		NodeView* connectingNodes[2];	// Array of pointers for storing the nodes
 										// are to be connected with a new connection
 
+		FlagEditor* flagEdit;
 		ConnectionEditor* connEdit;
 		sf::Vector2f connSpawn;
 		sf::Clock clock;

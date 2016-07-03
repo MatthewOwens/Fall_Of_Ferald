@@ -106,10 +106,11 @@ void ConnectionEditor::cancelEdits()
 	selectedIndex = -1;
 }
 
-void ConnectionEditor::updateSelection(const sf::Vector2f& mousePos)
+int ConnectionEditor::updateSelection(InputManager& inputManager)
 {
 	//selectedIndex = -1;
 	bool selected = false;
+	const sf::Vector2f& mousePos = inputManager.getMousePosition();
 
 	for (int i = 0; i < iboxes.size(); ++i)
 	{
@@ -130,6 +131,21 @@ void ConnectionEditor::updateSelection(const sf::Vector2f& mousePos)
 
 		selectedIndex = -1;
 	}
+
+	int ret = -1;
+	for (int i = 0; i< flagButtons.size(); ++i)
+	{
+		flagButtons[i]->update(&inputManager);
+
+		if (flagButtons[i]->isPressed())
+		{
+			flagButtons[i]->setHighlight(sf::Color::Red);
+			ret = i;
+		}
+		else flagButtons[i]->clearHighlight();
+	}
+
+	return ret;
 }
 
 void ConnectionEditor::render(sf::RenderWindow& window)

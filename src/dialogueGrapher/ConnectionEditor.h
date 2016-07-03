@@ -11,8 +11,10 @@
 
 #ifndef _WIN32
 #include "Button.h"
+#include "InputManager.h"
 #else
 #include "../game/Button.h"
+#include "../game/InputManager.h"
 #endif
 
 class ConnectionEditor
@@ -22,7 +24,9 @@ public:
 	~ConnectionEditor();
 
 	void render(sf::RenderWindow& window);
-	void updateSelection(const sf::Vector2f& mousePos);
+
+	// Returns -1 if no flag needs editing, index of the connection that needs editing otherwise
+	int updateSelection(InputManager& inputManager);
 
 	void updateText(int unicode);
 	void cancelEdits();
