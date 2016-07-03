@@ -18,10 +18,11 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Fix text not showing in ConnectionEditor::InputBox
-* Update NodeView::ConnectorTexts and Connector::Priorities on edits
+* Fix sf::Text positions when adding new flags to connectors
+* Fix sf::Text positions being changed prematurely when adding flags to connectors
+* Add triggered flags to JSON tree
+* Rename flags array to requiredFlags in JSON tree
 * Implement Connector deletion
 * Implement module scale flags
 * Implement global scale flags
-* Implement Connector flag editing
 * Implement wxWidgets to handle file dialogues
