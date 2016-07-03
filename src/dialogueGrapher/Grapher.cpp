@@ -358,6 +358,9 @@ void Grapher::onTextEntered(int unicode)
 				// If it's the module's inputbox
 				if (ibox.isSelected())
 				{
+					if (flagEdit != NULL)
+						flagEdit->getString(ibox.getString());
+
 					switch (inState)
 					{
 						case NAME:
@@ -395,8 +398,19 @@ void Grapher::onTextEntered(int unicode)
 					}
 
 					// Clearing the box and InputState
-					ibox.setSelected(false);
-					ibox.setActive(false);
+					if (flagEdit != NULL)
+					{
+						if (!flagEdit->gettingText())
+						{
+							ibox.setSelected(false);
+							ibox.setActive(false);
+						}
+					}
+					else
+					{
+						ibox.setSelected(false);
+						ibox.setActive(false);
+					}
 					ibox.clear();
 					inState = NONE;
 				}
@@ -534,7 +548,12 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 		}
 		else
 		{
-			flagEdit->checkButtons(&inputManager);
+			if (flagEdit->checkButtons(&inputManager))
+			{
+				selectedInputBox = &ibox;
+				ibox.setActive(true);
+				ibox.setSelected(true);
+			}
 			flagEdit->checkText(inputManager.getMousePosition());
 		}
 

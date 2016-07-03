@@ -21,12 +21,15 @@ public:
 
 	~FlagEditor();
 	void render(sf::RenderWindow& window);
-	void checkButtons(InputManager* inputManager);
+	bool checkButtons(InputManager* inputManager);
 	void checkText(const sf::Vector2f& mousePos);
+	void getString(std::string str);
+	inline bool gettingText() { return (inStrings[0] == "" ? false : true); }
 private:
 	enum TextBlocks {LOCAL = 0, GLOBAL, REQUIRED, TRIGGERED};
 
 	Connector& conn;	// The connection who's flags we're going to be editing
+	const sf::Font& fnt;
 	std::map<std::string, bool> &localFlags;
 	std::map<std::string, bool> &globalFlags;
 
@@ -38,10 +41,13 @@ private:
 	sf::Text breakTexts[4];
 	Button* buttons[4];
 	const unsigned int charSize = 20;
+	int clickedButton;
+	std::string inStrings[2];
 
 	sf::RectangleShape rect;
 
 	void moveTextBlock(TextBlocks block, float moveVal);
 	void clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec);
+	void addText(std::vector<sf::Text>& vec);
 };
 #endif//FLAGEDITOR_H

@@ -1,12 +1,14 @@
 #include "FlagEditor.h"
+#include <locale>
 
 FlagEditor::FlagEditor(Connector& connection, std::map<std::string, bool>& local,
-						std::map<std::string, bool>& global, sf::Vector2f availableSize,
-						const sf::Font& font, const sf::Texture& buttonTexture)
-:conn(connection),
-localFlags(local),
-globalFlags(global),
-rect(sf::RectangleShape(availableSize))
+	std::map<std::string, bool>& global, sf::Vector2f availableSize,
+	const sf::Font& font, const sf::Texture& buttonTexture)
+	:conn(connection),
+	localFlags(local),
+	globalFlags(global),
+	rect(sf::RectangleShape(availableSize)),
+	fnt(font)
 {
 	sf::Vector2f textSpawn = sf::Vector2f(50, 50);
 	sf::Vector2f padding = sf::Vector2f(20, 0);
@@ -15,12 +17,15 @@ rect(sf::RectangleShape(availableSize))
 	rect.setFillColor(sf::Color(29,29,29));
 	float textHeight = 0.f;
 	float textLength = 0.f;
+	clickedButton = -1;
 
 	breakTexts[LOCAL] = sf::Text("Local Flags:", font, charSize);
 	breakTexts[GLOBAL] = sf::Text("Global Flags:", font, charSize);
 	breakTexts[REQUIRED] = sf::Text("Required Flags:", font, charSize);
 	breakTexts[TRIGGERED] = sf::Text("Triggered Flags:", font, charSize);
 
+	inStrings[0] = "";
+	inStrings[1] = "";
 
 	breakTexts[LOCAL].setPosition(40, 40);
 
@@ -128,18 +133,23 @@ void FlagEditor::moveTextBlock(TextBlocks block, float moveVal)
 	}
 }
 
-void FlagEditor::checkButtons(InputManager* inputManager)
+// Returns true if a button was pressed, false otherwise
+bool FlagEditor::checkButtons(InputManager* inputManager)
 {
-	int sel = -1;
+	clickedButton = -1;
 	for (int i = 0; i < 4; ++i)
 	{
 		buttons[i]->update(inputManager);
 		if (buttons[i]->isPressed())
-			sel = i;
+			clickedButton = i;
 	}
 
-	if (sel > -1 && sel < 3)
-		moveTextBlock((TextBlocks)(sel + 1), 50.f);
+	if (clickedButton > -1 && clickedButton < 3)
+	{
+		moveTextBlock((TextBlocks)(clickedButton + 1), 50.f);
+		return true;
+	}
+	else return false;
 }
 
 void FlagEditor::checkText(const sf::Vector2f& mousePos)
@@ -180,6 +190,71 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 			vec[i].setColor(color);
 		}
 	}
+}
+
+void FlagEditor::getString(std::string str)
+{
+	bool flagVal = false;
+
+	if (inStrings[0] == "")
+	{
+		inStrings[0] = str;
+		return;
+	}
+	else
+	{
+		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+
+		if (str == "false")
+		{
+			inStrings[1] = str;
+			flagVal = false;
+		}
+		else if (str == "true")
+		{
+			inStrings[1] = str;
+			flagVal = true;
+		}
+		else
+		{
+			inStrings[0] = "";
+			inStrings[1] = "";
+			return;
+		}
+	}
+	
+	// Both inStrings populated with valid values
+	conn.addFlag(inStrings[0], flagVal);
+
+	if ((TextBlocks)clickedButton == REQUIRED)
+	{
+		addText(requiredTexts);
+	}
+	else if ((TextBlocks)clickedButton == TRIGGERED)
+	{
+		addText(triggeredTexts);
+	}
+
+	inStrings[0] = "";
+	inStrings[1] = "";
+}
+
+void FlagEditor::addText(std::vector<sf::Text>& vec)
+{
+	auto ref = breakTexts[clickedButton];
+	int count = vec.size();
+
+	vec.push_back(sf::Text(inStrings[0], fnt, charSize));
+	vec.back().setPosition(ref.getPosition());
+	if (count != 0)
+		vec.back().move(10, vec[count-1].getGlobalBounds().height + 20);
+	else vec.back().move(10, ref.getGlobalBounds().height + 20);
+
+	vec.push_back(sf::Text(inStrings[1], fnt, charSize));
+	vec.back().setPosition(ref.getPosition());
+	if (count != 0)
+		vec.back().move(10, vec[count-1].getGlobalBounds().height + 20);
+	else vec.back().move(10, ref.getGlobalBounds().height + 20);
 }
 
 void FlagEditor::render(sf::RenderWindow& window)
