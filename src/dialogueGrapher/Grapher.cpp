@@ -355,35 +355,35 @@ void Grapher::onTextEntered(int unicode)
 					{
 						case NAME:
 						{
-									 moduleName.setString(ibox.getString());
+							 moduleName.setString(ibox.getString());
 
-									 int count = 0;
-									 for (auto i : nodeViews)
-									 {
-										 i->setID(moduleName.getString(), count);
-										 count++;
-									 }
-									 break;
+							 int count = 0;
+							 for (auto i : nodeViews)
+							 {
+								 i->setID(moduleName.getString(), count);
+								 count++;
+							 }
+							 break;
 						}
 						case LOAD:
 						{
-									 std::string newName;
-									 if (populateGraph(fileManager.loadDialogue(ibox.getString(), newName)) == 0)
-										 moduleName.setString(newName);
-									 else
-										 std::cerr << "file " << ibox.getString() << " contained no nodes!" << std::endl;
-									 break;
+							 std::string newName;
+							 if (populateGraph(fileManager.loadDialogue(ibox.getString(), newName)) == 0)
+								 moduleName.setString(newName);
+							 else
+								 std::cerr << "file " << ibox.getString() << " contained no nodes!" << std::endl;
+							 break;
 						}
 						case SAVE:
 						{
-									 std::vector<Node*> nodes;
-									 for (auto i : nodeViews)
-										 nodes.push_back(i->getNode());
+							 std::vector<Node*> nodes;
+							 for (auto i : nodeViews)
+								 nodes.push_back(i->getNode());
 
-									 if (fileManager.saveDialogue(ibox.getString(), moduleName.getString(), nodes))
-										 std::cout << "File saved successfully!" << std::endl;
+							 if (fileManager.saveDialogue(ibox.getString(), moduleName.getString(), nodes))
+								 std::cout << "File saved successfully!" << std::endl;
 
-									 break;
+							 break;
 						}
 					}
 
