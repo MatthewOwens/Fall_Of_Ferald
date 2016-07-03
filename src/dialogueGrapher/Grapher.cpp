@@ -22,6 +22,8 @@ Grapher::Grapher()
 	for (int i = 0; i < 2; ++i)
 		connectingNodes[i] = NULL;
 
+	imageManager.loadImage("assets/images/interface/flag.png", "flag");
+
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 290,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	ibox.setActive(false);
 
@@ -513,7 +515,7 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 		if (clock.getElapsedTime().asMilliseconds() < 250 && selectedNode != NULL)
 		{
 			if (selectedNode != NULL)
-				connEdit = new ConnectionEditor(selectedNode, connSpawn, font);
+				connEdit = new ConnectionEditor(selectedNode, connSpawn, font, imageManager.getTexture("flag"));
 		}
 	}
 	clock.restart();

@@ -9,10 +9,16 @@
 #include <iostream>
 #include <vector>
 
+#ifndef _WIN32
+#include "Button.h"
+#else
+#include "../game/Button.h"
+#endif
+
 class ConnectionEditor
 {
 public:
-	ConnectionEditor(NodeView* target, sf::Vector2f spawnPos, const sf::Font& font);
+	ConnectionEditor(NodeView* target, sf::Vector2f spawnPos, const sf::Font& font, const sf::Texture& flagTexture);
 	~ConnectionEditor();
 
 	void render(sf::RenderWindow& window);
@@ -27,6 +33,7 @@ private:
 	std::vector<sf::Text>& choiceTexts;
 
 	std::vector<InputBox> iboxes;
+	std::vector<Button *> flagButtons;
 	int selectedIndex = -1;
 
 	void addCharacter(char in);

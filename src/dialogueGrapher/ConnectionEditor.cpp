@@ -1,22 +1,26 @@
 #include "ConnectionEditor.h"
 
-ConnectionEditor::ConnectionEditor(NodeView* target, sf::Vector2f spawnPos, const sf::Font& font)
+ConnectionEditor::ConnectionEditor(NodeView* target, sf::Vector2f spawnPos, const sf::Font& font, const sf::Texture& flagTexture)
 :conns(target->getNode()->getConnections()),
  prioTexts(target->getPrioTexts()),
  choiceTexts(target->getChoiceTexts())
 {
-	sf::Vector2f stringBoxSize = sf::Vector2f(245, 25);
+	sf::Vector2f stringBoxSize = sf::Vector2f(215, 25);
 	sf::Vector2f prioBoxSize = sf::Vector2f(25, 25);
 	sf::Vector2f paddingSize = sf::Vector2f(10, 10);
+	sf::Vector2f flagOffset = sf::Vector2f(30, 0);
 
 	for (auto i : conns)
 	{
 		sf::Vector2f prioSpawnPos = spawnPos;
-		prioSpawnPos.x += (stringBoxSize.x + paddingSize.x);
+		prioSpawnPos.x += (stringBoxSize.x + paddingSize.x + flagOffset.x);
 
 		// string text box
-		iboxes.push_back(InputBox(spawnPos, stringBoxSize, font));
+		iboxes.push_back(InputBox(spawnPos + flagOffset, stringBoxSize, font));
 		iboxes.back().setString(i.getChoiceText());
+
+		flagButtons.push_back(new Button(flagTexture));
+		flagButtons.back()->setPosition(spawnPos);
 		
 		// priority text box
 		iboxes.push_back(InputBox(prioSpawnPos, prioBoxSize, font));
@@ -132,8 +136,16 @@ void ConnectionEditor::render(sf::RenderWindow& window)
 {
 	for (int i = 0; i < iboxes.size(); ++i)
 		iboxes[i].render(window);
+
+	for (auto i : flagButtons)
+		i->draw(&window);
 }
 
 ConnectionEditor::~ConnectionEditor()
 {
+	for (int i = 0; i < flagButtons.size(); ++i)
+	{
+		delete flagButtons[i];
+		flagButtons[i] = 0;
+	}
 }

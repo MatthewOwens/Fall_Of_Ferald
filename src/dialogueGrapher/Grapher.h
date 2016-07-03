@@ -17,9 +17,11 @@
 // If compiling with cmake & make
 #ifndef _WIN32
 #include "InputManager.h"
+#include "ImageManager.h"
 #include "Button.h"
 #else
 #include "../game/InputManager.h"
+#include "../game/ImageManager.h"
 #include "../game/Button.h"
 #endif
 class Grapher
@@ -51,7 +53,10 @@ class Grapher
 		bool close = false;
 		InputState inState = NONE;
 		sf::View graphView;
+
 		InputManager inputManager;
+		ImageManager imageManager;
+
 		FileManager fileManager;
 		InputBox ibox;	// The InputBox used to get input for this class
 		sf::Text moduleName;	// Name of the module being edited, defaults to untitled
