@@ -17,11 +17,15 @@ class FlagEditor
 public:
 	FlagEditor(Connector& conn, std::map<std::string, bool>& localFlags,
 		std::map<std::string, bool>& globalFlags, sf::Vector2f availableSize,
-		const sf::Font& font);
+		const sf::Font& font, const sf::Texture& buttonTexture);
 
 	~FlagEditor();
 	void render(sf::RenderWindow& window);
+	void checkButtons(InputManager* inputManager);
+	void checkText(const sf::Vector2f& mousePos);
 private:
+	enum TextBlocks {LOCAL = 0, GLOBAL, REQUIRED, TRIGGERED};
+
 	Connector& conn;	// The connection who's flags we're going to be editing
 	std::map<std::string, bool> &localFlags;
 	std::map<std::string, bool> &globalFlags;
@@ -32,8 +36,12 @@ private:
 	std::vector<sf::Text> globalTexts;
 
 	sf::Text breakTexts[4];
+	Button* buttons[4];
 	const unsigned int charSize = 20;
 
 	sf::RectangleShape rect;
+
+	void moveTextBlock(TextBlocks block, float moveVal);
+	void clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec);
 };
 #endif//FLAGEDITOR_H

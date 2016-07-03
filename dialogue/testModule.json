@@ -40,7 +40,8 @@
           "priority":-1,
           "flags":
           [
-            {"key":"delinquent", "value":true}
+            {"key":"delinquent", "value":true},
+			{"key":"has_morals", "value":false}
           ]
         }
       ]

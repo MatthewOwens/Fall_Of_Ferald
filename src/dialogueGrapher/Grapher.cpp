@@ -23,7 +23,8 @@ Grapher::Grapher()
 	for (int i = 0; i < 2; ++i)
 		connectingNodes[i] = NULL;
 
-	imageManager.loadImage("assets/images/interface/flag.png", "flag");
+	imageManager.loadImage("assets/images/interface/buttons/flag.png", "flag");
+	imageManager.loadImage("assets/images/interface/buttons/plus.png", "plus");
 
 	ibox = InputBox(sf::Vector2f(window.getSize().x - 290,window.getSize().y - 50), sf::Vector2f(280,25), font);
 	ibox.setActive(false);
@@ -152,6 +153,12 @@ void Grapher::update()
 
 				selectedNode = NULL;
 			}
+		}
+
+		if (flagEdit != NULL)
+		{
+			delete flagEdit;
+			flagEdit = NULL;
 		}
 	}
 
@@ -502,7 +509,7 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 				sf::Vector2f size(window.getSize().x - graphBG.getSize().x, window.getSize().y);
 
 				flagEdit = new FlagEditor(selectedNode->getNode()->getConnections()[sel],
-				lFlags, gFlags, size, font);
+				lFlags, gFlags, size, font, imageManager.getTexture("plus"));
 			}
 		}
 
@@ -516,12 +523,19 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 	}
 	else
 	{
-
-		selectedNode = NULL;
-		if (connEdit)
+		if (flagEdit == NULL)
 		{
-			delete connEdit;
-			connEdit = NULL;
+			selectedNode = NULL;
+			if (connEdit)
+			{
+				delete connEdit;
+				connEdit = NULL;
+			}
+		}
+		else
+		{
+			flagEdit->checkButtons(&inputManager);
+			flagEdit->checkText(inputManager.getMousePosition());
 		}
 
 		// Selecting a node
