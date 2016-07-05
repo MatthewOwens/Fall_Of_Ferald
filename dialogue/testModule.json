@@ -12,7 +12,7 @@
           "targetID":"test1",
           "choiceText":"",
           "priority":-1,
-          "flags":[]
+          "requiredFlags":[]
         }
       ]
     },
@@ -26,19 +26,19 @@
           "targetID":"test2",
           "choiceText":"Yes",
           "priority":0,
-          "flags":[]
+          "requiredFlags":[]
         },
         {
           "targetID":"test3",
           "choiceText":"No",
           "priority":0,
-          "flags":[]
+          "requiredFlags":[]
         },
         {
           "targetID":"test4",
           "choiceText":"Go fuck yourself",
           "priority":-1,
-          "flags":
+          "requiredFlags":
           [
             {"key":"delinquent", "value":true},
 			{"key":"has_morals", "value":false}

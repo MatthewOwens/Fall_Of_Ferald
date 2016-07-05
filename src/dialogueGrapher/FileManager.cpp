@@ -43,7 +43,7 @@ void FileManager::loadDialogue(const std::string& moduleFile)
 			for (int j = 0; j < conns.size(); ++j)
 			{
 				// Getting this connections flags
-				const Json::Value& flags = conns[j]["flags"];
+				const Json::Value& flags = conns[j]["requiredFlags"];
 
 				std::cout << "\ttargetID: " << conns[j]["targetID"].asString() << std::endl;
 				std::cout << "\tchoiceText: " << conns[j]["choiceText"].asString() << std::endl;
@@ -96,7 +96,7 @@ std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std:
 			for (int j = 0; j < conns.size(); ++j)
 			{
 				// Getting this connections flags
-				const Json::Value& flags = conns[j]["flags"];
+				const Json::Value& flags = conns[j]["requiredFlags"];
 
 				Node* connectionTarget = NULL;
 				const std::string& targetID = conns[j]["targetID"].asString();
@@ -178,7 +178,7 @@ bool FileManager::saveDialogue(const std::string& moduleFile, const std::string&
 					flagArr.append(flagValue);
 				}
 
-				connValue["flags"] = flagArr;
+				connValue["requiredFlags"] = flagArr;
 				connArr.append(connValue);
 			}
 

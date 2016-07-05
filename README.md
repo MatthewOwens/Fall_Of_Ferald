@@ -18,11 +18,16 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Fix sf::Text positions when adding new flags to connectors
 * Fix sf::Text positions being changed prematurely when adding flags to connectors
+* Fix no way to save flag toggles
 * Add triggered flags to JSON tree
-* Rename flags array to requiredFlags in JSON tree
+* Fix events being triggered when window is not selected
+* Implement flag removal
+* Move flag editor buttons on flag add/remove
 * Implement Connector deletion
+* Implement flag deletion
+* Fix connector lines being removed incorrectly
+* Fix connector texts not being cleared on node deletion
 * Implement module scale flags
 * Implement global scale flags
 * Implement wxWidgets to handle file dialogues

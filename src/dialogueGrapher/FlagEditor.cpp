@@ -243,18 +243,34 @@ void FlagEditor::addText(std::vector<sf::Text>& vec)
 {
 	auto ref = breakTexts[clickedButton];
 	int count = vec.size();
+	int widthPadding = 20;
 
 	vec.push_back(sf::Text(inStrings[0], fnt, charSize));
-	vec.back().setPosition(ref.getPosition());
 	if (count != 0)
-		vec.back().move(10, vec[count-1].getGlobalBounds().height + 20);
-	else vec.back().move(10, ref.getGlobalBounds().height + 20);
+	{
+		vec.back().setPosition(vec[count - 2].getPosition());
+		vec.back().move(0, vec[count-2].getGlobalBounds().height + 20);
+	}
+	else
+	{
+		vec.back().setPosition(ref.getPosition());
+		vec.back().move(10, ref.getGlobalBounds().height + 20);
+	}
+
+	auto keyItr = vec.back();
+	sf::Vector2f keyTextSize(keyItr.getGlobalBounds().width, keyItr.getGlobalBounds().height);
 
 	vec.push_back(sf::Text(inStrings[1], fnt, charSize));
-	vec.back().setPosition(ref.getPosition());
 	if (count != 0)
-		vec.back().move(10, vec[count-1].getGlobalBounds().height + 20);
-	else vec.back().move(10, ref.getGlobalBounds().height + 20);
+	{
+		vec.back().setPosition(vec[count - 2].getPosition());
+		vec.back().move(0 + widthPadding + keyTextSize.x, vec[count-2].getGlobalBounds().height + 20);
+	}
+	else
+	{
+		vec.back().setPosition(ref.getPosition());
+		vec.back().move(10 + widthPadding + keyTextSize.x, ref.getGlobalBounds().height + 20);
+	}
 }
 
 void FlagEditor::render(sf::RenderWindow& window)
