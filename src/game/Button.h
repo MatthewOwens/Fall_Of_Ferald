@@ -39,6 +39,7 @@ public:
 
 	void rotate(float angle);
 	void move(const sf::Vector2f& offset);
+	void move(const float& offsetX, const float& offsetY);
 	void scale(const sf::Vector2f& factor);
 
 	void draw(sf::RenderWindow* window);

@@ -149,6 +149,16 @@ void Button::move(const sf::Vector2f& offset)
 	updatePositions();
 }
 
+void Button::move(const float& offsetX, const float& offsetY)
+{
+	if (sprite)
+		sprite->move(offsetX, offsetY);
+	if (rectShape)
+		rectShape->move(offsetX, offsetY);
+
+	updatePositions();
+}
+
 void Button::scale(const sf::Vector2f& factor)
 {
 	if(sprite)

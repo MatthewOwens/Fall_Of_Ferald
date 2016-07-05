@@ -118,18 +118,22 @@ void FlagEditor::moveTextBlock(TextBlocks block, float moveVal)
 			breakTexts[LOCAL].move(0, moveVal);
 			for (auto &i : localTexts)
 				i.move(0, moveVal);
+			buttons[LOCAL]->move(0, moveVal);
 		case GLOBAL:
 			breakTexts[GLOBAL].move(0, moveVal);
 			for (auto &i : globalTexts)
 				i.move(0, moveVal);
+			buttons[GLOBAL]->move(0, moveVal);
 		case REQUIRED:
 			breakTexts[REQUIRED].move(0, moveVal);
 			for (auto &i : requiredTexts)
 				i.move(0, moveVal);
+			buttons[REQUIRED]->move(0, moveVal);
 		case TRIGGERED:
 			breakTexts[TRIGGERED].move(0, moveVal);
 			for (auto &i : triggeredTexts)
 				i.move(0, moveVal);
+			buttons[TRIGGERED]->move(0, moveVal);
 	}
 }
 

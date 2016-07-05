@@ -23,7 +23,6 @@ jsoncpp
 * Add triggered flags to JSON tree
 * Fix events being triggered when window is not selected
 * Implement flag removal
-* Move flag editor buttons on flag add/remove
 * Implement Connector deletion
 * Implement flag deletion
 * Fix connector lines being removed incorrectly
