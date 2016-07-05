@@ -19,7 +19,6 @@ jsoncpp
 
 ## TODO - DialogueGrapher
 * Fix sf::Text positions being changed prematurely when adding flags to connectors
-* Fix no way to save flag toggles
 * Add triggered flags to JSON tree
 * Fix events being triggered when window is not selected
 * Implement flag removal

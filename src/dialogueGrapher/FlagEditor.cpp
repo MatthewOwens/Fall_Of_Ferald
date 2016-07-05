@@ -179,16 +179,30 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 				vec[i - 1].setColor(color);
 
 				if (vec[i].getString() == "false")
+				{
 					vec[i].setString("true");
-				else vec[i].setString("false");
+					conn.getFlags()[vec[i - 1].getString()] = true;
+				}
+				else
+				{
+					vec[i].setString("false");
+					conn.getFlags()[vec[i - 1].getString()] = false;
+				}
 			}
 			else
 			{
 				vec[i + 1].setColor(color);
 
 				if (vec[i + 1].getString() == "false")
+				{
 					vec[i + 1].setString("true");
-				else vec[i + 1].setString("false");
+					conn.getFlags()[vec[i].getString()] = true;
+				}
+				else
+				{
+					vec[i + 1].setString("false");
+					conn.getFlags()[vec[i].getString()] = false;
+				}
 			}
 
 			vec[i].setColor(color);
