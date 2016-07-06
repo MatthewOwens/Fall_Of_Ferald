@@ -9,14 +9,23 @@
 class FileManager
 {
 public:
-	FileManager();
+	FileManager(const std::string& dialogueFolder);
 	~FileManager();
-	void loadDialogue(const std::string& moduleFile);
+	std::vector<Node*> loadDialogue(const std::string& moduleName);
 	std::vector<Node*> loadDialogue(const std::string& moduleFile, std::string& moduleName);
-	bool saveDialogue(const std::string& moduleFile, const std::string& moduleName, std::vector<Node*>);
+	bool saveDialogue(const std::string& moduleName, std::vector<Node*>);
+
+	std::map<std::string, bool> loadGlobals();
+	std::map<std::string, bool> loadLocals(const std::string& moduleName);
+
+	void saveGlobals(const std::map<std::string, bool>& map);
+	void saveLocals(const std::string& moduleName, const std::map<std::string, bool>& map);
 private:
-	const std::string globalFlagPath = "dialogue/globalFlags.json";
-	const std::string dialogueFolder = "dialogue/";
+	std::map<std::string, bool> loadFlags(const std::string& filePath);
+	void saveFlags(const std::string& filePath, const std::map<std::string, bool>& flags);
+
+	const std::string globalFlagPath;
+	const std::string dialogueFolder;
 };
 
 #endif//FILEMANAGER_H

@@ -1,10 +1,9 @@
 #include "Grapher.h"
 #include <iostream>
 #include <algorithm>
-Grapher::Grapher()
+Grapher::Grapher() : fileManager("dialogue/")
 {
 	window.create(sf::VideoMode(1280, 720), "DialogueGrapher");
-	//fileManager.loadDialogue("testModule.json");
 
 	// Loading the font
 	font.loadFromFile("assets/fonts/EaseOfUse.ttf");
@@ -379,20 +378,15 @@ void Grapher::onTextEntered(int unicode)
 						{
 							 std::string newName;
 							 if (populateGraph(fileManager.loadDialogue(ibox.getString(), newName)) == 0)
+							 {
 								 moduleName.setString(newName);
+								 lFlags = fileManager.loadLocals(newName);
+
+								 if (gFlags.size() == 0)
+									 gFlags = fileManager.loadGlobals();
+							 }
 							 else
 								 std::cerr << "file " << ibox.getString() << " contained no nodes!" << std::endl;
-							 break;
-						}
-						case SAVE:
-						{
-							 std::vector<Node*> nodes;
-							 for (auto i : nodeViews)
-								 nodes.push_back(i->getNode());
-
-							 if (fileManager.saveDialogue(ibox.getString(), moduleName.getString(), nodes))
-								 std::cout << "File saved successfully!" << std::endl;
-
 							 break;
 						}
 					}
@@ -625,10 +619,15 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 
 			if (i.first == "save")
 			{
-				ibox.setSelected(true);
-				ibox.setActive(true);
-				selectedInputBox = &ibox;
-				inState = SAVE;
+				std::vector<Node*> nodes;
+				for (auto i : nodeViews)
+					nodes.push_back(i->getNode());
+
+				fileManager.saveDialogue(moduleName.getString(), nodes);
+				fileManager.saveLocals(moduleName.getString(), lFlags);
+
+				if (moduleName.getString() != "untitled")
+					fileManager.saveGlobals(gFlags);
 			}
 
 			if (i.first == "n.names")

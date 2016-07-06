@@ -2,25 +2,70 @@
 #include <iostream>
 #include <fstream>
 
-FileManager::FileManager()
+FileManager::FileManager(const std::string& dialogueFolderPath)
+:dialogueFolder(dialogueFolderPath),
+globalFlagPath(dialogueFolderPath + "globals.json")
 {
-	/*std::ifstream ifs(globalFlagPath);
+}
+
+void FileManager::saveFlags(const std::string& filePath,
+							const std::map<std::string, bool>& flags)
+{
+	std::ofstream ofs(filePath);
+	Json::StyledWriter writer;
+	Json::Value obj;
+	Json::Value arr(Json::arrayValue);
+
+	for (auto i : flags)
+	{
+		Json::Value jflag;
+		jflag["key"] = i.first;
+		jflag["value"] = i.second;
+
+		arr.append(jflag);
+	}
+	
+	obj["flags"] = arr;
+}
+
+std::map<std::string, bool> FileManager::loadFlags(const std::string& filePath)
+{
+	std::ifstream ifs(filePath);
 	Json::Reader reader;
 	Json::Value obj;
 	reader.parse(ifs, obj);
+	std::map<std::string, bool> ret;
 
-	const Json::Value& globals = obj["globals"];
-	for (int i = 0; i < globals.size(); ++i)
-	{
-		std::cout << globals[i]["key"].asString();
-		std::cout << " " << globals[i]["value"].asBool();
-		std::cout << std::endl;
-	}*/
+	const Json::Value& flags = obj["flags"];
+	for (int i = 0; i < flags.size(); ++i)
+		ret[flags[i]["key"].asString()] = flags[i]["value"].asBool();
+
+	return ret;
+}
+
+std::map<std::string, bool> FileManager::loadLocals(const std::string& moduleName)
+{
+	return loadFlags(dialogueFolder + moduleName + "/flags.json");
+}
+
+std::map<std::string, bool> FileManager::loadGlobals()
+{
+	return loadFlags(dialogueFolder + "globals.json");
+}
+
+void FileManager::saveLocals(const std::string& moduleName, const std::map<std::string, bool>& map)
+{
+	saveFlags(dialogueFolder + moduleName + "/flags.json", map);
+}
+
+void FileManager::saveGlobals(const std::map<std::string, bool>& map)
+{
+	saveFlags(dialogueFolder + "globals.json", map);
 }
 
 std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std::string& moduleName)
 {
-	std::ifstream ifs(dialogueFolder + moduleFile);
+	std::ifstream ifs(dialogueFolder + moduleFile + "/dialogue.json");
 	Json::Reader reader;
 	Json::Value obj;
 	std::vector<Node*> finalNodes;
@@ -94,9 +139,9 @@ std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std:
 
 	return finalNodes;
 }
-bool FileManager::saveDialogue(const std::string& moduleFile, const std::string& moduleName, std::vector<Node*> nodes)
+bool FileManager::saveDialogue(const std::string& moduleName, std::vector<Node*> nodes)
 {
-	std::ofstream ofs(dialogueFolder + moduleFile);
+	std::ofstream ofs(dialogueFolder + moduleName + "/dialogue.json");
 	Json::StyledWriter writer;
 
 	Json::Value obj;
@@ -162,7 +207,7 @@ bool FileManager::saveDialogue(const std::string& moduleFile, const std::string&
 	}
 	else
 	{
-		std::cerr << "Could not open " << dialogueFolder + moduleFile << " for writing!" << std::endl;
+		std::cerr << "Could not open " << dialogueFolder << moduleName << "/dialogue.json for writing!" << std::endl;
 		return false;
 	}
 }

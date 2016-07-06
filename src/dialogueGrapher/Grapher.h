@@ -28,7 +28,7 @@
 class Grapher
 {
 	public:
-		enum InputState{ NONE, NAME, LOAD, SAVE };
+		enum InputState{ NONE, NAME, LOAD};
 		Grapher();
 		~Grapher();
 		void run();

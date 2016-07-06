@@ -18,9 +18,6 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Implement Connector deletion
 * Fix connector lines being removed incorrectly
 * Fix connector texts not being cleared on node deletion
-* Implement module scale flags
-* Implement global scale flags
 * Implement wxWidgets to handle file dialogues

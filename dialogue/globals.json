@@ -1,5 +1,5 @@
 {
-	"globals":
+	"flags":
 	[
 		{"key":"flag1", "value":false},
 		{"key":"flag2", "value":false},

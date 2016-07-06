@@ -19,8 +19,8 @@ FlagEditor::FlagEditor(Connector& connection, std::map<std::string, bool>& local
 	float textLength = 0.f;
 	clickedButton = -1;
 
-	breakTexts[LOCAL] = sf::Text("Local Flags:", font, charSize);
-	breakTexts[GLOBAL] = sf::Text("Global Flags:", font, charSize);
+	breakTexts[LOCAL] = sf::Text("Initial Local Flags:", font, charSize);
+	breakTexts[GLOBAL] = sf::Text("Initial Global Flags:", font, charSize);
 	breakTexts[REQUIRED] = sf::Text("Required Flags:", font, charSize);
 	breakTexts[TRIGGERED] = sf::Text("Triggered Flags:", font, charSize);
 
@@ -184,6 +184,9 @@ void FlagEditor::removeFlags(const sf::Vector2f& mousePos)
 void FlagEditor::remove(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
 						std::map<std::string, bool>& map)
 {
+	if (map.size() == 0)
+		return;
+
 	auto mapItr = map.begin();
 	int vecItr = 0;
 	bool found = false;

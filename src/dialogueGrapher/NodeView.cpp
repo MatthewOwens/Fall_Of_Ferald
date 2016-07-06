@@ -226,7 +226,7 @@ InputBox* NodeView::getSelectedInputBox(const sf::Vector2f& mousePos)
 // Returns the header/body value saved in Node if either input box is selected
 std::string NodeView::getUnsavedInput()
 {
-	if (!node)
+	if (node == NULL)
 		return "";
 
 	if (headerInput.isSelected())
