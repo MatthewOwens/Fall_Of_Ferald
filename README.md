@@ -18,7 +18,6 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Fix events being triggered when window is not selected
 * Implement flag removal
 * Implement Connector deletion
 * Fix connector lines being removed incorrectly

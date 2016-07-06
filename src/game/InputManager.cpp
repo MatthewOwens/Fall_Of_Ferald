@@ -22,7 +22,7 @@ InputManager::~InputManager()
 void InputManager::update(sf::RenderWindow& window)
 {
 	// Only update if we have focus
-	if(!window.isOpen())
+	if(!window.isOpen() || !window.hasFocus())
 		return;
 	
 	// Updating the keyboard state
