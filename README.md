@@ -18,11 +18,9 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Add triggered flags to JSON tree
 * Fix events being triggered when window is not selected
 * Implement flag removal
 * Implement Connector deletion
-* Implement flag deletion
 * Fix connector lines being removed incorrectly
 * Fix connector texts not being cleared on node deletion
 * Implement module scale flags

@@ -102,6 +102,24 @@ FlagEditor::FlagEditor(Connector& connection, std::map<std::string, bool>& local
 	textHeight = breakTexts[3].getGlobalBounds().height;
 	textSpawn.y += padding.x + textHeight;
 
+	for (auto i : conn.getTriggers())
+	{
+		triggeredTexts.push_back(sf::Text(i.first, font, charSize));
+		triggeredTexts.back().setPosition(textSpawn);
+
+		textLength = triggeredTexts.back().getGlobalBounds().width;
+		
+		if (i.second)
+			triggeredTexts.push_back(sf::Text("true", font, charSize));
+		else
+			triggeredTexts.push_back(sf::Text("false", font, charSize));
+
+		triggeredTexts.back().setPosition(textSpawn + padding);
+		triggeredTexts.back().move(textLength, 0);
+
+		textSpawn.y += padding.x + textHeight;
+	}
+
 	for (int i = 0; i < 4; ++i)
 	{
 		buttons[i] = new Button(buttonTexture);
@@ -148,22 +166,17 @@ bool FlagEditor::checkButtons(InputManager* inputManager)
 			clickedButton = i;
 	}
 
-	return (clickedButton > -1 && clickedButton < 3);
-	/*if (clickedButton > -1 && clickedButton < 3)
-	{
-		moveTextBlock((TextBlocks)(clickedButton + 1), 50.f);
-		return true;
-	}
-	else return false;*/
+	return (clickedButton > -1 && clickedButton <= 3);
 }
 
 void FlagEditor::checkText(const sf::Vector2f& mousePos)
 {
-	clicked(mousePos, requiredTexts);
-	clicked(mousePos, triggeredTexts);
+	clicked(mousePos, requiredTexts, &Connector::getFlags);
+	clicked(mousePos, triggeredTexts, &Connector::getTriggers);
 }
 
-void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec)
+void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
+						std::map<std::string, bool>& (Connector::*getter)())
 {
 	sf::Color color;
 
@@ -182,12 +195,14 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 				if (vec[i].getString() == "false")
 				{
 					vec[i].setString("true");
-					conn.getFlags()[vec[i - 1].getString()] = true;
+					//conn.getFlags()[vec[i - 1].getString()] = true;
+					(conn.*getter)()[vec[i - 1].getString()] = true;
 				}
 				else
 				{
 					vec[i].setString("false");
-					conn.getFlags()[vec[i - 1].getString()] = false;
+					//conn.getFlags()[vec[i - 1].getString()] = false;
+					(conn.*getter)()[vec[i - 1].getString()] = false;
 				}
 			}
 			else
@@ -197,12 +212,14 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 				if (vec[i + 1].getString() == "false")
 				{
 					vec[i + 1].setString("true");
-					conn.getFlags()[vec[i].getString()] = true;
+					//conn.getFlags()[vec[i].getString()] = true;
+					(conn.*getter)()[vec[i].getString()] = true;
 				}
 				else
 				{
 					vec[i + 1].setString("false");
-					conn.getFlags()[vec[i].getString()] = false;
+					//conn.getFlags()[vec[i].getString()] = false;
+					(conn.*getter)()[vec[i].getString()] = false;
 				}
 			}
 
@@ -245,13 +262,20 @@ void FlagEditor::getString(std::string str)
 	// Both inStrings populated with valid values
 	conn.addFlag(inStrings[0], flagVal);
 
-	if ((TextBlocks)clickedButton == REQUIRED)
+	switch ((TextBlocks)clickedButton)
 	{
+	case REQUIRED:
 		addText(requiredTexts);
-	}
-	else if ((TextBlocks)clickedButton == TRIGGERED)
-	{
+		break;
+	case TRIGGERED:
 		addText(triggeredTexts);
+		break;
+	case GLOBAL:
+		addText(globalTexts);
+		break;
+	case LOCAL:
+		addText(localTexts);
+		break;
 	}
 
 	moveTextBlock((TextBlocks)(clickedButton + 1), 50.f);

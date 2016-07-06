@@ -40,14 +40,15 @@ private:
 
 	sf::Text breakTexts[4];
 	Button* buttons[4];
-	const unsigned int charSize = 20;
+	const unsigned int charSize = 12;
 	int clickedButton;
 	std::string inStrings[2];
 
 	sf::RectangleShape rect;
 
 	void moveTextBlock(TextBlocks block, float moveVal);
-	void clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec);
 	void addText(std::vector<sf::Text>& vec);
+	void clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
+				std::map<std::string, bool>& (Connector::*getter)());
 };
 #endif//FLAGEDITOR_H

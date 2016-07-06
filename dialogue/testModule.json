@@ -12,7 +12,8 @@
           "targetID":"test1",
           "choiceText":"",
           "priority":-1,
-          "requiredFlags":[]
+          "requiredFlags":[],
+		  "triggeredFlags":[]
         }
       ]
     },
@@ -26,13 +27,15 @@
           "targetID":"test2",
           "choiceText":"Yes",
           "priority":0,
-          "requiredFlags":[]
+          "requiredFlags":[],
+		  "triggeredFlags":[]
         },
         {
           "targetID":"test3",
           "choiceText":"No",
           "priority":0,
-          "requiredFlags":[]
+          "requiredFlags":[],
+		  "triggeredFlags":[]
         },
         {
           "targetID":"test4",
@@ -42,7 +45,11 @@
           [
             {"key":"delinquent", "value":true},
 			{"key":"has_morals", "value":false}
-          ]
+          ],
+		  "triggeredFlags":
+		  [
+			{"key":"irritated_man", "value":true}
+		  ]
         }
       ]
     },

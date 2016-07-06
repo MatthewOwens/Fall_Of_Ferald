@@ -34,6 +34,11 @@ void Connector::addFlag(std::string flag, bool state)
 	flags.insert(std::pair<std::string,bool>(flag, state));
 }
 
+void Connector::addTrigger(std::string flag, bool state)
+{
+	triggeredFlags.insert(std::pair<std::string,bool>(flag, state));
+}
+
 bool Connector::conditionsMet(std::map<std::string, bool>& localFlags,
 							  std::map<std::string, bool>& globalFlags)
 {
