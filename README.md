@@ -9,6 +9,8 @@ Currently in the prototype stage.
 SFML 2.3.2
 jsoncpp
 
+##
+
 ## TODO - Game
 * Bind camera to map
 * Replace current dialogue parser with one that supports json output from
@@ -20,4 +22,5 @@ jsoncpp
 ## TODO - DialogueGrapher
 * Fix connector lines being removed incorrectly
 * Fix connector texts not being cleared on node deletion
+* Add warning when saving with an 'untitled' module
 * Implement wxWidgets to handle file dialogues

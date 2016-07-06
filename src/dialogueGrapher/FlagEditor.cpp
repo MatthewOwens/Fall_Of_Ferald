@@ -179,6 +179,8 @@ void FlagEditor::removeFlags(const sf::Vector2f& mousePos)
 {
 	remove(mousePos, requiredTexts, conn.getFlags());
 	remove(mousePos, triggeredTexts, conn.getTriggers());
+	remove(mousePos, globalTexts, globalFlags);
+	remove(mousePos, localTexts, localFlags);
 }
 
 void FlagEditor::remove(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
@@ -208,6 +210,8 @@ void FlagEditor::remove(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec
 		map.erase(mapItr);
 		if (vecItr % 2 == 0)
 			vec.erase(vec.begin() + vecItr, vec.begin() + (vecItr + 2));
+		else if (vecItr == 1)
+			vec.erase(vec.begin(), vec.begin() + vecItr);
 		else
 			vec.erase(vec.begin() + (vecItr - 2), vec.begin() + vecItr);
 	}

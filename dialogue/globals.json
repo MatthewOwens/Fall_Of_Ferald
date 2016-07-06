@@ -1,9 +1,0 @@
-{
-	"flags":
-	[
-		{"key":"flag1", "value":false},
-		{"key":"flag2", "value":false},
-		{"key":"flag3", "value":true},
-		{"key":"flag4", "value":true}
-	]
-}
