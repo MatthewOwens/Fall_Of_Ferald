@@ -169,14 +169,49 @@ bool FlagEditor::checkButtons(InputManager* inputManager)
 	return (clickedButton > -1 && clickedButton <= 3);
 }
 
-void FlagEditor::checkText(const sf::Vector2f& mousePos)
+void FlagEditor::toggleText(const sf::Vector2f& mousePos)
 {
-	clicked(mousePos, requiredTexts, &Connector::getFlags);
-	clicked(mousePos, triggeredTexts, &Connector::getTriggers);
+	toggle(mousePos, requiredTexts, conn.getFlags());
+	toggle(mousePos, triggeredTexts, conn.getTriggers());
 }
 
-void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
-						std::map<std::string, bool>& (Connector::*getter)())
+void FlagEditor::removeFlags(const sf::Vector2f& mousePos)
+{
+	remove(mousePos, requiredTexts, conn.getFlags());
+	remove(mousePos, triggeredTexts, conn.getTriggers());
+}
+
+void FlagEditor::remove(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
+						std::map<std::string, bool>& map)
+{
+	auto mapItr = map.begin();
+	int vecItr = 0;
+	bool found = false;
+
+	for (; vecItr < vec.size(); ++vecItr)
+	{
+		if (vec[vecItr].getGlobalBounds().contains(mousePos))
+		{
+			found = true;
+			break;
+		}
+
+		if (vecItr % 2 == 0 && vecItr != 0)
+			mapItr++;
+	}
+
+	if (found)
+	{
+		map.erase(mapItr);
+		if (vecItr % 2 == 0)
+			vec.erase(vec.begin() + vecItr, vec.begin() + (vecItr + 2));
+		else
+			vec.erase(vec.begin() + (vecItr - 2), vec.begin() + vecItr);
+	}
+}
+
+void FlagEditor::toggle(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
+						std::map<std::string, bool>& map)
 {
 	sf::Color color;
 
@@ -196,13 +231,13 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 				{
 					vec[i].setString("true");
 					//conn.getFlags()[vec[i - 1].getString()] = true;
-					(conn.*getter)()[vec[i - 1].getString()] = true;
+					map[vec[i - 1].getString()] = true;
 				}
 				else
 				{
 					vec[i].setString("false");
 					//conn.getFlags()[vec[i - 1].getString()] = false;
-					(conn.*getter)()[vec[i - 1].getString()] = false;
+					map[vec[i - 1].getString()] = false;
 				}
 			}
 			else
@@ -213,13 +248,13 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 				{
 					vec[i + 1].setString("true");
 					//conn.getFlags()[vec[i].getString()] = true;
-					(conn.*getter)()[vec[i].getString()] = true;
+					map[vec[i].getString()] = true;
 				}
 				else
 				{
 					vec[i + 1].setString("false");
 					//conn.getFlags()[vec[i].getString()] = false;
-					(conn.*getter)()[vec[i].getString()] = false;
+					map[vec[i].getString()] = false;
 				}
 			}
 
@@ -228,7 +263,7 @@ void FlagEditor::clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& ve
 	}
 }
 
-void FlagEditor::getString(std::string str)
+void FlagEditor::inputString(std::string str)
 {
 	bool flagVal = false;
 

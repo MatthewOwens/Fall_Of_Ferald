@@ -22,8 +22,9 @@ public:
 	~FlagEditor();
 	void render(sf::RenderWindow& window);
 	bool checkButtons(InputManager* inputManager);
-	void checkText(const sf::Vector2f& mousePos);
-	void getString(std::string str);
+	void toggleText(const sf::Vector2f& mousePos);
+	void inputString(std::string str);
+	void removeFlags(const sf::Vector2f& mousePos);
 	inline bool gettingText() { return (inStrings[0] == "" ? false : true); }
 private:
 	enum TextBlocks {LOCAL = 0, GLOBAL, REQUIRED, TRIGGERED};
@@ -48,7 +49,11 @@ private:
 
 	void moveTextBlock(TextBlocks block, float moveVal);
 	void addText(std::vector<sf::Text>& vec);
-	void clicked(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
-				std::map<std::string, bool>& (Connector::*getter)());
+
+	void toggle(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
+				std::map<std::string, bool>& map);
+
+	void remove(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec,
+				std::map<std::string, bool>& map);
 };
 #endif//FLAGEDITOR_H

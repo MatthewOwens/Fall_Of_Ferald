@@ -359,7 +359,7 @@ void Grapher::onTextEntered(int unicode)
 				if (ibox.isSelected())
 				{
 					if (flagEdit != NULL)
-						flagEdit->getString(ibox.getString());
+						flagEdit->inputString(ibox.getString());
 
 					switch (inState)
 					{
@@ -554,7 +554,7 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 				ibox.setActive(true);
 				ibox.setSelected(true);
 			}
-			flagEdit->checkText(inputManager.getMousePosition());
+			flagEdit->toggleText(inputManager.getMousePosition());
 		}
 
 		// Selecting a node
@@ -640,6 +640,8 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 
 void Grapher::onRightClick(sf::Vector2f& viewPos)
 {
+	if (flagEdit != NULL)
+		flagEdit->removeFlags(inputManager.getMousePosition());
 
 	for (auto i = nodeViews.begin(); i != nodeViews.end();)
 	{

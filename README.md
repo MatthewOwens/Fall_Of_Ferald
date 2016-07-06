@@ -18,7 +18,6 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Implement flag removal
 * Implement Connector deletion
 * Fix connector lines being removed incorrectly
 * Fix connector texts not being cleared on node deletion
