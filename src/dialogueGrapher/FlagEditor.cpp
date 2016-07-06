@@ -148,12 +148,13 @@ bool FlagEditor::checkButtons(InputManager* inputManager)
 			clickedButton = i;
 	}
 
-	if (clickedButton > -1 && clickedButton < 3)
+	return (clickedButton > -1 && clickedButton < 3);
+	/*if (clickedButton > -1 && clickedButton < 3)
 	{
 		moveTextBlock((TextBlocks)(clickedButton + 1), 50.f);
 		return true;
 	}
-	else return false;
+	else return false;*/
 }
 
 void FlagEditor::checkText(const sf::Vector2f& mousePos)
@@ -252,6 +253,8 @@ void FlagEditor::getString(std::string str)
 	{
 		addText(triggeredTexts);
 	}
+
+	moveTextBlock((TextBlocks)(clickedButton + 1), 50.f);
 
 	inStrings[0] = "";
 	inStrings[1] = "";

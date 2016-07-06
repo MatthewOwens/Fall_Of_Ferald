@@ -18,7 +18,6 @@ jsoncpp
 * Make some sprites that don't look awful
 
 ## TODO - DialogueGrapher
-* Fix sf::Text positions being changed prematurely when adding flags to connectors
 * Add triggered flags to JSON tree
 * Fix events being triggered when window is not selected
 * Implement flag removal
