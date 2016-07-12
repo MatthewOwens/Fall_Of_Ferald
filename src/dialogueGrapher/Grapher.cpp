@@ -112,10 +112,6 @@ void Grapher::update()
 {
 	sf::Event event;
 
-	if (selectedNode)
-		window.setTitle("Dialogue Grapher | SELECION");
-	else window.setTitle("Dialogue Grapher | NO SELECTION");
-
 	// Updating our key input
 	inputManager.update(window);
 	sf::Vector2f viewPos = window.mapPixelToCoords((sf::Vector2i)inputManager.getMousePosition(), graphView);
@@ -655,6 +651,14 @@ void Grapher::onRightClick(sf::Vector2f& viewPos)
 				}
 			}
 
+			// Clearing selections, just in case
+			selectedNode = NULL;
+			connectingNodes[0] = NULL;
+			connectingNodes[1] = NULL;
+
+			if (selectedInputBox != &ibox)
+				selectedInputBox = NULL;
+
 			delete *i;
 			*i = NULL;
 
@@ -662,6 +666,10 @@ void Grapher::onRightClick(sf::Vector2f& viewPos)
 		}
 		else ++i;
 	}
+
+	// Repopulating lines
+	for (auto i : nodeViews)
+		i->populateLines(nodeViews);
 }
 
 void Grapher::onMiddleClick(sf::Vector2f& viewPos)

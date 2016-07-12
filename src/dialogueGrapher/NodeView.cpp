@@ -162,6 +162,9 @@ void NodeView::updateLines(const std::list<NodeView*>& nodeViews)
 void NodeView::populateLines(const std::list<NodeView*>& nodeViews)
 {
 	std::vector<Connector> conns = node->getConnections();
+	lines.clear();
+	connectorTexts.clear();
+	connectorPriorities.clear();
 
 	for (auto i : conns)
 	{

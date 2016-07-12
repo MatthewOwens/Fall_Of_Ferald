@@ -17,8 +17,3 @@ Currently in the prototype stage.
 * Implement a way to navigate the directed diagraphs outputted by DialogueGrapher
 * Rework inventory system
 * Make some sprites that don't look awful
-
-## TODO - DialogueGrapher
-* Fix connector lines being removed incorrectly
-* Fix connector texts not being cleared on node deletion
-* Add warning when saving with an 'untitled' module
