@@ -6,10 +6,9 @@ SRPG based on the SRPG_Engine repo that was developed prior.
 Currently in the prototype stage.
 
 ## Dependencies
-SFML 2.3.2
-jsoncpp
+* SFML 2.3.2
+* jsoncpp
 
-##
 
 ## TODO - Game
 * Bind camera to map
@@ -23,4 +22,3 @@ jsoncpp
 * Fix connector lines being removed incorrectly
 * Fix connector texts not being cleared on node deletion
 * Add warning when saving with an 'untitled' module
-* Implement wxWidgets to handle file dialogues
