@@ -119,7 +119,7 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 	pathfinder = Pathfinder(this);
 }
 
-void Level::update(InputManager& inputManager, UserInterface& ui)
+void Level::update(InputManager& inputManager, GameUserInterface& ui)
 {
 	// Updating the sprites
 	combatController.updateSprites(tileSize);

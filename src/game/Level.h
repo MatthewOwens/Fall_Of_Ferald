@@ -9,7 +9,7 @@
 #include "ImageManager.h"
 #include "InputManager.h"
 #include "Pathfinder.h"
-#include "UserInterface.h"
+#include "GameUserInterface.h"
 #include "AI.h"
 #include <SFML/Graphics.hpp>
 
@@ -20,7 +20,7 @@ class Level
         Level(const std::string& mapPath, const std::string& tilesheetPath, ImageManager* imageManager);
         void initilizeAI(const std::string& unitPath, const std::string& spritesheetPath, ImageManager& imageManager);
         void draw(sf::RenderWindow& window);
-		void update(InputManager& inputManager, UserInterface& ui);
+		void update(InputManager& inputManager, GameUserInterface& ui);
         virtual ~Level();
         Tile getTile(int x, int y);
         std::string getTileType(int x, int y);

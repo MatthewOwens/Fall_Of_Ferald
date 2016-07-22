@@ -8,7 +8,7 @@
 
 class DialogueBox
 {
-    friend class UserInterface;
+    friend class GameUserInterface;
 
     public:
         DialogueBox();

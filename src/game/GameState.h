@@ -7,7 +7,7 @@
 #include "BaseState.h"
 #include "ImageManager.h"
 #include "InputManager.h"
-#include "UserInterface.h"
+#include "GameUserInterface.h"
 #include "Pathfinder.h"
 #include "Level.h"
 #include "AI.h"
@@ -26,7 +26,7 @@ public:
 	sf::Packet onExit(ImageManager* imageManager);
 
 private:
-	UserInterface ui;
+	GameUserInterface ui;
 	Level* level;
 	sf::View camera;
 

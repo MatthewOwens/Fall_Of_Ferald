@@ -6,7 +6,7 @@
 
 class Tooltip
 {
-    friend class UserInterface; // Allowing the UI class to access tooltip members
+    friend class GameUserInterface; // Allowing the UI class to access tooltip members
 
     public:
         Tooltip();

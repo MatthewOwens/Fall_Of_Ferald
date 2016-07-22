@@ -6,7 +6,7 @@
 #include "Level.h"
 #include "Pathfinder.h"
 #include "InputManager.h"
-#include "UserInterface.h"
+#include "GameUserInterface.h"
 #include "AI.h"
 #include "StateManager.h"
 #include <iostream>
