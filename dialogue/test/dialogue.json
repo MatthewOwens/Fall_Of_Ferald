@@ -11,7 +11,13 @@
 					"priority" : -1,
 					"requiredFlags" : [],
 					"targetID" : "test1",
-					"triggeredFlags" : []
+					"triggeredFlags" : 
+					[
+						{
+							"key" : "utter_cunt",
+							"value" : true
+						}
+					]
 				}
 			],
 			"header" : "Old Man",

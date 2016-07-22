@@ -302,21 +302,23 @@ void FlagEditor::inputString(std::string str)
 	}
 	
 	// Both inStrings populated with valid values
-	conn.addFlag(inStrings[0], flagVal);
-
 	switch ((TextBlocks)clickedButton)
 	{
 	case REQUIRED:
 		addText(requiredTexts);
+		conn.addFlag(inStrings[0], flagVal);
 		break;
 	case TRIGGERED:
 		addText(triggeredTexts);
+		conn.addTrigger(inStrings[0], flagVal);
 		break;
 	case GLOBAL:
 		addText(globalTexts);
+		globalFlags[inStrings[0]] = flagVal;
 		break;
 	case LOCAL:
 		addText(localTexts);
+		localFlags[inStrings[0]] = flagVal;
 		break;
 	}
 

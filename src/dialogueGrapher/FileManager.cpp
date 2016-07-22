@@ -26,6 +26,7 @@ void FileManager::saveFlags(const std::string& filePath,
 	}
 	
 	obj["flags"] = arr;
+	ofs << obj;
 }
 
 std::map<std::string, bool> FileManager::loadFlags(const std::string& filePath)
