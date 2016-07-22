@@ -535,6 +535,25 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 				delete connEdit;
 				connEdit = NULL;
 			}
+
+			// Selecting a node
+			for (auto i : nodeViews)
+			{
+				if (i->getGlobalBounds().contains(viewPos))
+				{
+					if (clock.getElapsedTime().asMilliseconds() < 250)
+						selectedNode = i;
+					else
+						clickedNode = i;
+				}
+			}
+
+			// Node double clicked
+			if (clock.getElapsedTime().asMilliseconds() < 250 && selectedNode != NULL)
+			{
+				if (selectedNode != NULL)
+					connEdit = new ConnectionEditor(selectedNode, connSpawn, font, imageManager.getTexture("flag"));
+			}
 		}
 		else
 		{
@@ -545,25 +564,6 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 				ibox.setSelected(true);
 			}
 			flagEdit->toggleText(inputManager.getMousePosition());
-		}
-
-		// Selecting a node
-		for (auto i : nodeViews)
-		{
-			if (i->getGlobalBounds().contains(viewPos))
-			{
-				if (clock.getElapsedTime().asMilliseconds() < 250)
-					selectedNode = i;
-				else
-					clickedNode = i;
-			}
-		}
-
-		// Node double clicked
-		if (clock.getElapsedTime().asMilliseconds() < 250 && selectedNode != NULL)
-		{
-			if (selectedNode != NULL)
-				connEdit = new ConnectionEditor(selectedNode, connSpawn, font, imageManager.getTexture("flag"));
 		}
 	}
 	clock.restart();
