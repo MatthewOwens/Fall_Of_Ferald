@@ -4,6 +4,7 @@
 
 GameState::GameState() : BaseState()
 {
+	renderPrevious = true;
 }
 
 GameState::~GameState()

@@ -102,6 +102,16 @@ bool StateManager::update()
 
 void StateManager::render()
 {
-	if(!stateStack.empty() && window != NULL)
+	if (!stateStack.empty() && window != NULL)
+	{
+		if (stateStack.size() > 1 && stateStack.top()->renderingPrevious())
+		{
+			BaseState* s = stateStack.top();
+			stateStack.pop();
+
+			stateStack.top()->render(window);
+			stateStack.push(s);
+		}
 		stateStack.top()->render(window);
+	}
 }
