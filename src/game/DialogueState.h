@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include "ImageManager.h"
 #include "DialogueBox.h"
-#include "../dialogueGrapher/FileManager.h"
+//#include "../dialogueGrapher/FileManager.h"
 
 class DialogueState : public BaseState
 {

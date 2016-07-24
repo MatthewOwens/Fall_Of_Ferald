@@ -32,5 +32,5 @@ void DialogueState::onPause()
 
 sf::Packet DialogueState::onExit(ImageManager* imageManager)
 {
-
+	return sf::Packet();
 }
