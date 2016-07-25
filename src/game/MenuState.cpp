@@ -69,10 +69,8 @@ void MenuState::render(sf::RenderWindow* window)
 {
 	if(window != NULL)
 	{
-		window->clear();
 		window->draw(*menubgSprite);
 		button->draw(window);
 		exitButton->draw(window);
-		window->display();
 	}
 }

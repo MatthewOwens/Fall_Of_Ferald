@@ -4,7 +4,6 @@
 
 GameState::GameState() : BaseState()
 {
-	renderPrevious = true;
 }
 
 GameState::~GameState()
@@ -49,14 +48,12 @@ void GameState::render(sf::RenderWindow* window)
 {
 	if(window != NULL)
 	{
-		window->clear();
 		window->setView(camera);
 
 		if(level != NULL)
 			level->draw(*window);
 
 		ui.draw(window, camera);
-		window->display();
 	}
 }
 

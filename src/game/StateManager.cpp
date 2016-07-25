@@ -102,6 +102,8 @@ bool StateManager::update()
 
 void StateManager::render()
 {
+	window->clear();
+
 	if (!stateStack.empty() && window != NULL)
 	{
 		if (stateStack.size() > 1 && stateStack.top()->renderingPrevious())
@@ -114,4 +116,6 @@ void StateManager::render()
 		}
 		stateStack.top()->render(window);
 	}
+
+	window->display();
 }
