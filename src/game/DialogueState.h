@@ -4,7 +4,13 @@
 #include "InputManager.h"
 #include "ImageManager.h"
 #include "DialogueBox.h"
-//#include "../dialogueGrapher/FileManager.h"
+#include "../dialogueGrapher/FileManager.h"
+#include "../dialogueGrapher/Node.h"
+#include <vector>
+#include <string>
+#include <map>
+
+class StateManager;
 
 class DialogueState : public BaseState
 {
@@ -17,5 +23,11 @@ public:
 	void onPause();
 	sf::Packet onExit(ImageManager* imageManager);
 private:
+	bool inputValid;
+	std::string dialogueName;
+
+	std::vector<Node*> dialogueNodes;
+	std::map<std::string, bool> gFlags;
+	std::map<std::string, bool> lFlags;
 };
 #endif//DIALOGUE_STATE

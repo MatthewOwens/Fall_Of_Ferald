@@ -1,6 +1,7 @@
 #include "StateManager.h"
 #include "GameState.h"
 #include "MenuState.h"
+#include "DialogueState.h"
 #include <iostream>
 
 StateManager::StateManager(InputManager* inputs, ImageManager* images, sf::RenderWindow* win)
@@ -31,7 +32,7 @@ StateManager::~StateManager()
 		popState();
 }
 
-void StateManager::pushState(StateEnum stateType)
+void StateManager::pushState(StateEnum stateType, sf::Packet* data)
 {
 	// Pausing the current state, if needed
 	if(!stateStack.empty())
@@ -48,12 +49,16 @@ void StateManager::pushState(StateEnum stateType)
 			std::cout << "Menu State Created!" << std::endl;
 			stateStack.emplace(new MenuState());
 			break;
+		case DIALOGUE:
+			std::cout << "Dialogue state created!" << std::endl;
+			stateStack.emplace(new DialogueState());
+			break;
 		default:
 			std::cout << "Cannot create state!" << std::endl;
 			return;
 	}
 
-	stateStack.top()->onEnter(NULL, imageManager);
+	stateStack.top()->onEnter(data, imageManager);
 	currentState = stateType;
 }
 
@@ -68,7 +73,7 @@ void StateManager::popState()
 
 // Switch states safely, removing the current state and emplacing a new one
 // usually called from within the current state
-void StateManager::switchState(StateEnum stateType)
+/*void StateManager::switchState(StateEnum stateType, sf::Packet* data)
 {
 	if(stateType == LOADING)
 	{
@@ -83,7 +88,7 @@ void StateManager::switchState(StateEnum stateType)
 	delete stateStack.top();
 	stateStack.pop();
 	pushState(stateType);
-}
+}*/
 
 // Returns false if we have no more states to update
 bool StateManager::update()

@@ -17,6 +17,7 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 
 	// Updating the input manager
 	//inputManager.update(window);
+	inputManager->addBinding("test", sf::Keyboard::T);
 
 	// Updating the camera
 	if(inputManager->keyHeld("right"))
@@ -42,6 +43,16 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 		//stateManager->switchState(StateManager::MENU);
 		stateManager->popState();
 	}
+
+	if (inputManager->pressedOnce("test"))
+	{
+		sf::Packet bundle;
+		bundle << "test";
+
+		stateManager->pushState(StateManager::DIALOGUE, &bundle);
+	}
+
+	inputManager->removeBinding("test");
 }
 
 void GameState::render(sf::RenderWindow* window)

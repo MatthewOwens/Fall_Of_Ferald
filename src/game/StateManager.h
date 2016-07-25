@@ -7,15 +7,15 @@
 class StateManager
 {
 public:
-	enum StateEnum {MENU, OPTIONS, LOADING, GAME, COMBAT};
+	enum StateEnum {MENU, OPTIONS, LOADING, GAME, COMBAT, DIALOGUE};
 
 	StateManager(InputManager* inputs, ImageManager* images, sf::RenderWindow* win);
 	~StateManager();
 	StateManager();
-	void pushState(StateEnum stateType);
+	void pushState(StateEnum stateType, sf::Packet* data = NULL);
 
 	// Pop the current state and push a new state to the stack
-	void switchState(StateEnum stateType);
+	//void switchState(StateEnum stateType, sf::Packet* data = NULL);
 
 	bool update();
 	void render();

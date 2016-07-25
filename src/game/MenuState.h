@@ -10,7 +10,7 @@
 #include "InputManager.h"
 #include "Button.h"
 
-class GameStateManager;
+class StateManager;
 
 class MenuState : public BaseState
 {

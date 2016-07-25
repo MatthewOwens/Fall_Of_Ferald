@@ -13,7 +13,7 @@ Game::Game()
 	settings.majorVersion = 3;
 	settings.minorVersion = 2;
 
-	window.create(sf::VideoMode(1280, 720), "Fall of Ferald", sf::Style::Close);// Default, settings);
+	window.create(sf::VideoMode(1280, 720), "Fall of Ferald", sf::Style::Default, settings);
 	stateManager = NULL;
 
 	settings = window.getSettings();

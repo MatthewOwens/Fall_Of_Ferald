@@ -11,7 +11,7 @@ class FileManager
 public:
 	FileManager(const std::string& dialogueFolder);
 	~FileManager();
-	std::vector<Node*> loadDialogue(const std::string& moduleName);
+	std::vector<Node*> loadDialogue(const std::string& moduleFile);
 	std::vector<Node*> loadDialogue(const std::string& moduleFile, std::string& moduleName);
 	bool saveDialogue(const std::string& moduleName, std::vector<Node*>);
 

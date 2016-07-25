@@ -12,7 +12,7 @@
 #include "Level.h"
 #include "AI.h"
 
-class GameStateManager;
+class StateManager;
 
 class GameState : public BaseState
 {

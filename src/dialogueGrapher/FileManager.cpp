@@ -64,6 +64,12 @@ void FileManager::saveGlobals(const std::map<std::string, bool>& map)
 	saveFlags(dialogueFolder + "globals.json", map);
 }
 
+std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile)
+{
+	std::string s;
+	return loadDialogue(moduleFile, s);
+}
+
 std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std::string& moduleName)
 {
 	std::ifstream ifs(dialogueFolder + moduleFile + "/dialogue.json");
