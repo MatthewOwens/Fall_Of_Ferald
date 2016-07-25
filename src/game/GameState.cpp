@@ -72,7 +72,6 @@ void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	//imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
 	//imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
 	ui.loadAssets(*imageManager);
-	ui.addDialogueBox("dialogue/test.txt", 0, 500);
 
 	// Setting up the camera
 	camera.reset(sf::FloatRect(0,0,1280,720));

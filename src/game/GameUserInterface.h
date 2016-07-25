@@ -16,7 +16,6 @@ class GameUserInterface
         std::list<Tooltip> tooltips;
         sf::Font regularFont;
         sf::Font italicFont;
-        DialogueBox dialogueBox;
 		std::vector<TileHighlight> highlights;
 
 		// References to textures, to be populated in loadAssets()
@@ -27,10 +26,8 @@ class GameUserInterface
 		void loadAssets(ImageManager& imageManager);
         virtual ~GameUserInterface();
         void addTooltip(std::string header, std::string body, int x, int y, int characterSize);
-        void addDialogueBox(std::string scriptPath, int x, int y);
         void update(sf::Vector2f pointerPosition, sf::Vector2f prevPointerPos, bool lmbPressed, bool rmbPressed);
         void draw(sf::RenderWindow *window, sf::View& camera);
-        void nextDialogueLine();
         std::list<Tooltip> getTooltips();
         Tooltip getTooltip(std::string header);
         Tooltip getTooltip(int mouseX, int mouseY);

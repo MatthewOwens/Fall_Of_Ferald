@@ -21,13 +21,11 @@ void GameUserInterface::loadAssets(ImageManager& imageManager)
 
 	// Loading the textures
 	//imageManager.loadImage("assets/images/interface/tooltip.png", "tooltip");
-	imageManager.loadImage("assets/images/interface/Dialogue.png", "dialogueBox");
 	imageManager.loadImage("assets/images/interface/newTooltip.png", "newTooltip");
 
 	//tooltipTexture = &imageManager.getTexture("tooltip");
 	tooltipTexture= &imageManager.getTexture("newTooltip");
 	tooltipTexture->setRepeated(true);
-	dialogueTexture = &imageManager.getTexture("dialogueBox");
 }
 
 GameUserInterface::~GameUserInterface()
@@ -54,9 +52,6 @@ void GameUserInterface::update(sf::Vector2f pointerPosition, sf::Vector2f prevPo
 				break;
 			}
 		}
-
-		if(lmbPressed)	// Ensuring one click per line of dialogue
-			dialogueBox.nextLine();
 	}
 	else if (rmbPressed)
 	{
@@ -156,28 +151,6 @@ void GameUserInterface::addTooltip(std::string header, std::string body, int x, 
 		tooltips.push_back(tempTooltip);
 }
 
-void GameUserInterface::nextDialogueLine() { dialogueBox.nextLine(); }
-
-// Method to add a new dialogue box. Normally only one of these is needed at a time.
-void GameUserInterface::addDialogueBox(std::string scriptPath, int x, int y)
-{
-    if(dialogueBox.openScript(scriptPath))
-    {
-        std::cout << "script loaded successfully." << std::endl;
-        dialogueBox.sprite.setPosition(x, y);
-        dialogueBox.name.setFont(regularFont);
-        dialogueBox.name.setCharacterSize(48);
-        dialogueBox.dialogue.setFont(regularFont);
-        dialogueBox.dialogue.setCharacterSize(48);
-        dialogueBox.nextLine();
-		dialogueBox.active = true;
-
-		if(dialogueTexture != NULL)	// Preventing possible null pointer dereferencing
-        	dialogueBox.sprite.setTexture(*dialogueTexture);
-		else std::cout << "Dialogue texture not loaded!" << std::endl;
-    }
-}
-
 // Method to draw the various UI elements to the screen
 void GameUserInterface::draw(sf::RenderWindow *window, sf::View& camera)
 {
@@ -194,12 +167,6 @@ void GameUserInterface::draw(sf::RenderWindow *window, sf::View& camera)
 
 	// Making the rest of the interface static
 	window->setView(window->getDefaultView());
-
-	/* Drawing the tooltips
-    for (auto i = tooltips.begin(); i != tooltips.end(); i++)
-        i->draw(window); */
-
-    dialogueBox.draw(window);
 
 	// Resetting the view
 	window->setView(camera);
