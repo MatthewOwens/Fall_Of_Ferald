@@ -33,8 +33,11 @@ void DialogueState::render(sf::RenderWindow* window)
 void DialogueState::onEnter(sf::Packet* data, ImageManager* imageManager)
 {
 	FileManager fm("dialogue/");		// Todo: replace global dialogue folder with one for the current save
-
 	inputValid = false;
+	dialogueBox = NULL;
+
+	font.loadFromFile("assets/fonts/steelfish rg it.ttf");
+	imageManager->loadImage("assets/images/interface/Dialogue.png", "dBox");
 
 	if (data != NULL)
 	{
@@ -44,6 +47,8 @@ void DialogueState::onEnter(sf::Packet* data, ImageManager* imageManager)
 			lFlags = fm.loadLocals(dialogueName);
 			gFlags = fm.loadGlobals();
 			inputValid = true;
+
+			dialogueBox = new DialogueBox(imageManager->getTexture("dBox"), font);
 		}
 	}
 }
@@ -55,7 +60,12 @@ void DialogueState::onPause()
 
 sf::Packet DialogueState::onExit(ImageManager* imageManager)
 {
+	imageManager->unloadImage("dBox");
 	return sf::Packet();
 }
 
-//sf::Packet& operator << (sf::Packet& packet, s)
+// Returns true if there is another node to switch to
+bool DialogueState::nextNode()
+{
+
+}

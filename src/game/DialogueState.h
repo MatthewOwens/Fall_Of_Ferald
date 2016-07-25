@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "ImageManager.h"
 #include "DialogueBox.h"
+#include "Button.h"
 #include "../dialogueGrapher/FileManager.h"
 #include "../dialogueGrapher/Node.h"
 #include <vector>
@@ -26,8 +27,16 @@ private:
 	bool inputValid;
 	std::string dialogueName;
 
+	DialogueBox* dialogueBox;
+	sf::Font font;
+
 	std::vector<Node*> dialogueNodes;
 	std::map<std::string, bool> gFlags;
 	std::map<std::string, bool> lFlags;
+	Node* currentNode;
+
+	std::vector<Button> choiceButtons;
+
+	bool nextNode();
 };
 #endif//DIALOGUE_STATE
