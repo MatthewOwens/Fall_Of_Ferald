@@ -34,9 +34,12 @@ private:
 	std::map<std::string, bool> gFlags;
 	std::map<std::string, bool> lFlags;
 	Node* currentNode;
+	bool makingChoice;
 
 	std::vector<Button> choiceButtons;
+	std::vector<int> validConnectionIndices;
 
-	bool nextNode();
+	bool nextNodeExists();
+	void populateButtons();
 };
 #endif//DIALOGUE_STATE

@@ -1,8 +1,8 @@
 #include "DialogueBox.h"
 #include <SFML/Graphics.hpp>
 
-DialogueBox::DialogueBox(const sf::Texture& texture, const sf::Font font,
-					const int charSize = 48, const int posX = 0, const int posY = 0)
+DialogueBox::DialogueBox(const sf::Texture& texture, const sf::Font& font,
+					const int charSize, const int posX, const int posY)
 {
 	sprite.setPosition(posX, posY);
 	sprite.setTexture(texture);
@@ -12,6 +12,12 @@ DialogueBox::DialogueBox(const sf::Texture& texture, const sf::Font font,
 
 	name.setCharacterSize(charSize);
 	dialogue.setCharacterSize(charSize);
+
+	name.setPosition(sprite.getPosition());
+	name.move(5, 10);
+
+	dialogue.setPosition(sprite.getPosition());
+	name.move(5, 50);
 }
 
 DialogueBox::~DialogueBox()

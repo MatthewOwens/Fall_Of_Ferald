@@ -9,7 +9,7 @@
 class DialogueBox
 {
     public:
-		DialogueBox(const sf::Texture& texture, const sf::Font font,
+		DialogueBox(const sf::Texture& texture, const sf::Font& font,
 					const int charSize = 48, const int posX = 0, const int posY = 0);
 
         virtual ~DialogueBox();
