@@ -637,39 +637,41 @@ void Grapher::onRightClick(sf::Vector2f& viewPos)
 {
 	if (flagEdit != NULL)
 		flagEdit->removeFlags(inputManager.getMousePosition());
-
-	for (auto i = nodeViews.begin(); i != nodeViews.end();)
+	else
 	{
-		if ((*i)->removeRequired(viewPos))
+		for (auto i = nodeViews.begin(); i != nodeViews.end();)
 		{
-			// Ensuring that nodes connected to i are disconnected cleanly
-			for (auto j : nodeViews)
+			if ((*i)->removeRequired(viewPos))
 			{
-				if (j != *i)
+				// Ensuring that nodes connected to i are disconnected cleanly
+				for (auto j : nodeViews)
 				{
-					j->removeConnector(*i);
+					if (j != *i)
+					{
+						j->removeConnector(*i);
+					}
 				}
+
+				// Clearing selections, just in case
+				selectedNode = NULL;
+				connectingNodes[0] = NULL;
+				connectingNodes[1] = NULL;
+
+				if (selectedInputBox != &ibox)
+					selectedInputBox = NULL;
+
+				delete *i;
+				*i = NULL;
+
+				i = nodeViews.erase(i);
 			}
-
-			// Clearing selections, just in case
-			selectedNode = NULL;
-			connectingNodes[0] = NULL;
-			connectingNodes[1] = NULL;
-
-			if (selectedInputBox != &ibox)
-				selectedInputBox = NULL;
-
-			delete *i;
-			*i = NULL;
-
-			i = nodeViews.erase(i);
+			else ++i;
 		}
-		else ++i;
-	}
 
-	// Repopulating lines
-	for (auto i : nodeViews)
-		i->populateLines(nodeViews);
+		// Repopulating lines
+		for (auto i : nodeViews)
+			i->populateLines(nodeViews);
+	}
 }
 
 void Grapher::onMiddleClick(sf::Vector2f& viewPos)
