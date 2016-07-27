@@ -11,7 +11,7 @@ Currently in the prototype stage.
 
 ## TODO - Dialogue Grapher
 * Fix NodeView text not saving properly
-..* This is due to selectedNode not updating when a textBox is selected
+..*. This is due to selectedNode not updating when a textBox is selected
 
 
 ## TODO - Game
