@@ -1,3 +1,9 @@
 {
-	"flags" : []
+	"flags" : 
+	[
+		{
+			"key" : "delinquent",
+			"value" : true
+		}
+	]
 }

@@ -36,10 +36,11 @@ private:
 	Node* currentNode;
 	bool makingChoice;
 
-	std::vector<Button> choiceButtons;
+	std::vector<Button*> choiceButtons;
 	std::vector<int> validConnectionIndices;
 
 	bool nextNodeExists();
 	void populateButtons();
+	void updateFlags(Connector& selectedConn);
 };
 #endif//DIALOGUE_STATE

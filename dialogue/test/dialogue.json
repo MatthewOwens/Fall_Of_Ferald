@@ -8,9 +8,22 @@
 			[
 				{
 					"choiceText" : "",
-					"priority" : -1,
+					"priority" : 0,
 					"requiredFlags" : [],
 					"targetID" : "test1",
+					"triggeredFlags" : []
+				},
+				{
+					"choiceText" : "",
+					"priority" : -1,
+					"requiredFlags" : 
+					[
+						{
+							"key" : "irritated_man",
+							"value" : true
+						}
+					],
+					"targetID" : "test5",
 					"triggeredFlags" : []
 				}
 			],
@@ -37,10 +50,22 @@
 				},
 				{
 					"choiceText" : "Go fuck yourself",
-					"priority" : 0,
-					"requiredFlags" : [],
+					"priority" : -1,
+					"requiredFlags" : 
+					[
+						{
+							"key" : "delinquent",
+							"value" : true
+						}
+					],
 					"targetID" : "test4",
-					"triggeredFlags" : []
+					"triggeredFlags" : 
+					[
+						{
+							"key" : "irritated_man",
+							"value" : true
+						}
+					]
 				}
 			],
 			"header" : "Old Man",
@@ -60,9 +85,30 @@
 		},
 		{
 			"body" : "You wanna' go, punk?!",
-			"connectors" : [],
+			"connectors" : 
+			[
+				{
+					"choiceText" : "",
+					"priority" : -1,
+					"requiredFlags" : [],
+					"targetID" : "test6",
+					"triggeredFlags" : []
+				}
+			],
 			"header" : "Old Man",
 			"id" : "test4"
+		},
+		{
+			"body" : "Fuck you",
+			"connectors" : [],
+			"header" : "Old Man",
+			"id" : "test5"
+		},
+		{
+			"body" : "I'm going to kill you!",
+			"connectors" : [],
+			"header" : "Old Man",
+			"id" : "test6"
 		}
 	]
 }

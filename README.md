@@ -9,6 +9,10 @@ Currently in the prototype stage.
 * SFML 2.3.2
 * jsoncpp
 
+## TODO - Dialogue Grapher
+* Fix NodeView text not saving properly
+..* This is due to selectedNode not updating when a textBox is selected
+
 
 ## TODO - Game
 * Bind camera to map
