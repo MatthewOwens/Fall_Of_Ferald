@@ -11,13 +11,7 @@
 					"priority" : -1,
 					"requiredFlags" : [],
 					"targetID" : "test1",
-					"triggeredFlags" : 
-					[
-						{
-							"key" : "utter_cunt",
-							"value" : true
-						}
-					]
+					"triggeredFlags" : []
 				}
 			],
 			"header" : "Old Man",
@@ -43,26 +37,10 @@
 				},
 				{
 					"choiceText" : "Go fuck yourself",
-					"priority" : -1,
-					"requiredFlags" : 
-					[
-						{
-							"key" : "delinquent",
-							"value" : true
-						},
-						{
-							"key" : "utter_cunt",
-							"value" : true
-						}
-					],
+					"priority" : 0,
+					"requiredFlags" : [],
 					"targetID" : "test4",
-					"triggeredFlags" : 
-					[
-						{
-							"key" : "irritated_man",
-							"value" : true
-						}
-					]
+					"triggeredFlags" : []
 				}
 			],
 			"header" : "Old Man",

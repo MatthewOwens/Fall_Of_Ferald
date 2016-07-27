@@ -14,10 +14,10 @@ DialogueBox::DialogueBox(const sf::Texture& texture, const sf::Font& font,
 	dialogue.setCharacterSize(charSize);
 
 	name.setPosition(sprite.getPosition());
-	name.move(5, 10);
+	name.move(25, 10);
 
 	dialogue.setPosition(sprite.getPosition());
-	name.move(5, 50);
+	dialogue.move(25, 120);
 }
 
 DialogueBox::~DialogueBox()

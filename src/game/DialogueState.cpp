@@ -154,6 +154,7 @@ bool DialogueState::nextNodeExists()
 	for (auto i = validConnectionIndices.begin(); i != validConnectionIndices.end(); )
 	{
 		const std::map<std::string, bool>& flags = conns[*i].getFlags();
+		bool incRequired = true;
 
 		// If there's flags to parse
 		if (flags.size() >= 1)
@@ -169,6 +170,7 @@ bool DialogueState::nextNodeExists()
 				{
 					std::cout << "Flag value '" << flag->first << "' was not found!";
 					i = validConnectionIndices.erase(i);
+					incRequired = false;
 					break;
 				}
 
@@ -178,6 +180,7 @@ bool DialogueState::nextNodeExists()
 					if (lSearch->second != flag->second)	// Flag isn't met
 					{
 						i = validConnectionIndices.erase(i);
+						incRequired = false;
 					}
 					break;
 				}
@@ -186,12 +189,14 @@ bool DialogueState::nextNodeExists()
 					if (gSearch->second != flag->second) // Flag isn't met
 					{
 						i = validConnectionIndices.erase(i);
+						incRequired = false;
 					}
 					break;
 				}
 			}
 		}
-		i++;
+		if (incRequired)
+			i++;
 	}
 
 	// There's at least one valid node
