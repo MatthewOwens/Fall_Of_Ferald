@@ -211,9 +211,7 @@ void FlagEditor::remove(const sf::Vector2f& mousePos, std::vector<sf::Text>& vec
 		if (vecItr % 2 == 0)
 			vec.erase(vec.begin() + vecItr, vec.begin() + (vecItr + 2));
 		else if (vecItr == 1)
-			vec.erase(vec.begin(), vec.begin() + vecItr);
-		else
-			vec.erase(vec.begin() + (vecItr - 2), vec.begin() + vecItr);
+			vec.erase(vec.begin() + (vecItr - 1), vec.begin() + vecItr + 1);
 	}
 }
 
