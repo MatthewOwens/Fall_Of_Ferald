@@ -26,42 +26,40 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
     if(inFile.good())
     {
         int i = 0;      // Iterator for within the lines of text
-        int j  = -1;    // Iterator for the lines themselves, initially -1 so
-                        // we can load the map from the second line.
-        while(std::getline(inFile, line))
-        {
-            subString.str(line);
-            if(j == -1)
-            {
-                std::string ss;
-                while(std::getline(subString, ss, ','))
-                {
-                    // If statments are there to prevent cleaning up the converter
-                    // as doing so requires multiple function calls.
-                    if(levelHeight == 0 && levelWidth != 0)
-                    {
-                        std::istringstream convert(ss);
-                        convert >> levelHeight;
-                    }
+        int j  = 0;		// Iterator for the lines themselves
+		bool calculatingWidth = true;
 
-                    if(levelWidth == 0)
-                    {
-                        std::istringstream convert(ss);
-                        convert >> levelWidth;
-                    }
+		// Calculating the level size
+		while (std::getline(inFile, line))
+		{
+			if (calculatingWidth)
+			{
+				subString.str(line);
+				levelWidth = line.length();
+				calculatingWidth = false;
+			}
 
-                }
+			levelHeight++;
+		}
 
-                std::cout << "Level defined with size " << levelWidth << "x" << levelHeight << std::endl;
+		std::cout << "Level defined with size " << levelWidth << "x" << levelHeight << std::endl;
 
-                // Defining the array
-                tiles = new Tile*[levelWidth];
-                for(int k = 0; k < levelWidth; ++k)
-                    tiles[k] = new Tile[levelHeight];
-            }
-            else if (j < levelHeight)
+		// Returning the cursor
+		inFile.clear();
+		inFile.seekg(0, inFile.beg);
+
+		// Defining the array
+		tiles = new Tile*[levelWidth];
+		for(int k = 0; k < levelWidth; ++k)
+			tiles[k] = new Tile[levelHeight];
+
+		while (std::getline(inFile, line))
+		{
+            if (j < levelHeight)
             {
                 char id;
+				subString.str(line);
+
                 while (i < levelWidth)
                 {
                     // Grabbing a character from the line string
