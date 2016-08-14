@@ -20,14 +20,28 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 	inputManager->addBinding("test", sf::Keyboard::T);
 
 	// Updating the camera
-	if(inputManager->keyHeld("right"))
-		camera.move(3,0);
-	if(inputManager->keyHeld("left"))
-		camera.move(-3,0);
-	if(inputManager->keyHeld("down"))
-		camera.move(0,3);
-	if(inputManager->keyHeld("up"))
-		camera.move(0,-3);
+	updateCameraRect();
+
+	if (inputManager->keyHeld("right"))
+	{
+		if (cameraRect.left + cameraRect.width < cameraBounds.x - 3)
+			camera.move(3,0);
+	}
+	if (inputManager->keyHeld("left"))
+	{
+		if (cameraRect.left >= 3)
+			camera.move(-3,0);
+	}
+	if (inputManager->keyHeld("down"))
+	{
+		if (cameraRect.top + cameraRect.height < cameraBounds.y - 3)
+			camera.move(0,3);
+	}
+	if (inputManager->keyHeld("up"))
+	{
+		if (cameraRect.top >= 3)
+			camera.move(0,-3);
+	}
 
 	// Updating the UI
 	ui.update(inputManager->getMousePosition(), inputManager->getPrevMousePosition(),
@@ -55,6 +69,17 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 	inputManager->removeBinding("test");
 }
 
+void GameState::updateCameraRect()
+{
+	const sf::Vector2f& viewCenter = camera.getCenter();
+	const sf::Vector2f& viewRect = camera.getSize();
+
+	cameraRect.left = viewCenter.x - (viewRect.x / 2);
+	cameraRect.top = viewCenter.y - (viewRect.y / 2);
+	cameraRect.width = viewRect.x;
+	cameraRect.height = viewRect.y;
+}
+
 void GameState::render(sf::RenderWindow* window)
 {
 	if(window != NULL)
@@ -77,6 +102,12 @@ void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	}
 
     level = new Level("levels/example/map.txt", "assets/images/tileSheets/spriteSheet.png", imageManager);
+
+	cameraBounds = sf::Vector2i(level->getMapSizeX() * level->getTileSize(),
+								level->getMapSizeY() * level->getTileSize());
+
+	std::cout << "Camera Bounds: (" << cameraBounds.x << "," << cameraBounds.y << ")" << std::endl;
+
     level->initilizeAI("levels/example/units.txt", "assets/images/unitSprites", *imageManager);
 
 	// Loading the interface data

@@ -15,10 +15,6 @@ Currently in the prototype stage.
 
 
 ## TODO - Game
-* Bind camera to map
-* Replace current dialogue parser with one that supports json output from
-  DialogueGrapher
-* Implement a way to navigate the directed diagraphs outputted by DialogueGrapher
-* Add the option to render the previous and current states
 * Rework inventory system
+* Implement 9-slice transistions for map tiles
 * Make some sprites that don't look awful

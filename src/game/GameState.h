@@ -28,7 +28,12 @@ public:
 private:
 	GameUserInterface ui;
 	Level* level;
+
 	sf::View camera;
+	sf::Vector2i cameraBounds;
+	sf::FloatRect cameraRect;
+
+	void updateCameraRect();
 
 	bool closed = false;
 	bool turnPassed = false;
