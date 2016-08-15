@@ -13,31 +13,34 @@ ImageManager::~ImageManager()
 }
 
 // Load an image into the map and use the file path as the key
-void ImageManager::loadImage(const std::string& filename)
+bool ImageManager::loadImage(const std::string& filename)
 {
     sf::Texture tempTexture;
 
     // Ensuring that the file exists
     if (!tempTexture.loadFromFile(filename))
     {
-        std::cout << "Error loading " << filename << std::endl;
+        std::cerr << "Error loading " << filename << std::endl;
+		return false;
     }
     images[filename] = tempTexture;
+	return true;
 }
 
 // Load an image into the map and specify the key
-void ImageManager::loadImage(const std::string& filename, const std::string& name)
+bool ImageManager::loadImage(const std::string& filename, const std::string& name)
 {
     sf::Texture tempTexture;
 
     // Ensuring that the file exists
     if (!tempTexture.loadFromFile(filename))
     {
-        std::cout << "Error loading " << filename << std::endl;
-		std::cin.get();
+        std::cerr << "Error loading " << filename << std::endl;
+		return false;
     }
 
     images[name] = tempTexture;
+	return true;
 }
 
 // Method to unload an image from memory based on it's key

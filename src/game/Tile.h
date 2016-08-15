@@ -12,10 +12,12 @@ class Tile
 	public:
 		Tile(int terrainType, sf::Texture& texture);
 		Tile(int terrainType, sf::Texture& texture, sf::IntRect& textureRect);
+		Tile(int terrainType);
 		Tile();
 		sf::Sprite getSprite() {return sprite;}
 		std::string getType(){return tileType;}
 		const int& getTerrainDef() { return terrainDef; }
+		void setSprite(sf::Texture& texture, sf::IntRect& textureRect);
 
 	private:
 		std::string tileType;						// The type of terrain tyle

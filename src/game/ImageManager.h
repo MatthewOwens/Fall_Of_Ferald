@@ -8,8 +8,8 @@ class ImageManager
     public:
         ImageManager();
         virtual ~ImageManager();
-        void loadImage(const std::string& filename);
-        void loadImage(const std::string& filename, const std::string& name);
+        bool loadImage(const std::string& filename);
+        bool loadImage(const std::string& filename, const std::string& name);
         void unloadImage(const std::string& key);
         sf::Texture& getTexture(const std::string& key);
     private:

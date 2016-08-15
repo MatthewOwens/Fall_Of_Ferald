@@ -9,6 +9,11 @@ Tile::Tile()
 
 }
 
+Tile::Tile(int terrainType)
+{
+	setStats(terrainType);
+}
+
 Tile::Tile(int terrainType, sf::Texture& texture)
 {
     // Setting the texture
@@ -21,6 +26,12 @@ Tile::Tile(int terrainType, sf::Texture& texture)
     sprite.setTextureRect(rect);
 
 	setStats(terrainType);
+}
+
+void Tile::setSprite(sf::Texture& texture, sf::IntRect& textureRect)
+{
+	sprite.setTexture(texture);
+	sprite.setTextureRect(textureRect);
 }
 
 Tile::Tile(int terrainType, sf::Texture& texture, sf::IntRect& textureRect)
