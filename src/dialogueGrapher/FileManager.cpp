@@ -136,7 +136,7 @@ std::vector<Node*> FileManager::loadDialogue(const std::string& moduleFile, std:
 					connection.addFlag(requiredFlags[k]["key"].asString(), requiredFlags[k]["value"].asBool());
 
 				for (int k = 0; k < triggeredFlags.size(); ++k)
-					connection.addTrigger(triggeredFlags[k]["key"].asString(), requiredFlags[k]["value"].asBool());
+					connection.addTrigger(triggeredFlags[k]["key"].asString(), triggeredFlags[k]["value"].asBool());
 
 				finalNodes[i]->addConnector(connection);
 			}
