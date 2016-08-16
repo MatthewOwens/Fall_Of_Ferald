@@ -497,14 +497,16 @@ void Grapher::onMiddleRelease(sf::Vector2f& viewPos)
 
 void Grapher::onLeftClick(sf::Vector2f& viewPos)
 {
-	for (auto i : nodeViews)
+	if (connEdit == NULL && flagEdit == NULL)
 	{
-		selectedInputBox = i->getSelectedInputBox(viewPos);
-		
-		if (selectedInputBox != NULL)
+		for (auto i : nodeViews)
 		{
-			selectedNode = i;
-			break;
+			selectedInputBox = i->getSelectedInputBox(viewPos);
+
+			if (selectedInputBox != NULL)
+			{
+				break;
+			}
 		}
 	}
 
