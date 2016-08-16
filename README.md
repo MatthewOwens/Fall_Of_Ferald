@@ -10,9 +10,7 @@ Currently in the prototype stage.
 * jsoncpp
 
 ## TODO - Dialogue Grapher
-* Fix NodeView text not saving properly
-  * This is due to selectedNode not updating when a textBox is selected
-
+* Rewrite to be a more robust, standalone program
 
 ## TODO - Game
 * Rework inventory system

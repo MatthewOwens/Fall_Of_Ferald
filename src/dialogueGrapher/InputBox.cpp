@@ -43,7 +43,9 @@ void InputBox::removeCharacter()
 
 bool InputBox::checkClicked(const sf::Vector2f& mousePos)
 {
-	selected = getGlobalBounds().contains(mousePos);
+	sf::FloatRect& bounds = getGlobalBounds();
+	selected = bounds.contains(mousePos);
+	//selected = getGlobalBounds().contains(mousePos);
 
 	if(selected)
 		setOutlineColor(sf::Color(179,80,80));

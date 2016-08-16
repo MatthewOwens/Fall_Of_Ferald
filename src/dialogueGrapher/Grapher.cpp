@@ -500,6 +500,12 @@ void Grapher::onLeftClick(sf::Vector2f& viewPos)
 	for (auto i : nodeViews)
 	{
 		selectedInputBox = i->getSelectedInputBox(viewPos);
+		
+		if (selectedInputBox != NULL)
+		{
+			selectedNode = i;
+			break;
+		}
 	}
 
 	// If we've clicked in the graph
