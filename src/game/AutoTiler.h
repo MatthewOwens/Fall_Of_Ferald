@@ -11,7 +11,7 @@
 class AutoTiler
 {
 public:
-	AutoTiler(ImageManager* imageManager, std::string& folderPath);
+	AutoTiler(ImageManager* imageManager, const std::string& folderPath);
 	~AutoTiler();
 
 	/**

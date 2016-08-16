@@ -1,7 +1,7 @@
 #include "AutoTiler.h"
 #include <fstream>
 
-AutoTiler::AutoTiler(ImageManager* imageManager, std::string& folderPath) :
+AutoTiler::AutoTiler(ImageManager* imageManager, const std::string& folderPath) :
 imageManager(imageManager),
 folderPath(folderPath)
 {
@@ -47,7 +47,7 @@ bool AutoTiler::loadTileset(const std::string& tilesetName)
 		return false;
 	}
 
-	if (!reader.parse(descriptorPath, root))
+	if (!reader.parse(ifs, root))
 	{
 		std::cerr << "Error parsing json file at '" << descriptorPath << "'!" << std::endl;
 		return false;
@@ -55,6 +55,7 @@ bool AutoTiler::loadTileset(const std::string& tilesetName)
 
 	tilesets[tilesetName] = new Tileset(imageManager->getTexture(tilesetName + nameSuffix),
 										root);
+	return true;
 }
 
 bool AutoTiler::setTextures(Tile** tiles, int width, int height, const std::string& tilesetName)
@@ -86,22 +87,27 @@ bool AutoTiler::setTextures(Tile** tiles, int width, int height, const std::stri
 				neighbours[k] = NULL;
 
 			// Populating the neighbours
-			if (j > 0)			neighbours[0] = &tiles[i][j - 1];	// North
-			if (j > height - 1)	neighbours[1] = &tiles[i][j + 1];	// South
-			if (i < width - 1)	neighbours[2] = &tiles[i + 1][j];	// East
-			if (i > 0)			neighbours[3] = &tiles[i - 1][j];	// West
+			if (j > 0)
+				neighbours[0] = &tiles[i][j - 1];	// North
+			if (j < height - 1)
+				neighbours[1] = &tiles[i][j + 1];	// South
+			if (i < width - 1)
+				neighbours[2] = &tiles[i + 1][j];	// East
+			if (i > 0)
+				neighbours[3] = &tiles[i - 1][j];	// West
 
 			// Setting the texture for the current tile
 			setTexture(&tiles[i][j], neighbours, tilesetName);
 		}
 	}
+	return true;
 }
 
 void AutoTiler::setTexture(Tile* target, Tile* neighbours[4], const std::string& tilesetName)
 {
 	int defaultIndex = 0;
 	int tileIndex = -1;
-	const Json::Value& ruleset = tilesets[tilesetName]->descriptor[target->getType()];
+	const Json::Value& ruleset = tilesets[tilesetName]->descriptor["rulesets"][target->getType()];
 	const Json::Value& rules = ruleset["rules"];
 
 	int sheetHeight = tilesets[tilesetName]->descriptor["sheetHeight"].asInt();
@@ -117,20 +123,23 @@ void AutoTiler::setTexture(Tile* target, Tile* neighbours[4], const std::string&
 	defaultIndex = ruleset["defaultTileIndex"].asInt();
 
 	// Checking if any of the rules match
-	for (auto rule : ruleset)
+	Json::Value ruleArr(Json::arrayValue);
+	ruleArr = ruleset["rules"];
+
+	for (auto rule : ruleArr)
 	{
 		std::string dirs = rule["directions"].asString();
 
 		if (ruleCheck(neighbours, rule["types"], dirs))
 		{
 			tileIndex = rule["tileIndex"].asInt();
-			continue;	// Match, stop checking the rules
+			break;	// Match, stop checking the rules
 		}
 	}
 
 	// Falling back to the default if needed
 	if (tileIndex == -1)
-		defaultIndex = tileIndex;
+		tileIndex = defaultIndex;
 
 	// Positioning the source rect
 	sourceRect.top = sourceRect.height * (tileIndex / sheetWidth);
@@ -160,6 +169,9 @@ bool AutoTiler::ruleCheck(Tile* neighbours[4], Json::Value& type, std::string& d
 				targetNeighbour = 3;
 				break;
 		}
+
+		if (neighbours[targetNeighbour] == NULL)
+			return false;
 
 		if (type.isArray())
 		{

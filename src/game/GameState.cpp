@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "StateManager.h"
+#include "AutoTiler.h"
 #include <iostream>
 
 GameState::GameState() : BaseState()
@@ -101,7 +102,21 @@ void GameState::onEnter(sf::Packet* data, ImageManager* imageManager)
 		// TODO: parse data
 	}
 
-    level = new Level("levels/example/map.txt", "assets/images/tileSheets/spriteSheet.png", imageManager);
+    //level = new Level("levels/example/map.txt", "assets/images/tileSheets/spriteSheet.png", imageManager);
+    level = new Level("levels/example/map.txt");
+
+	// Initilizing the tileset
+	AutoTiler tiler(imageManager, tilesheetPath);
+
+	if (tiler.loadTileset("grasslands"))
+	{
+		if (!tiler.setTextures(level->getTiles(), level->getMapSizeX(), level->getMapSizeY(), "grasslands"))
+		{
+			std::cerr << "FAILED TO SET TILE TEXTURES!" << std::endl;
+			std::cin.get();
+			exit(-1);
+		}
+	}
 
 	cameraBounds = sf::Vector2i(level->getMapSizeX() * level->getTileSize(),
 								level->getMapSizeY() * level->getTileSize());

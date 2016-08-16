@@ -4,6 +4,88 @@
 #include "Unit.h"
 //#include "SaveManager.h"
 
+Level::Level(const std::string& mapPath)
+{
+	//SaveManager saveManager;
+    std::ifstream inFile(mapPath);
+    std::istringstream subString;
+    std::string line;
+    levelWidth = 0;
+    levelHeight = 0;
+	playerTurn = true;
+	playerUnitSelected = false;
+	playerUnitTargeting = false;
+	hoveredTile = sf::Vector2i(0,0);
+	selectedUnitPos = sf::Vector2i(-1,-1);
+	previouslyHoveredTile = sf::Vector2i(-1,-1);
+	selectedUnit = NULL;
+
+    std::cout << "loading level" << std::endl;
+
+    if(inFile.good())
+    {
+        int i = 0;      // Iterator for within the lines of text
+        int j  = 0;		// Iterator for the lines themselves
+		bool calculatingWidth = true;
+
+		// Calculating the level size
+		while (std::getline(inFile, line))
+		{
+			if (calculatingWidth)
+			{
+				subString.str(line);
+				levelWidth = line.length();
+				calculatingWidth = false;
+			}
+
+			levelHeight++;
+		}
+
+		std::cout << "Level defined with size " << levelWidth << "x" << levelHeight << std::endl;
+
+		// Returning the cursor
+		inFile.clear();
+		inFile.seekg(0, inFile.beg);
+
+		// Defining the array
+		tiles = new Tile*[levelWidth];
+		for(int k = 0; k < levelWidth; ++k)
+			tiles[k] = new Tile[levelHeight];
+
+		while (std::getline(inFile, line))
+		{
+            if (j < levelHeight)
+            {
+                char id;
+				subString.str(line);
+
+                while (i < levelWidth)
+                {
+                    // Grabbing a character from the line string
+                    id = subString.get();
+
+                    int identifier = id - '0';
+                    tiles[i][j] = Tile(identifier);
+                    tiles[i][j].sprite.setPosition(i * tileSize, j * tileSize);
+                    i++;
+                }
+                i = 0;  // Line parsed, moving back to the start
+            }
+            // Line parsed, move to the next line
+            j++;
+
+            // Clearing up the subString
+            subString.str("");
+            subString.clear();
+        }
+    }
+    else
+    {
+        std::cout << "Error loading " << mapPath << ", file not found." << std::endl;
+    }
+
+}
+
 Level::Level(const std::string& mapPath, const std::string& tileSheetPath, ImageManager* imageManager)
 {
 	//SaveManager saveManager;

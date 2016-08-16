@@ -37,5 +37,6 @@ private:
 
 	bool closed = false;
 	bool turnPassed = false;
+	const std::string tilesheetPath = "assets/images/tileSheets/";
 };
 #endif //GAMESTATE_H

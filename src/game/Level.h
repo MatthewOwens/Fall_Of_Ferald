@@ -18,6 +18,7 @@ class Level
 {
     public:
         Level(const std::string& mapPath, const std::string& tilesheetPath, ImageManager* imageManager);
+		Level(const std::string& mapPath);
         void initilizeAI(const std::string& unitPath, const std::string& spritesheetPath, ImageManager& imageManager);
         void draw(sf::RenderWindow& window);
 		void update(InputManager& inputManager, GameUserInterface& ui);
@@ -26,6 +27,8 @@ class Level
         std::string getTileType(int x, int y);
         int getMapSizeX();
         int getMapSizeY();
+
+		Tile** getTiles() { return tiles; }
 
 		// Accessor methods
 		inline int getTileSize() { return tileSize; }

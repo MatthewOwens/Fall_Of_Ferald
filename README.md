@@ -16,5 +16,4 @@ Currently in the prototype stage.
 
 ## TODO - Game
 * Rework inventory system
-* Implement 9-slice transistions for map tiles
 * Make some sprites that don't look awful
