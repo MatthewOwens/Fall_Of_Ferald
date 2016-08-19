@@ -29,21 +29,21 @@
       "defaultTileIndex":4,
       "rules":
       [
-        {"directions":"nsew", "types":"plain", "tileIndex": 19},
-        {"directions":"new", "types":"plain", "tileIndex": 18},
-        {"directions":"sew", "types":"plain", "tileIndex": 17},
-        {"directions":"nse", "types":"plain", "tileIndex": 16},
-        {"directions":"nsw", "types":"plain", "tileIndex": 15},
-        {"directions":"ns", "types":"plain", "tileIndex": 9},
-        {"directions":"ew", "types":"plain", "tileIndex": 14},
-        {"directions":"ne", "types":"plain", "tileIndex": 8},
-        {"directions":"nw", "types":"plain", "tileIndex": 7},
-        {"directions":"se", "types":"plain", "tileIndex": 13},
-        {"directions":"sw", "types":"plain", "tileIndex": 12},
-        {"directions":"n", "types":"plain", "tileIndex": 5},
-        {"directions":"s", "types":"plain", "tileIndex": 11},
-        {"directions":"e", "types":"plain", "tileIndex": 6},
-        {"directions":"w", "types":"plain", "tileIndex": 10}
+        {"directions":"nsew", "types":["plain","forest","mountain"], "tileIndex": 19},
+        {"directions":"new", "types":["plain","forest","mountain"], "tileIndex": 18},
+        {"directions":"sew", "types":["plain","forest","mountain"], "tileIndex": 17},
+        {"directions":"nse", "types":["plain","forest","mountain"], "tileIndex": 16},
+        {"directions":"nsw", "types":["plain","forest","mountain"], "tileIndex": 15},
+        {"directions":"ns", "types":["plain","forest","mountain"], "tileIndex": 9},
+        {"directions":"ew", "types":["plain","forest","mountain"], "tileIndex": 14},
+        {"directions":"ne", "types":["plain","forest","mountain"], "tileIndex": 8},
+        {"directions":"nw", "types":["plain","forest","mountain"], "tileIndex": 7},
+        {"directions":"se", "types":["plain","forest","mountain"], "tileIndex": 13},
+        {"directions":"sw", "types":["plain","forest","mountain"], "tileIndex": 12},
+        {"directions":"n", "types":["plain","forest","mountain"], "tileIndex": 5},
+        {"directions":"s", "types":["plain","forest","mountain"], "tileIndex": 11},
+        {"directions":"e", "types":["plain","forest","mountain"], "tileIndex": 6},
+        {"directions":"w", "types":["plain","forest","mountain"], "tileIndex": 10}
       ]
     }
   }

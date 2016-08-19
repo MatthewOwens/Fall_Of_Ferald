@@ -175,7 +175,15 @@ bool AutoTiler::ruleCheck(Tile* neighbours[4], Json::Value& type, std::string& d
 
 		if (type.isArray())
 		{
-			if (neighbours[targetNeighbour]->getType() != type[i].asString())
+			/*if (neighbours[targetNeighbour]->getType() != type[i].asString())
+				return false;*/
+			bool matchOne = false;
+			for (auto t : type)
+			{
+				if (neighbours[targetNeighbour]->getType() == t.asString())
+					matchOne = true;
+			}
+			if (!matchOne)
 				return false;
 		}
 		else
