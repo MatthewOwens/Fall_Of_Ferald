@@ -126,19 +126,30 @@ bool StateManager::update()
 
 void StateManager::render()
 {
+	/// Render stack so that we can render prior states
+	std::stack<BaseState*> renderStack;
+
 	window->clear();
 
 	if (!stateStack.empty() && window != NULL)
 	{
-		if (stateStack.size() > 1 && stateStack.top()->renderingPrevious())
+		// Populating the render stack
+		while(stateStack.top()->renderingPrevious() == true)
 		{
-			BaseState* s = stateStack.top();
+			renderStack.push(stateStack.top());
 			stateStack.pop();
-
-			stateStack.top()->render(window);
-			stateStack.push(s);
 		}
+
+		// Rendering the bottom-most state
 		stateStack.top()->render(window);
+
+		// Rendering the render stack
+		while(!renderStack.empty())
+		{
+			renderStack.top()->render(window);
+			stateStack.push(renderStack.top());
+			renderStack.pop();
+		}
 	}
 
 	window->display();
