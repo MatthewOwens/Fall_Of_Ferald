@@ -1,16 +1,45 @@
-# Author: Xemerau
-# Date:	27th July 2015
+# Enabling debug symbols
+if(CMAKE_BUILD_TYPE STREQUAL "")
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
 
-# Simple Cmake Setup, utilises a single subdirectory (src) and adds all C++
-# source files to the project
+list (APPEND CMAKE_CXX_FLAGS "-Wall -DGL_GLEXT_PROTOTYPES -Werror=return-type -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
 
-# cmake is forwards compatable, but not always backwards compatable. So a
-# minimum version must be specified.
-cmake_minimum_required(VERSION 3.1)	# for now I'm just using the version I have installed
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+file(GLOB SRCS *.cpp *.h)
 
-#project(fall_of_ferald) # defining the project's name
+add_executable(SRPG ${SRCS})
 
-add_subdirectory(game)	# adding a subdirectory, cmake will look here for an
-						# additional CMakeLists.txt file.
-add_subdirectory(dialogueGrapher)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+message(CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH})
+find_package(GLEW REQUIRED)
+find_package(SFML 2.4.0 REQUIRED system window graphics network audio)
+find_package(OpenGL REQUIRED)
+find_package(Jsoncpp REQUIRED)
+
+if(GLEW_FOUND)
+	include_directories(${GLEW_INCLUDE_DIR})
+	target_link_libraries(SRPG ${GLEW_LIBRARIES})
+endif()
+
+if(SFML_FOUND)
+  include_directories(${SFML_INCLUDE_DIR})
+  target_link_libraries(SRPG ${SFML_LIBRARIES})
+endif()
+
+if(OPENGL_FOUND)
+  include_directories(${OPENGL_INCLUDE_DIR})
+  target_link_libraries(SRPG ${OPENGL_LIBRARIES})
+endif()
+
+if(Jsoncpp_FOUND)
+#	message(Found jsoncpp in ${JSONCPP_INCLUDE_DIR})
+#	include_directories(${JSONCPP_INCLUDE_DIR})
+#	target_link_libraries(SRPG ${JSONCPP_LIBRARIES})
+	message("Found jsoncpp in " ${Jsoncpp_INCLUDE_DIR})
+	include_directories(${Jsoncpp_INCLUDE_DIR})
+	target_link_libraries(SRPG ${Jsoncpp_LIBRARY})
+else()
+	message("-- Jsoncpp not found")
+	message("  -- jsoncpp_INCLUDE_DIR: " ${Jsoncpp_INCLUDE_DIR})
+	message("  -- jsoncpp_LIBRARY: " ${Jsoncpp_LIBRARIES})
+endif()
