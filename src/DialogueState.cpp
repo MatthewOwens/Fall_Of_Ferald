@@ -23,8 +23,6 @@ void DialogueState::update(InputManager* inputManager, StateManager* stateManage
 
 	if (inputManager->pressedOnce("cancel"))
 		stateManager->pushState(StateManager::PAUSE);
-		//stateManager->popState();
-		//close = true;
 
 	if (inputManager->pressedOnce(sf::Mouse::Left))
 	{
