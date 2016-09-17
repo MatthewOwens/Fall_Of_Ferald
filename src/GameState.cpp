@@ -51,11 +51,8 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 	// Updating the level
 	level->update(*inputManager, ui);
 
-	// Checking if the window's been closed
 	if(inputManager->pressedOnce("cancel"))
 	{
-		//stateManager->switchState(StateManager::MENU);
-		//stateManager->popState();
 		stateManager->pushState(StateManager::PAUSE);
 	}
 
@@ -65,7 +62,6 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 		bundle << "test";
 
 		stateManager->pushState(StateManager::DIALOGUE, &bundle);
-		//stateManager->pushState(StateManager::COMBAT, &bundle);
 	}
 
 	inputManager->removeBinding("test");
@@ -92,6 +88,7 @@ void GameState::render(sf::RenderWindow* window)
 			level->draw(*window);
 
 		ui.draw(window, camera);
+		window->setView(window->getDefaultView());
 	}
 }
 
