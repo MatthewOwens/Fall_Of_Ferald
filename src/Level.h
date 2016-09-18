@@ -36,6 +36,10 @@ class Level
 		void nextTurn();
 		inline bool isPlayerTurn() { return playerTurn; }
     private:
+		enum TurnState {SELECTION, MOVE, MOVEANIM, ATTACK, ATTACKANIM};
+		TurnState turnState;
+
+
         int levelWidth;
         int levelHeight;
         const int tileSize = 64;
@@ -52,6 +56,8 @@ class Level
         Tile** tiles;
         AI combatController;
 		Pathfinder pathfinder;
+
+		void deselectUnit(GameUserInterface& ui, bool moveBack = true);
 };
 
 #endif // LEVEL_H

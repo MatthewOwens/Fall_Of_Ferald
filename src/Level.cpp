@@ -13,6 +13,7 @@ Level::Level(const std::string& mapPath)
     levelWidth = 0;
     levelHeight = 0;
 	playerTurn = true;
+	turnState = TurnState::SELECTION;
 	playerUnitSelected = false;
 	playerUnitTargeting = false;
 	hoveredTile = sf::Vector2i(0,0);
@@ -230,130 +231,188 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 			}
 		}
 
-		// Rendering unit stats on right click
-		if(inputManager.pressedOnce(sf::Mouse::Button::Right))
+		switch (turnState)
 		{
-			for(auto &unit : combatController.getEnemyUnits())
+			case SELECTION:
 			{
-				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+				// Rendering unit stats on right click
+				if(inputManager.pressedOnce(sf::Mouse::Button::Right))
 				{
-					// Draw appropriate tooltip
-					ui.addTooltip(unit.getName(), unit.getInfo(),
-						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
-				}
-			}
-
-			for(auto &unit : combatController.getAvailableUnits())
-			{
-				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
-					// Draw appropriate tooltip
-					ui.addTooltip(unit.getName(), unit.getInfo(),
-						(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
-			}
-		}
-
-		// Displaying a unit's range if the player's unit is clicked for the first time
-		if(inputManager.pressedOnce(sf::Mouse::Button::Left))
-		{
-			ui.clearHighlight();
-			playerUnitSelected = false;
-
-			// Checking each unit to see if we've clicked it
-			for(auto &unit : combatController.getEnemyUnits())
-			{
-				if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
-				{
-
-					/*toHighlight = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()),
-						unit.getStat("moveRange"), unit.getMovementType());*/
-					pathfinder.calculateArea(unit, toHighlight, toHighlightAtk);
-
-					ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
-					ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
-					playerUnitSelected = true;
-					selectedUnitPos = sf::Vector2i(unit.getX(), unit.getY());
-					selectedUnit = &unit;
-
-					// No need to check the rest of the units
-					break;
-				}
-			}
-
-			// Moving the selected unit, if we didn't select it this frame
-			if(selectedUnit != NULL && !playerUnitSelected)
-			{
-				bool changeTurn = true;
-
-				// Only move the unit if it hasn't been moved this turn
-				if(!selectedUnit->getMoved())
-				{
-				// Only moving within the moverange
-					for(auto &tile : toHighlight)
+					// Checking player units
+					for(auto &unit : combatController.getEnemyUnits())
 					{
-						if(hoveredTile.x == tile.x && hoveredTile.y == tile.y)
+						if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
 						{
-							selectedUnit->setPosition(hoveredTile.x, hoveredTile.y, tileSize);
-							selectedUnit->setMoved(true);
-							playerUnitTargeting = true;
+							ui.addTooltip(unit.getName(), unit.getInfo(),
+									(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
+						}
+					}
+
+					// Checking the AI units
+					for(auto &unit : combatController.getAvailableUnits())
+					{
+						if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+						{
+							ui.addTooltip(unit.getName(), unit.getInfo(),
+									(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
+						}
+					}
+				}
+
+				// Making a selection on left click
+				if(inputManager.pressedOnce(sf::Mouse::Button::Left))
+				{
+					ui.clearHighlight();
+					playerUnitSelected = false;
+
+					// Checking the player-controlled units to see if we've selected one
+					for(auto &unit : combatController.getEnemyUnits())
+					{
+						if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY()
+							&& !unit.getMoved())
+						{
+
+							pathfinder.calculateArea(unit, toHighlight, toHighlightAtk);
+
+							ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
+							ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
+							playerUnitSelected = true;
+							selectedUnitPos = sf::Vector2i(unit.getX(), unit.getY());
+							selectedUnit = &unit;
+
+							// Switching to the next state
+							turnState = TurnState::MOVE;
+
+							// No need to check the rest of the units
 							break;
 						}
 					}
 				}
-				//selectedUnit = NULL;
+				break;
+			}
+			case MOVE:
+			{
+				bool validTile = false;
 
-				// Changing turn if all the player units have been used
-				for(auto &unit : combatController.getEnemyUnits())
+				// Clearing selection on right click
+				if(inputManager.pressedOnce(sf::Mouse::Button::Right))
 				{
-					if(!unit.getMoved())
-						changeTurn = false;
+					deselectUnit(ui);
+					break;
 				}
 
-				if(changeTurn)
-					nextTurn();
+				// Drawing the path between the selected unit and the mouse
+				if(playerUnitSelected && hoveredTile != previouslyHoveredTile && !playerUnitTargeting)
+				{
+					// Checking if the hovered tile in our range
+					for(auto &i : toHighlight)
+					{
+						if(i.x == hoveredTile.x && i.y == hoveredTile.y)
+							validTile = true;
+					}
+
+					if(validTile && hoveredTile != selectedUnit->getGridPos())
+					{
+						std::stack<sf::Vector2i> pathStack;
+						pathStack = pathfinder.getPath(toHighlight, selectedUnitPos, hoveredTile);
+						ui.clearHighlight(ui.enemyHighlight);
+
+						ui.highlightTiles(pathStack, ui.enemyHighlight, tileSize);
+					}
+					else	// Moved off the movable tiles
+					{
+						ui.clearHighlight();
+						pathfinder.calculateArea(*selectedUnit, toHighlight, toHighlightAtk);
+
+						ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
+						ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
+					}
+				}
+
+				if(inputManager.pressedOnce(sf::Mouse::Button::Left))
+				{
+					// If we've clicked in a valid tile for movement
+					if(validTile || hoveredTile == selectedUnitPos)
+					{
+						// Move to the hoveredTile
+						selectedUnit->setPosition((sf::Vector2f)hoveredTile, tileSize);
+						turnState = TurnState::MOVEANIM;
+					}
+				}
+
+				break;
 			}
-		}
-
-		// TODO: Display radius with UI::highlightTiles
-		if(playerUnitTargeting && selectedUnit != NULL)
-		{
-			std::vector<sf::Vector2i> atkRange = combatController.getItemRange(*selectedUnit, 5, 2);
-			ui.highlightTiles(atkRange, ui.enemyHighlight, tileSize);
-
-			playerUnitTargeting = false;
-		}
-
-		// Drawing the path between the selected unit and the mouse
-		if(playerUnitSelected && hoveredTile != previouslyHoveredTile)
-		{
-			bool validTile = false;
-
-			// Checking if the hovered tile in our range
-			for(auto &i : toHighlight)
+			case MOVEANIM:
 			{
-				if(i.x == hoveredTile.x && i.y == hoveredTile.y)
-					validTile = true;
+				turnState = TurnState::ATTACK;
+				break;
 			}
-
-			if(validTile)
+			case ATTACK:
 			{
-				std::stack<sf::Vector2i> pathStack;
-				pathStack = pathfinder.getPath(toHighlight, selectedUnitPos, hoveredTile);
-				ui.clearHighlight(ui.enemyHighlight);
-
-				ui.highlightTiles(pathStack, ui.enemyHighlight, tileSize);
-			}
-			else	// Moved off the movable tiles
-			{
+				// Highlighting the attackable tiles
 				ui.clearHighlight();
-				pathfinder.calculateArea(*selectedUnit, toHighlight, toHighlightAtk);
+				std::vector<sf::Vector2i> atkRange = combatController.getItemRange(*selectedUnit, 5, 2);
+				ui.highlightTiles(atkRange, ui.enemyHighlight, tileSize);
 
-				ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
-				ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
+				// Clearing selection on right click
+				if(inputManager.pressedOnce(sf::Mouse::Button::Right))
+				{
+					deselectUnit(ui);
+					break;
+				}
+
+				if(inputManager.pressedOnce(sf::Mouse::Button::Left))
+				{
+					// Wait if the unit was clicked again
+					if(hoveredTile == selectedUnit->getGridPos())
+					{
+						turnState = TurnState::ATTACKANIM;
+					}
+					else
+					{
+						// Checking to see if we're attacking an enemy
+						for(auto &unit : combatController.getAvailableUnits())
+						{
+							if(unit.getGridPos() == (sf::Vector2i)hoveredTile)
+							{
+								std::cout << "ATTACK!" << std::endl;
+								unit.modifyStat("health", 10);	// TODO: replace temp value (10)
+								turnState = TurnState::ATTACKANIM;
+								break;
+							}
+						}
+					}
+				}
+
+				break;
+			}
+			case ATTACKANIM:
+			{
+				// TODO: Display the actual attack animation
+
+				// Cleaning up
+				selectedUnit->getSprite().setColor(sf::Color(43,43,43));
+				selectedUnit->setMoved(true);
+				deselectUnit(ui, false);
+				break;
+			}
+
+			previouslyHoveredTile = hoveredTile;
+		}
+
+		// Checking to see if the turn has ended
+		bool next = true;
+		for(auto &unit : combatController.getEnemyUnits())
+		{
+			if(!unit.getMoved())
+			{
+				next = false;
+				break;
 			}
 		}
 
-		// Updating the previous hovered tile
-		previouslyHoveredTile = hoveredTile;
+		if(next)
+			nextTurn();
 	}
 }
 
@@ -402,14 +461,38 @@ void Level::nextTurn()
 	{
 		playerTurn = false;
 		for(auto &unit : combatController.getAvailableUnits())
+		{
 			unit.setMoved(false);
+			unit.getSprite().setColor(sf::Color::White);
+		}
 	}
 	else
 	{
 		playerTurn = true;
 		for(auto &unit : combatController.getEnemyUnits())
+		{
 			unit.setMoved(false);
+			unit.getSprite().setColor(sf::Color::White);
+		}
+
+		turnState = TurnState::SELECTION;
 	}
+}
+
+void Level::deselectUnit(GameUserInterface& ui, bool moveBack)
+{
+	// Clearing highlights
+	ui.clearHighlight();
+	toHighlight.clear();
+	toHighlightAtk.clear();
+
+	// Moving unit back
+	if(moveBack)
+		selectedUnit->setPosition((sf::Vector2f)selectedUnitPos, tileSize);
+
+	selectedUnitPos = sf::Vector2i(-1,-1);
+	selectedUnit = NULL;
+	turnState = TurnState::SELECTION;
 }
 
 Tile Level::getTile(int x, int y) {return tiles[x][y];}

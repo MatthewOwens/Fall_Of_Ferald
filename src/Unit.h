@@ -17,9 +17,10 @@ class Unit
 		inline void setSprite(sf::Texture& texture) { sprite.setTexture(texture); }
         int getStat(std::string statName);
         std::string getHighestStat();
-        int getX(){return x;}
-        int getY(){return y;}
         int getMaxRange();
+        inline int getX(){return x;}
+        inline int getY(){return y;}
+		inline sf::Vector2i getGridPos() { return sf::Vector2i(x, y); }
 		inline sf::Sprite& getSprite() { return sprite; }
 		inline bool getMoved() { return moved; }
 		inline void setMoved(bool val) { moved = val; }
@@ -65,7 +66,7 @@ class Unit
         std::string type;           // The unit's type (Tank, Mech, Infantry etc.)
         std::string name;           // The unit's name (if not specified, this becomes the unit's type)
         int level;
-		bool moved;					// Wether or not the unit has been moved this turn
+		bool moved;					// Whether or not the unit has been moved this turn
 
         // The unit's stats, stored in a map so that individual stats can be easily accessed.
         std::map<std::string, Stat> stats;
