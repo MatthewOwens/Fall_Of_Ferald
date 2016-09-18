@@ -51,6 +51,7 @@ class Level
 		//std::vector<sf::Vector3i> toHighlight;
 		std::vector<sf::Vector3i> toHighlight;
 		std::vector<sf::Vector2i> toHighlightAtk;
+		std::stack<sf::Vector2i> pathStack;
 		sf::Vector2i selectedUnitPos;
 		Unit* selectedUnit;
         Tile** tiles;

@@ -165,6 +165,8 @@ void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, s
 		/*else if(i.z  - moveCosts[moveType][levelPtr->getTileType(i.x, i.y)] <= atkRange)
 			atkSet.push_back(sf::Vector2i(i.x, i.y));*/
 	}
+
+	moveSet.erase(moveSet.begin());
 }
 
 // Calculates the area on the map that a unit can move to, based on it's movement
@@ -267,6 +269,7 @@ std::stack<sf::Vector2i> Pathfinder::getPath(std::vector<sf::Vector3i> searchRan
 
 	// Pushing the start node
 	finalPath.push(target);
+	searchRange.push_back(sf::Vector3i(start.x, start.y, 0));
 
 	while(finalPath.top() != start)
 	{
@@ -303,5 +306,6 @@ std::stack<sf::Vector2i> Pathfinder::getPath(std::vector<sf::Vector3i> searchRan
 		}
 	}
 
+	//finalPath.pop();
 	return finalPath;
 }

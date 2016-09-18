@@ -313,7 +313,6 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 					if(validTile && hoveredTile != selectedUnit->getGridPos())
 					{
-						std::stack<sf::Vector2i> pathStack;
 						pathStack = pathfinder.getPath(toHighlight, selectedUnitPos, hoveredTile);
 						ui.clearHighlight(ui.enemyHighlight);
 
@@ -344,6 +343,11 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 			}
 			case MOVEANIM:
 			{
+				while(!pathStack.empty())
+				{
+					std::cout << "(" << pathStack.top().x << ","<< pathStack.top().y<<")"<<std::endl;
+					pathStack.pop();
+				}
 				turnState = TurnState::ATTACK;
 				break;
 			}
@@ -371,15 +375,35 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 					else
 					{
 						// Checking to see if we're attacking an enemy
-						for(auto &unit : combatController.getAvailableUnits())
+						auto unit = combatController.getAvailableUnits().begin();
+						while(unit != combatController.getAvailableUnits().end())
+						//for(auto &unit : combatController.getAvailableUnits())
 						{
-							if(unit.getGridPos() == (sf::Vector2i)hoveredTile)
+							if(unit->getGridPos() == (sf::Vector2i)hoveredTile)
 							{
-								std::cout << "ATTACK!" << std::endl;
-								unit.modifyStat("health", 10);	// TODO: replace temp value (10)
-								turnState = TurnState::ATTACKANIM;
-								break;
+								// TODO: Find out why this valididty check is breaking everything
+								bool valid = false;
+								for(auto i : atkRange)
+								{
+									if(i == unit->getGridPos())
+										valid = true;
+								}
+
+								if(valid)
+								{
+									std::cout << "ATTACK!" << std::endl;
+									unit->modifyStat("health", 10);	// TODO: replace temp value (10)
+									turnState = TurnState::ATTACKANIM;
+
+									if(unit->getStat("health") <= 0)
+										unit = combatController.getAvailableUnits().erase(unit);
+									else ++unit;
+
+									break;
+								}
+								else ++unit;
 							}
+							else ++unit;
 						}
 					}
 				}
