@@ -342,6 +342,14 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 				ui.highlightTiles(pathStack, ui.enemyHighlight, tileSize);
 			}
+			else	// Moved off the movable tiles
+			{
+				ui.clearHighlight();
+				pathfinder.calculateArea(*selectedUnit, toHighlight, toHighlightAtk);
+
+				ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
+				ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
+			}
 		}
 
 		// Updating the previous hovered tile
