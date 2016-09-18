@@ -293,12 +293,12 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 						if(hoveredTile.x == tile.x && hoveredTile.y == tile.y)
 						{
 							selectedUnit->setPosition(hoveredTile.x, hoveredTile.y, tileSize);
+							selectedUnit->setMoved(true);
+							playerUnitTargeting = true;
 							break;
 						}
 					}
 				}
-				selectedUnit->setMoved(true);
-				playerUnitTargeting = true;
 				//selectedUnit = NULL;
 
 				// Changing turn if all the player units have been used
