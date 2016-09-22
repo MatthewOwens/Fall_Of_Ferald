@@ -13,8 +13,8 @@ GameState::~GameState()
 
 void GameState::update(InputManager* inputManager, StateManager* stateManager)
 {
-    std::vector<sf::Vector3i> locations;
-	std::stack<sf::Vector2i> path;
+    //std::vector<sf::Vector3i> locations;
+	//std::stack<sf::Vector2i> path;
 
 	// Updating the input manager
 	//inputManager.update(window);

@@ -36,6 +36,7 @@ Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int 
 
 	x = _x;
 	y = _y;
+
 }
 
 // Alternative constructor for a generic unit, takes an array
@@ -113,6 +114,49 @@ void Unit::setPosition(int newX, int newY, int tileSize)
 
 	// Setting the sprite's position
 	sprite.setPosition(x * tileSize, y * tileSize);
+}
+
+void Unit::moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize)
+{
+	sf::Vector2i target = path.top();
+	sf::Vector2f moveVec = (sf::Vector2f)(target - getGridPos());
+
+	std::cout << "\tSprite pos: (" << sprite.getPosition().x << "," << sprite.getPosition().y << ")";
+	std::cout << "\tMoveVec: (" << moveVec.x << "," << moveVec.y << ")";
+	std::cout << "\tGridPos: (" << x << "," << y << ")";
+	std::cout << "\tTarget: (" << target.x << "," << target.y << ")"<< std::endl;
+
+	// Moving the sprite
+	//sprite.move(moveVec);
+	sprite.move(moveVec.x * 4, moveVec.y * 4);
+
+	// TODO: If -ve change this check!!
+	if(moveVec.x < 0)
+	{
+		x = (sprite.getPosition().x + sprite.getLocalBounds().width) / tileSize;
+	}
+	else if(moveVec.y < 0)
+	{
+		y = (sprite.getPosition().y + sprite.getLocalBounds().height) / tileSize;
+	}
+	else
+	{
+		x = sprite.getPosition().x / tileSize;
+		y = sprite.getPosition().y / tileSize;
+	}
+
+	// Checking if we need to change target
+	if(getGridPos() == target)
+	{
+		x = target.x;
+		y = target.y;
+
+		// Moving the unit back if need be
+		if(moveVec.x < 0 || moveVec.y < 0)
+			sprite.move(-moveVec);
+
+		path.pop();
+	}
 }
 
 void Unit::setPosition(sf::Vector2f newPos, int tileSize)

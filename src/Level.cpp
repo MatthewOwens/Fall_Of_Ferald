@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include "Unit.h"
+#include <cmath>
 //#include "SaveManager.h"
 
 Level::Level(const std::string& mapPath)
@@ -196,6 +197,8 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 8, 3));
 	combatController.getEnemyUnits().back().setSprite(imageManager.getTexture("player"));
 
+	combatController.updateSprites(tileSize);
+
 	// Initilising the pathfinder
 	pathfinder = Pathfinder(this);
 }
@@ -203,11 +206,11 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 void Level::update(InputManager& inputManager, GameUserInterface& ui)
 {
 	// Updating the sprites
-	combatController.updateSprites(tileSize);
 	sf::Vector2f mousePos = inputManager.getMousePosition();
 
 	if(!playerTurn)
 	{
+		combatController.updateSprites(tileSize);
 		combatController.update(pathfinder, tiles, tileSize);
 		std::cout << "Completed AI turn" << std::endl;
 		nextTurn();
@@ -334,7 +337,8 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 					if(validTile || hoveredTile == selectedUnitPos)
 					{
 						// Move to the hoveredTile
-						selectedUnit->setPosition((sf::Vector2f)hoveredTile, tileSize);
+						//selectedUnit->setPosition((sf::Vector2f)hoveredTile, tileSize);
+						pathStack.pop();
 						turnState = TurnState::MOVEANIM;
 					}
 				}
@@ -343,12 +347,13 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 			}
 			case MOVEANIM:
 			{
-				while(!pathStack.empty())
-				{
-					std::cout << "(" << pathStack.top().x << ","<< pathStack.top().y<<")"<<std::endl;
-					pathStack.pop();
-				}
-				turnState = TurnState::ATTACK;
+				//turnState = TurnState::ATTACK;
+
+				// TODO: Fix
+				selectedUnit->moveAlong(pathStack, tileSize);
+
+				if(pathStack.empty())
+					turnState = TurnState::ATTACK;
 				break;
 			}
 			case ATTACK:

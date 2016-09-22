@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include <string>
 #include <list>
+#include <stack>
 #include <SFML/Graphics/Sprite.hpp>
 
 class Unit
@@ -25,11 +26,14 @@ class Unit
 		inline bool getMoved() { return moved; }
 		inline void setMoved(bool val) { moved = val; }
 		inline Inventory& getInventory() { return inventory; }
+
 		inline std::string getName() { return name; }
 		inline std::string getMovementType() { return movementType; }
 
 		void setPosition(int newX, int newY, int tileSize);	
 		void setPosition(sf::Vector2f newPos, int tileSize);
+
+		void moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize);
 	
 		bool useItem(std::string itemName, Unit* target);	// For targeting other units
 		bool useItem(std::string itemName);					// For using on self
@@ -71,7 +75,6 @@ class Unit
         // The unit's stats, stored in a map so that individual stats can be easily accessed.
         std::map<std::string, Stat> stats;
         int x, y;                   // The unit's x and y coords on the map
-		int tileSize;
 };
 
 #endif // UNIT_H
