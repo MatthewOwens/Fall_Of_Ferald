@@ -324,7 +324,6 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 					else	// Moved off the movable tiles
 					{
 						ui.clearHighlight();
-						pathfinder.calculateArea(*selectedUnit, toHighlight, toHighlightAtk, true);
 
 						ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
 						ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
@@ -336,9 +335,6 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 					// If we've clicked in a valid tile for movement
 					if(validTile || hoveredTile == selectedUnitPos)
 					{
-						// Move to the hoveredTile
-						//selectedUnit->setPosition((sf::Vector2f)hoveredTile, tileSize);
-						pathStack.pop();
 						ui.clearHighlight();
 						turnState = TurnState::MOVEANIM;
 					}
@@ -350,9 +346,8 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 			{
 				//turnState = TurnState::ATTACK;
 
-				// TODO: Fix
 				if(!pathStack.empty())
-					selectedUnit->moveAlong(pathStack, tileSize);
+					selectedUnit->moveAlong(pathStack, tileSize);	// TODO: Fix movement
 
 				if(pathStack.empty())
 					turnState = TurnState::ATTACK;
