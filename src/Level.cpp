@@ -210,8 +210,8 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 	if(!playerTurn)
 	{
-		combatController.updateSprites(tileSize);
-		combatController.update(pathfinder, tiles, tileSize);
+		//combatController.updateSprites(tileSize);
+		//combatController.update(pathfinder, tiles, tileSize);
 		std::cout << "Completed AI turn" << std::endl;
 		nextTurn();
 	}
@@ -275,7 +275,7 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 							&& !unit.getMoved())
 						{
 
-							pathfinder.calculateArea(unit, toHighlight, toHighlightAtk);
+							pathfinder.calculateArea(unit, toHighlight, toHighlightAtk, true);
 
 							ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
 							ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
@@ -314,17 +314,17 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 							validTile = true;
 					}
 
-					if(validTile && hoveredTile != selectedUnit->getGridPos())
+					if(validTile)
 					{
 						pathStack = pathfinder.getPath(toHighlight, selectedUnitPos, hoveredTile);
-						ui.clearHighlight(ui.enemyHighlight);
 
+						ui.clearHighlight(ui.enemyHighlight);
 						ui.highlightTiles(pathStack, ui.enemyHighlight, tileSize);
 					}
 					else	// Moved off the movable tiles
 					{
 						ui.clearHighlight();
-						pathfinder.calculateArea(*selectedUnit, toHighlight, toHighlightAtk);
+						pathfinder.calculateArea(*selectedUnit, toHighlight, toHighlightAtk, true);
 
 						ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
 						ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
@@ -339,6 +339,7 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 						// Move to the hoveredTile
 						//selectedUnit->setPosition((sf::Vector2f)hoveredTile, tileSize);
 						pathStack.pop();
+						ui.clearHighlight();
 						turnState = TurnState::MOVEANIM;
 					}
 				}
@@ -350,7 +351,8 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 				//turnState = TurnState::ATTACK;
 
 				// TODO: Fix
-				selectedUnit->moveAlong(pathStack, tileSize);
+				if(!pathStack.empty())
+					selectedUnit->moveAlong(pathStack, tileSize);
 
 				if(pathStack.empty())
 					turnState = TurnState::ATTACK;

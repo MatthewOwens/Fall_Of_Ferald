@@ -20,7 +20,7 @@ class Pathfinder
 		Pathfinder() {}
         virtual ~Pathfinder();
         std::vector<sf::Vector3i> calculateArea(sf::Vector2i start, int range, const std::string& moveType = "flight");
-        void calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet);
+        void calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet, bool playerUnit = false);
         std::vector<sf::Vector2i> getPath(Unit& currentUnit);
 		std::stack<sf::Vector2i> getPath(std::vector<sf::Vector3i> searchRange, sf::Vector2i start, sf::Vector2i target);
         void findPlayerPaths(std::list<Unit>& playerUnits);
@@ -34,6 +34,9 @@ class Pathfinder
         // units, stops them from being recalculated during down-time.
         std::vector<std::vector<sf::Vector2i>> playerPaths;
         Level* levelPtr;
+
+		void findMoveRange(Unit& unit, std::vector<sf::Vector3i>& moveSet, bool playerUnit);
+		void findAtkRange(const sf::Vector2i& start, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet, int atkRange);
 };
 
 #endif // PATHFINDER_H

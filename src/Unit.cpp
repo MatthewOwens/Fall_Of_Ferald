@@ -130,7 +130,6 @@ void Unit::moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize)
 	//sprite.move(moveVec);
 	sprite.move(moveVec.x * 4, moveVec.y * 4);
 
-	// TODO: If -ve change this check!!
 	if(moveVec.x < 0)
 	{
 		x = (sprite.getPosition().x + sprite.getLocalBounds().width) / tileSize;

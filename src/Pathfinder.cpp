@@ -37,136 +37,174 @@ Pathfinder::~Pathfinder()
     levelPtr = NULL;
 }
 
-// Calculates the area that a unit can move to and attack, takes a reference to a unit
-// and references to moveSet and atkSet to modify.
-void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet)
+void Pathfinder::findMoveRange(Unit& unit, std::vector<sf::Vector3i>& moveSet, bool playerUnit)
 {
 	int moveRange = unit.getStat("moveRange");
 	std::string moveType = unit.getMovementType();
-	int atkRange = moveRange + 3;					// TODO: Change to += weapon range
-	sf::Vector2i startPos(unit.getX(), unit.getY());
-	std::list<sf::Vector3i> openSet;
-	std::vector<sf::Vector3i> edgeSet;
-	//std::vector<sf::Vector3i> openSet;
-	int cornerSize = 1;
+	//int atkRange = 3;					// TODO: Change to += weapon range
 
-	// No need to go further if the unit can't move
-	if(moveRange <= 0)
-	{
-		// Since if we're here, it's probably accidental
-		std::cout << unit.getName()  << " can't move!" << std::endl;
-		return;
-	}
+	std::deque<sf::Vector3i> openSet;
 
-	// Ensuring everything's empty.
-	moveSet.clear();
-	atkSet.clear();
-
-	// Calculating how large the corners of the range are
-	for(int i = 2; i < atkRange; ++i)
-		cornerSize += i;
-
-	// Calculating the total size of our range
-	const int maxSearchSize = 1 + (4 * atkRange) + (4 * cornerSize);
-
-	// Pushing our start point to the open set
 	openSet.push_back(sf::Vector3i(unit.getX(), unit.getY(), 0));
 
-	auto currentNode = openSet.begin();
-	while(openSet.size() != maxSearchSize)
+	std::list<Unit> impassableUnits;
+
+	if(playerUnit)
+		impassableUnits = levelPtr->getAI().getAvailableUnits();
+	else impassableUnits = levelPtr->getAI().getEnemyUnits();
+
+	while(!openSet.empty())
 	{
-		sf::Vector3i adjacentNodes[4];
+		sf::Vector3i neighbours[4];
+		neighbours[0] = sf::Vector3i(openSet.front().x + 1 , openSet.front().y, 0);
+		neighbours[1] = sf::Vector3i(openSet.front().x - 1, openSet.front().y, 0);
+		neighbours[2] = sf::Vector3i(openSet.front().x , openSet.front().y + 1, 0);
+		neighbours[3] = sf::Vector3i(openSet.front().x , openSet.front().y - 1, 0);
 
-		// Populating the adjacent nodes
-		adjacentNodes[0] = sf::Vector3i(currentNode->x + 1, currentNode->y, 9999);
-		adjacentNodes[1] = sf::Vector3i(currentNode->x - 1, currentNode->y, 9999);
-		adjacentNodes[2] = sf::Vector3i(currentNode->x, currentNode->y + 1, 9999);
-		adjacentNodes[3] = sf::Vector3i(currentNode->x, currentNode->y - 1, 9999);
-
-		for(int i = 0; i < 4; ++i)
+		for (auto i : neighbours)
 		{
-			// Preventing us from reading outside of the level's tile array
-			if(adjacentNodes[i].x >= 0 && adjacentNodes[i].x < levelPtr->getMapSizeX() &&
-			   adjacentNodes[i].y >= 0 && adjacentNodes[i].y < levelPtr->getMapSizeY())
+			// Preventing us checking off the tile array
+			if(i.x >= 0 && i.x < levelPtr->getMapSizeX() &&
+			   i.y >= 0 && i.y < levelPtr->getMapSizeY() )
 			{
-				adjacentNodes[i].z = moveCosts[moveType][levelPtr->getTileType(adjacentNodes[i].x, adjacentNodes[i].y)];
-				adjacentNodes[i].z += currentNode->z;
+				// Getting the cost to move to the neighbour
+				i.z = openSet.front().z + moveCosts[moveType][levelPtr->getTiles()[i.x][i.y].getType()];
 
-				// Checking if the current node is an edge node and unique in edgeNodes
-				if (adjacentNodes[i].z > moveRange && currentNode->z <= moveRange)
+				if(i.z > moveRange)
+					goto nextNeighbour;
+
+				// Is the neighbour's cost cheaper than a matching node in the open set?
+				for(auto j : openSet)
 				{
-					if (std::find(edgeSet.begin(), edgeSet.end(), *currentNode) == edgeSet.end())
-						edgeSet.push_back(*currentNode);
-				}
-			}
-
-			auto node = openSet.begin();
-
-			// Checking if the adjacent nodes are cheaper than any currently
-			// existing nodes in openSet
-			do
-			{
-				if(node->x == adjacentNodes[i].x && node->y == adjacentNodes[i].y)
-				{
-					if(node->z > adjacentNodes[i].z)
+					if(i.x == j.x && i.y == j.y)
 					{
-						node->z = adjacentNodes[i].z;
-						break;
-					} else break;
+						if(i.z < j.z)
+							j.z = i.z;
 
+						goto nextNeighbour;
+					}
 				}
-				node++;
-			}while(node != openSet.end());
 
-			// If the node doesn't exist at all in openSet
-			if(node == openSet.end())
-				openSet.push_back(adjacentNodes[i]);
+				for(auto j : moveSet)
+				{
+					if(i.x == j.x && i.y == j.y)
+						goto nextNeighbour;
+				}
+
+				// Checking to see if another unit occupies the neighbour
+				for(auto j : impassableUnits)
+				{
+					if(i.x == j.getX() && i.y == j.getY())
+						goto nextNeighbour;
+				}
+
+				// All checks passed - adding to the open set
+				openSet.push_back(i);
+			}
+			nextNeighbour:;
 		}
 
-		currentNode++;
+		moveSet.push_back(openSet.front());
+		openSet.pop_front();
 	}
 
-	// Culling nodes that are too expensive or off the map
-	for(auto i = openSet.begin(); i != openSet.end() ; )
+	// Removing the unit's starting position from the set
+	moveSet.erase(moveSet.begin());
+}
+
+void Pathfinder::findAtkRange(const sf::Vector2i& start, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet, int atkRange)
+{
+	std::deque<sf::Vector3i> openSet;
+
+	for(auto i : moveSet)
 	{
-		if(i->x < 0 || i->x > levelPtr->getMapSizeX() || i->y < 0 ||
-				i->y > levelPtr->getMapSizeY())
+		openSet.clear();
+		openSet.push_back(i);
+		openSet.back().z = 0;
+
+		while(!openSet.empty())
 		{
-			i = openSet.erase(i);
-		} else ++i;
-	} 
+			// Finding neighbours
+			sf::Vector3i neighbours[4];
+			neighbours[0] = sf::Vector3i(openSet.front().x + 1 , openSet.front().y, openSet.front().z + 1);
+			neighbours[1] = sf::Vector3i(openSet.front().x - 1, openSet.front().y,  openSet.front().z + 1);
+			neighbours[2] = sf::Vector3i(openSet.front().x , openSet.front().y + 1, openSet.front().z + 1);
+			neighbours[3] = sf::Vector3i(openSet.front().x , openSet.front().y - 1, openSet.front().z + 1);
 
-
-	// Populating our final vectors
-	for(auto i : openSet)
-	{
-		if(i.z <= moveRange)
-			moveSet.push_back(i);
-		else
-		{
-			bool close = false;
-
-			// Checking if the node is close enough to one of our edge nodes
-			for (auto j : edgeSet)
+			for(auto j : neighbours)
 			{
-				int distance = std::abs(j.x - i.x) + std::abs(j.y - i.y);
-
-				if (distance <= moveRange)
+				if(j.z <= atkRange)
 				{
-					close = true;
-					break;
+					bool alreadyExists = false;
+
+					for(auto k : openSet)
+					{
+						if(j.x == k.x && j.y == k.y)
+						{
+							alreadyExists = true;
+							break;
+						}
+					}
+
+					//for(auto k : atkSet)
+					//{
+					//	if(j.x == k.x && j.y == k.y)
+					//	{
+					//		alreadyExists = true;
+					//		break;
+					//	}
+					//}
+
+					if(!alreadyExists)
+					{
+						openSet.push_back(j);
+					}
+				}
+				else std::cout << "Tile (" << j.x << "," << j.y << "," << j.z << ") is too far" << std::endl;
+			}
+
+			bool alreadyExists = false;
+			if(openSet.front().x == start.x && openSet.front().y == start.y)
+				alreadyExists = true;
+
+			if(!alreadyExists)
+			{
+				for(auto j : atkSet)
+				{
+					if(j.x == openSet.front().x && j.y == openSet.front().y)
+					{
+						alreadyExists = true;
+						break;
+					}
 				}
 			}
 
-			if (close)
-				atkSet.push_back(sf::Vector2i(i.x, i.y));
-		}
-		// TODO: Fix atkSet population
-		/*else if(i.z  - moveCosts[moveType][levelPtr->getTileType(i.x, i.y)] <= atkRange)
-			atkSet.push_back(sf::Vector2i(i.x, i.y));*/
-	}
+			if(!alreadyExists)
+			{
+				for(auto j : moveSet)
+				{
+					if(j.x == openSet.front().x && j.y == openSet.front().y)
+					{
+						alreadyExists = true;
+						break;
+					}
+				}
+			}
 
-	moveSet.erase(moveSet.begin());
+			if(!alreadyExists)
+				atkSet.push_back(sf::Vector2i(openSet.front().x, openSet.front().y));
+			openSet.pop_front();
+		}
+	}
+}
+
+// Calculates the area that a unit can move to and attack, takes a reference to a unit
+// and references to moveSet and atkSet to modify.
+void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet,
+							   std::vector<sf::Vector2i>& atkSet, bool playerUnit)
+{
+		findMoveRange(unit, moveSet, playerUnit);
+		findAtkRange(unit.getGridPos(), moveSet, atkSet, 5);	// TODO: change to proper attack range value
 }
 
 // Calculates the area on the map that a unit can move to, based on it's movement
