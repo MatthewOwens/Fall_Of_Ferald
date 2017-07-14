@@ -22,8 +22,6 @@ Level::Level(const std::string& mapPath)
 	previouslyHoveredTile = sf::Vector2i(-1,-1);
 	selectedUnit = NULL;
 
-    std::cout << "loading level" << std::endl;
-
     if(inFile.good())
     {
         int i = 0;      // Iterator for within the lines of text
@@ -42,8 +40,6 @@ Level::Level(const std::string& mapPath)
 
 			levelHeight++;
 		}
-
-		std::cout << "Level defined with size " << levelWidth << "x" << levelHeight << std::endl;
 
 		// Returning the cursor
 		inFile.clear();
@@ -83,7 +79,7 @@ Level::Level(const std::string& mapPath)
     }
     else
     {
-        std::cout << "Error loading " << mapPath << ", file not found." << std::endl;
+        std::cerr << "Error loading " << mapPath << ", file not found." << std::endl;
     }
 
 }
@@ -105,8 +101,6 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
 	previouslyHoveredTile = sf::Vector2i(-1,-1);
 	selectedUnit = NULL;
 
-    std::cout << "loading level" << std::endl;
-
     if(inFile.good())
     {
         int i = 0;      // Iterator for within the lines of text
@@ -125,8 +119,6 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
 
 			levelHeight++;
 		}
-
-		std::cout << "Level defined with size " << levelWidth << "x" << levelHeight << std::endl;
 
 		// Returning the cursor
 		inFile.clear();
@@ -166,7 +158,7 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
     }
     else
     {
-        std::cout << "Error loading " << mapPath << ", file not found." << std::endl;
+        std::cerr << "Error loading " << mapPath << ", file not found." << std::endl;
     }
 }
 
@@ -174,10 +166,7 @@ Level::Level(const std::string& mapPath, const std::string& tileSheetPath, Image
 // with no enemies or NPC allies.
 void Level::initilizeAI(const std::string& unitPath, const std::string& spritesheetPath, ImageManager& imageManager)
 {
-   // std::cout << "starting to init AI" << std::endl;
-	std::cout << "UNIT PATH IS " << unitPath << std::endl;
     combatController = AI(unitPath, "stats/");
-    std::cout << "AI initilized" << std::endl;
 
 	// Loading the images for the NPC units
     imageManager.loadImage(spritesheetPath + "/mage.png", "mage");
@@ -210,9 +199,8 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 	if(!playerTurn)
 	{
-		//combatController.updateSprites(tileSize);
-		//combatController.update(pathfinder, tiles, tileSize);
-		std::cout << "Completed AI turn" << std::endl;
+		combatController.updateSprites(tileSize);
+		combatController.update(pathfinder, tiles, tileSize);
 		nextTurn();
 	}
 	else
@@ -260,12 +248,19 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 									(hoveredTile.x + 1) * tileSize, hoveredTile.y * tileSize, 24);
 						}
 					}
+
+					ui.clearHighlight();
+					toHighlight.clear();
+					toHighlightAtk.clear();
 				}
 
 				// Making a selection on left click
 				if(inputManager.pressedOnce(sf::Mouse::Button::Left))
 				{
 					ui.clearHighlight();
+					toHighlight.clear();
+					toHighlightAtk.clear();
+
 					playerUnitSelected = false;
 
 					// Checking the player-controlled units to see if we've selected one
@@ -290,6 +285,19 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 							break;
 						}
 					}
+
+					for(auto &unit : combatController.getAvailableUnits())
+					{
+						if(hoveredTile.x == unit.getX() && hoveredTile.y == unit.getY())
+						{
+
+							pathfinder.calculateArea(unit, toHighlight, toHighlightAtk);
+
+							ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
+							ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
+							break;
+						}
+					}
 				}
 				break;
 			}
@@ -311,7 +319,18 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 					for(auto &i : toHighlight)
 					{
 						if(i.x == hoveredTile.x && i.y == hoveredTile.y)
-							validTile = true;
+						{
+							bool occupied = false;
+							for(auto otherUnit : combatController.getEnemyUnits())
+							{
+								if(i.x == otherUnit.getX() && i.y == otherUnit.getY())
+									occupied = true;
+							}
+
+							if(!occupied)
+								validTile = true;
+							break;
+						}
 					}
 
 					if(validTile)
@@ -327,6 +346,10 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 						ui.highlightTiles(toHighlight, ui.friendlyHighlight, tileSize);
 						ui.highlightTiles(toHighlightAtk, ui.enemyHighlight, tileSize);
+
+						// Clearing the path stack
+						while(!pathStack.empty())
+							pathStack.pop();
 					}
 				}
 
@@ -393,7 +416,6 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 								if(valid)
 								{
-									std::cout << "ATTACK!" << std::endl;
 									unit->modifyStat("health", 10);	// TODO: replace temp value (10)
 									turnState = TurnState::ATTACKANIM;
 

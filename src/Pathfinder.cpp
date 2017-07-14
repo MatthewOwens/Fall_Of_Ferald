@@ -48,10 +48,18 @@ void Pathfinder::findMoveRange(Unit& unit, std::vector<sf::Vector3i>& moveSet, b
 	openSet.push_back(sf::Vector3i(unit.getX(), unit.getY(), 0));
 
 	std::list<Unit> impassableUnits;
+	std::list<Unit> friendlyUnits;
 
 	if(playerUnit)
+	{
 		impassableUnits = levelPtr->getAI().getAvailableUnits();
-	else impassableUnits = levelPtr->getAI().getEnemyUnits();
+		friendlyUnits = levelPtr->getAI().getEnemyUnits();
+	}
+	else
+	{
+		impassableUnits = levelPtr->getAI().getEnemyUnits();
+		friendlyUnits = levelPtr->getAI().getAvailableUnits();
+	}
 
 	while(!openSet.empty())
 	{
@@ -160,7 +168,6 @@ void Pathfinder::findAtkRange(const sf::Vector2i& start, std::vector<sf::Vector3
 						openSet.push_back(j);
 					}
 				}
-				else std::cout << "Tile (" << j.x << "," << j.y << "," << j.z << ") is too far" << std::endl;
 			}
 
 			bool alreadyExists = false;
@@ -203,8 +210,13 @@ void Pathfinder::findAtkRange(const sf::Vector2i& start, std::vector<sf::Vector3
 void Pathfinder::calculateArea(Unit& unit, std::vector<sf::Vector3i>& moveSet,
 							   std::vector<sf::Vector2i>& atkSet, bool playerUnit)
 {
-		findMoveRange(unit, moveSet, playerUnit);
-		findAtkRange(unit.getGridPos(), moveSet, atkSet, 5);	// TODO: change to proper attack range value
+	int atkRadius;
+	if(playerUnit)
+		atkRadius = 5;
+	else atkRadius = 1;
+
+	findMoveRange(unit, moveSet, playerUnit);
+	findAtkRange(unit.getGridPos(), moveSet, atkSet, atkRadius);	// TODO: change to proper attack range value
 }
 
 // Calculates the area on the map that a unit can move to, based on it's movement

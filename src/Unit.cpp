@@ -32,8 +32,6 @@ Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int 
     else name = unitName;
 	//name = unitName;
 
-	std::cout << "Created a unit called " << name << "!" << std::endl;
-
 	x = _x;
 	y = _y;
 
@@ -50,11 +48,15 @@ Unit::Unit(std::string unitType, int _x, int _y, int* statArray, int lvl)
     level = lvl;
 	moved = false;
 
+	//std::cout << unitType << " unit created!" << std::endl;
 	for(int i = 0; i < getStatsSize(); ++i)
+	{
 		stats[statNames[i]] = Stat(statArray[i]);
+	}
 
 	x = _x;
 	y = _y;
+	movementType = "foot";
 }
 
 Unit::~Unit()
@@ -121,13 +123,6 @@ void Unit::moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize)
 	sf::Vector2i target = path.top();
 	sf::Vector2f moveVec = (sf::Vector2f)(target - getGridPos());
 
-	std::cout << "\tSprite pos: (" << sprite.getPosition().x << "," << sprite.getPosition().y << ")";
-	std::cout << "\tMoveVec: (" << moveVec.x << "," << moveVec.y << ")";
-	std::cout << "\tGridPos: (" << x << "," << y << ")";
-	std::cout << "\tTarget: (" << target.x << "," << target.y << ")"<< std::endl;
-
-	// Moving the sprite
-	//sprite.move(moveVec);
 	sprite.move(moveVec.x * 4, moveVec.y * 4);
 
 	if(moveVec.x < 0)

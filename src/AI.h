@@ -22,7 +22,7 @@ class AI
         AI();
         AI(const std::string unitsPath, const std::string statsPath);
         std::list<Unit> getPossibleTargets(Unit& currentUnit, Tile** const levelMap);
-		std::list<Unit*> getPossibleTargets(std::vector<sf::Vector3i> attackRange);
+		std::list<Unit*> getPossibleTargets(std::vector<sf::Vector2i> attackRange);
 		Unit* selectTarget(std::list<Unit*>& possibleTargets, Unit& currentUnit);
 		sf::Vector2f selectPosition(std::vector<sf::Vector3i> validRange);
         void setMapDimensions(int width, int height);

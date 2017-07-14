@@ -17,7 +17,7 @@ AI::AI(const std::string unitsPath, const std::string statsPath)
 	populateAIUnits(unitsPath, statsPath);
 }
 
-std::list<Unit*> AI::getPossibleTargets(std::vector<sf::Vector3i> attackRange)
+std::list<Unit*> AI::getPossibleTargets(std::vector<sf::Vector2i> attackRange)
 {
 	std::list<Unit*> possibleTargets;
 
@@ -186,7 +186,7 @@ sf::Vector2f AI::selectPosition(std::vector<sf::Vector3i> validRange)
 			bestItr = itr;
 	}
 
-	std::cout << "Tile (" << bestItr->x << "," << bestItr->y << ") chosen with a def. of " << bestItr->z << std::endl;
+	//std::cout << "Tile (" << bestItr->x << "," << bestItr->y << ") chosen with a def. of " << bestItr->z << std::endl;
 	return sf::Vector2f(bestItr->x, bestItr->y);
 }
 
@@ -212,17 +212,12 @@ void AI::update(Pathfinder& pathfinder, Tile** const tiles, const int& tileSize)
 		std::list<Unit*> possibleTargets;		// What the AI controlled unit can attack
 		std::vector<sf::Vector3i> moveRange;
 		std::vector<sf::Vector2i> atkRange;
-		/*std::vector<sf::Vector3i> moveRange;	// Where the AI controlled unit can move to
-
-		// Finding the moveRange
-		moveRange = pathfinder.calculateArea(sf::Vector2i(unit.getX(), unit.getY()), unit.getStat("moveRange"),
-				unit.getMovementType());*/
 
 		// Finding the move and attack ranges
 		pathfinder.calculateArea(unit, moveRange, atkRange);
 
 		// Searching for possible targets based on the moveRange
-		possibleTargets = getPossibleTargets(moveRange);
+		possibleTargets = getPossibleTargets(atkRange);
 
 		// If there were valid targets within the unit's attack range
 		if(possibleTargets.size() != 0)
@@ -395,7 +390,7 @@ bool AI::populateAIUnits(const std::string& unitsPath, const std::string& statsP
                     std::cout << "The " << unitType << " stats file is good. \n";
                 else
 				{
-                    std::cout << "Error loading " << statsPath + unitType + ".txt" << std::endl;
+                    std::cerr << "Error loading " << statsPath + unitType + ".txt" << std::endl;
 					availableUnits.clear(); // Clearing to avoid half-populated lists.
 					return false;
 				}
@@ -467,7 +462,7 @@ bool AI::populateAIUnits(const std::string& unitsPath, const std::string& statsP
     }
 	else	// unitFile.good == false
 	{
-		std::cout << "Error reading from " << unitsPath << std::endl;
+		std::cerr << "Error reading from " << unitsPath << std::endl;
 		availableUnits.clear();	// Clearing to avoid half-populated lists
 		return false;
 	}
