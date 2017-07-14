@@ -9,6 +9,7 @@
 #include "ImageManager.h"
 #include "InputManager.h"
 #include "Button.h"
+#include "Juicer.h"
 
 class StateManager;
 
@@ -17,6 +18,7 @@ class MenuState : public BaseState
 public:
 	MenuState();
 	~MenuState();
+	Juicer juicer;
 	void update(InputManager* inputManager, StateManager* stateManager);
 	void render(sf::RenderWindow* window);
 	void onEnter(sf::Packet* data, ImageManager* imageManager);

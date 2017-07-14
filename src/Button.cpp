@@ -204,6 +204,22 @@ void Button::clearHighlight()
 	else rectShape->setOutlineColor(sf::Color(255, 255, 255, 0));
 }
 
+sf::Transformable* Button::getBaseTransformable()
+{
+	if(sprite != NULL)
+		return sprite;
+	else if (rectShape != NULL)
+		return rectShape;
+	else return NULL;
+}
+
+sf::Transformable* Button::getTextTransformable()
+{
+	if(text != NULL)
+		return text;
+	else return NULL;
+}
+
 void Button::updatePositions()
 {
 	sf::Vector2f pos = getPosition();
