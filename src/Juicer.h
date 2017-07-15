@@ -20,9 +20,7 @@ class Juicer
 		void add(sf::Transformable* obj,int bitmask);
 		void remove(sf::Transformable* obj);
 		void update();
-		sf::Vector2f testMove(const sf::Vector2f& pos);
 
-		//sf::Vector2f testMove(const sf::Vector2f& pos);
 		enum JuiceType
 		{
 			RMOVE = 1,

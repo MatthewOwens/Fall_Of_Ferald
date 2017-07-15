@@ -60,10 +60,3 @@ void Juicer::update()
 		mask = 1;
 	}
 }
-
-sf::Vector2f Juicer::testMove(const sf::Vector2f& pos)
-{
-	auto ret = pos;
-	ret.x++;
-	return ret;
-}
