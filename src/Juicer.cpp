@@ -38,12 +38,20 @@ void Juicer::update()
 		{
 			switch(bitmask & mask)
 			{
-				case JuiceType::LMOVE:
-					i.object->move(1.f, 0.f);
+				case JuiceType::RMOVE:
+				{
+					// Adding a bit of a delay to the slide in
+					if(i.timer.getElapsedTime().asMilliseconds() < 250)
+						i.object->setPosition(i.target.x - 100, i.target.y);
+					else if(i.object->getPosition().x < i.target.x)
+						i.object->move(5.f, 0.f);
 					break;
+				}
 				case JuiceType::BOUNCE:
+				{
 					i.object->move(0.f, -1.f);
 					break;
+				}
 			}
 			bitmask &= ~mask;
 			mask <<= 1;

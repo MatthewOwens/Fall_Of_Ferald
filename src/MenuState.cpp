@@ -27,9 +27,8 @@ void MenuState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	exitButton->setText(sf::String("Exit"), buttonFont);
 	exitButton->move(sf::Vector2f(1280.f/2 - 50, 720.f/2 + 100));
 
-	juicer.add(menubgSprite, Juicer::JuiceType::LMOVE);
-	juicer.add(button->getBaseTransformable(), Juicer::JuiceType::BOUNCE);
-	juicer.add(button->getTextTransformable(), Juicer::JuiceType::BOUNCE);
+	juicer.add(button->getBaseTransformable(), Juicer::JuiceType::RMOVE);
+	juicer.add(button->getTextTransformable(), Juicer::JuiceType::RMOVE);
 }
 
 sf::Packet MenuState::onExit(ImageManager* imageManager)

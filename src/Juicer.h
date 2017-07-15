@@ -9,6 +9,7 @@
 #ifndef JUICER_H
 #define JUICER_H
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/System/Clock.hpp>
 #include <vector>
 
 class Juicer
@@ -24,7 +25,7 @@ class Juicer
 		//sf::Vector2f testMove(const sf::Vector2f& pos);
 		enum JuiceType
 		{
-			LMOVE = 1,
+			RMOVE = 1,
 			BOUNCE = 2
 		};
 
@@ -33,13 +34,17 @@ class Juicer
 
 		struct Group
 		{
+			// The object's position after we've made it a bit juicy
+			sf::Vector2f target;
 			sf::Transformable* object;
 			int bitmask;
+			sf::Clock timer;
 
 			Group(sf::Transformable* object, int bitmask)
 			{
 				this->object = object;
 				this->bitmask = bitmask;
+				this->target = object->getPosition();
 			}
 		};
 
