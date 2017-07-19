@@ -15,37 +15,62 @@
 class Juicer
 {
 	public:
+		enum JuiceType
+		{
+			LERP, UNKNWN
+		};
+
+		enum TRS
+		{
+			TRANSLATE = 1,
+			SCALE = 2,
+			ROTATE = 3
+		};
+
 		Juicer();
 		~Juicer();
-		void add(sf::Transformable* obj,int bitmask);
+		void add(sf::Transformable* obj, JuiceType jt, TRS trs,
+				 sf::Time length, float start, float end);
+		void add(sf::Transformable* obj, JuiceType jt, TRS trs,
+				 sf::Time length, sf::Vector2f start, sf::Vector2f end);
 		void remove(sf::Transformable* obj);
 		void update();
 
-		enum JuiceType
-		{
-			RMOVE = 1,
-			BOUNCE = 2
-		};
-
 	private:
-		int mask = 1;
-
-		struct Group
+		struct JuiceGroup
 		{
-			// The object's position after we've made it a bit juicy
-			sf::Vector2f target;
 			sf::Transformable* object;
-			int bitmask;
+			JuiceType jt;
+			TRS trs;
 			sf::Clock timer;
-
-			Group(sf::Transformable* object, int bitmask)
+			sf::Time length;
+			sf::Vector2f v1;
+			sf::Vector2f v2;
+			
+			JuiceGroup (sf::Transformable* object, JuiceType jt, TRS trs,
+						sf::Time length, float start, float end)
 			{
 				this->object = object;
-				this->bitmask = bitmask;
-				this->target = object->getPosition();
+				this->jt = jt;
+				this->trs = trs;
+				this->length = length;
+				this->v1.x = start;
+				this->v1.y = end;
+			}
+
+			JuiceGroup (sf::Transformable* object, JuiceType jt, TRS trs,
+						sf::Time length, sf::Vector2f start, sf::Vector2f end)
+			{
+				this->object = object;
+				this->jt = jt;
+				this->trs = trs;
+				this->length = length;
+				this->v1 = start;
+				this->v2 = end;
+
 			}
 		};
 
-		std::vector<Group> vec;
+		std::vector<JuiceGroup> vec;
 };
 #endif//JUICER_H

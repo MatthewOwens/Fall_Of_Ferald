@@ -27,8 +27,16 @@ void MenuState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	exitButton->setText(sf::String("Exit"), buttonFont);
 	exitButton->move(sf::Vector2f(1280.f/2 - 50, 720.f/2 + 100));
 
-	juicer.add(button->getBaseTransformable(), Juicer::JuiceType::RMOVE);
-	juicer.add(button->getTextTransformable(), Juicer::JuiceType::RMOVE);
+	sf::Vector2f startPos = button->getPosition();
+	startPos.x -= 100;
+	juicer.add (button->getBaseTransformable(), Juicer::JuiceType::LERP,
+				Juicer::TRS::TRANSLATE, sf::milliseconds(500), startPos, button->getPosition());
+
+	startPos = button->getTextTransformable()->getPosition();
+	startPos.x -= 100;
+	juicer.add (button->getTextTransformable(), Juicer::JuiceType::LERP,
+				Juicer::TRS::TRANSLATE, sf::milliseconds(500), startPos,
+				button->getTextTransformable()->getPosition());
 }
 
 sf::Packet MenuState::onExit(ImageManager* imageManager)
