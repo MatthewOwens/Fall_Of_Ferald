@@ -37,6 +37,33 @@ void Juicer::remove(sf::Transformable* obj)
 	}
 }
 
+void Juicer::ease(float& r, JuiceType jt)
+{
+	switch(jt)
+	{
+		case LERP:
+			r = easing::lerp(r);
+			break;
+		case QUAD_EASE_OUT:
+			r = easing::quadraticEaseOut(r);
+			break;
+		case QUAD_EASE_IN:
+			r = easing::quadraticEaseIn(r);
+			break;
+		case QUAD_EASE_IN_OUT:
+			r = easing::quadraticEaseInOut(r);
+			break;
+		case ELASTIC_OUT:
+			r = easing::elasticOut(r);
+			break;
+		case ELASTIC_IN_OUT:
+			r = easing::elasticInOut(r);
+			break;
+		default:
+			std::cerr << "Jucier: unknown easing function, defaulting to lerp" << std::endl;
+	}
+}
+
 void Juicer::update()
 {
 	for(auto itr = vec.begin(); itr != vec.end(); )
@@ -44,66 +71,49 @@ void Juicer::update()
 		float r = itr->timer.getElapsedTime() / itr->length;
 		if(r < 1.f)
 		{
-			switch(itr->jt)
+			// Applying the easing function
+			ease(r, itr->jt);
+
+			switch(itr->trs)
 			{
-				case LERP:
+				case TRANSLATE:
 				{
-					switch(itr->trs)
-					{
-						case TRANSLATE:
-							itr->object->setPosition(itr->v1 + ((itr->v2-itr->v1)*r));
-							break;
-						case SCALE:
-						{
-							float factor = ((itr->v1.y - itr->v1.x) * r);
-							itr->object->setScale(factor,factor);
-						}
-							break;
-						case ROTATE:
-							itr->object->setRotation(((itr->v1.y - itr->v1.x) * r) * 360);
-							break;
-					}
+					itr->object->setPosition(itr->v1 + ((itr->v2-itr->v1)*r));
+					break;
+				}
+				case SCALE:
+				{
+					float factor = ((itr->v1.y - itr->v1.x) * r);
+					itr->object->setScale(factor,factor);
+					break;
+				}
+				case ROTATE:
+				{
+					itr->object->setRotation(((itr->v1.y - itr->v1.x) * r) * 360);
 					break;
 				}
 				default:
-					std::cerr << "Unknown juice type" << std::endl;
+					std::cerr << "Juicer: unknown TRS" << std::endl;
 			}
 			++itr;
 		}
-		else itr = vec.erase(itr);
+		else
+		{
+			// Ensuring that the final positions aren't incorrect due to
+			// framerate etc
+			switch(itr->trs)
+			{
+				case TRANSLATE:
+					itr->object->setPosition(itr->v2);
+					break;
+				case SCALE:
+					itr->object->setScale(itr->v1.y, itr->v1.y);
+					break;
+				case ROTATE:
+					itr->object->setRotation(itr->v1.y * 360);
+					break;
+			}
+			itr = vec.erase(itr);
+		}
 	}
 }
-
-//void Juicer::update()
-//{
-//	for(auto i : vec)
-//	{
-//		// Copying the bitmask out so it's not consumed for the next frame
-//		int bitmask = i.bitmask;
-//
-//		while(bitmask)
-//		{
-//			switch(bitmask & mask)
-//			{
-//				case JuiceType::RMOVE:
-//				{
-//					// Adding a bit of a delay to the slide in
-//					if(i.timer.getElapsedTime().asMilliseconds() < 250)
-//						i.object->setPosition(i.target.x - 100, i.target.y);
-//					else if(i.object->getPosition().x < i.target.x)
-//						i.object->move(5.f, 0.f);
-//					break;
-//				}
-//				case JuiceType::BOUNCE:
-//				{
-//					i.object->move(0.f, -1.f);
-//					break;
-//				}
-//			}
-//			bitmask &= ~mask;
-//			mask <<= 1;
-//		}
-//
-//		mask = 1;
-//	}
-//}

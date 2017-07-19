@@ -17,7 +17,8 @@ class Juicer
 	public:
 		enum JuiceType
 		{
-			LERP, UNKNWN
+			LERP, QUAD_EASE_OUT, QUAD_EASE_IN, QUAD_EASE_IN_OUT,
+			ELASTIC_OUT, ELASTIC_IN_OUT
 		};
 
 		enum TRS
@@ -70,6 +71,8 @@ class Juicer
 
 			}
 		};
+
+		void ease(float& r, JuiceType jt);
 
 		std::vector<JuiceGroup> vec;
 };
