@@ -12,7 +12,8 @@ MenuState::~MenuState()
 void MenuState::onEnter(sf::Packet* data, ImageManager* imageManager)
 {
 	imageManager->loadImage("assets/images/interface/menubg.png", "menubg");
-	imageManager->loadImage("assets/images/interface/buttons/tempButtonIcon.png", "buttonIcon");
+	//imageManager->loadImage("assets/images/interface/buttons/tempButtonIcon.png", "buttonIcon");
+	imageManager->loadImage("assets/images/interface/buttons/menuButton.png", "buttonIcon");
 
 	buttonFont.loadFromFile("assets/fonts/steelfish rg.ttf");
 
@@ -20,12 +21,14 @@ void MenuState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	menubgSprite->scale(0.75f, 0.75f);
 
 	button = new Button(imageManager->getTexture("buttonIcon"));
-	button->setText(sf::String("Start"), buttonFont);
-	button->move(sf::Vector2f(1280.f/2 - 50, 720.f/2 - 100));
+	button->move(sf::Vector2f(1280.f/2 - 250, 720.f/2 - 200));
+	button->getBaseTransformable()->scale(0.25f,0.25f);
+	button->setText(sf::String("Start"), buttonFont, 42);
 
 	exitButton = new Button(imageManager->getTexture("buttonIcon"));
-	exitButton->setText(sf::String("Exit"), buttonFont);
-	exitButton->move(sf::Vector2f(1280.f/2 - 50, 720.f/2 + 100));
+	exitButton->move(sf::Vector2f(1280.f/2 - 250, 720.f/2 + 50));
+	exitButton->getBaseTransformable()->scale(0.25f,0.25f);
+	exitButton->setText(sf::String("Exit"), buttonFont, 42);
 
 	// Making the start button juicy
 	sf::Vector2f startPos = button->getPosition();

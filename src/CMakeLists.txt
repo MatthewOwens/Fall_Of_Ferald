@@ -3,7 +3,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-list (APPEND CMAKE_CXX_FLAGS "-Wall -DGL_GLEXT_PROTOTYPES -Werror=return-type -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
+list (APPEND CMAKE_CXX_FLAGS "-fPIC -Wall -DGL_GLEXT_PROTOTYPES -Werror=return-type -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
 
 file(GLOB SRCS *.cpp *.h)
 

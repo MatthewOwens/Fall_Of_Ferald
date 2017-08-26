@@ -172,7 +172,8 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
     imageManager.loadImage(spritesheetPath + "/mage.png", "mage");
     imageManager.loadImage(spritesheetPath + "/warrior.png", "warrior");
     imageManager.loadImage(spritesheetPath + "/tank.png", "tank");
-	imageManager.loadImage(spritesheetPath + "/player.png", "player");
+	//imageManager.loadImage(spritesheetPath + "/player.png", "player");
+	imageManager.loadImage(spritesheetPath + "/slime_neutral.png", "player");
 
 	// Setting the sprites for the NPC units, works as long as the generic unit
 	// names are the same as the imageManager keys
