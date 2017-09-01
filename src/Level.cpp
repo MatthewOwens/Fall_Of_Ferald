@@ -7,55 +7,55 @@
 
 Level::Level(const std::string& mapPath)
 {
-	//SaveManager saveManager;
+    //SaveManager saveManager;
     std::ifstream inFile(mapPath);
     std::istringstream subString;
     std::string line;
     levelWidth = 0;
     levelHeight = 0;
-	playerTurn = true;
-	turnState = TurnState::SELECTION;
-	playerUnitSelected = false;
-	playerUnitTargeting = false;
-	hoveredTile = sf::Vector2i(0,0);
-	selectedUnitPos = sf::Vector2i(-1,-1);
-	previouslyHoveredTile = sf::Vector2i(-1,-1);
-	selectedUnit = NULL;
+    playerTurn = true;
+    turnState = TurnState::SELECTION;
+    playerUnitSelected = false;
+    playerUnitTargeting = false;
+    hoveredTile = sf::Vector2i(0,0);
+    selectedUnitPos = sf::Vector2i(-1,-1);
+    previouslyHoveredTile = sf::Vector2i(-1,-1);
+    selectedUnit = NULL;
 
     if(inFile.good())
     {
         int i = 0;      // Iterator for within the lines of text
         int j  = 0;		// Iterator for the lines themselves
-		bool calculatingWidth = true;
+        bool calculatingWidth = true;
 
-		// Calculating the level size
-		while (std::getline(inFile, line))
-		{
-			if (calculatingWidth)
-			{
-				subString.str(line);
-				levelWidth = line.length();
-				calculatingWidth = false;
-			}
+        // Calculating the level size
+        while (std::getline(inFile, line))
+        {
+            if (calculatingWidth)
+            {
+                subString.str(line);
+                levelWidth = line.length();
+                calculatingWidth = false;
+            }
 
-			levelHeight++;
-		}
+            levelHeight++;
+        }
 
-		// Returning the cursor
-		inFile.clear();
-		inFile.seekg(0, inFile.beg);
+        // Returning the cursor
+        inFile.clear();
+        inFile.seekg(0, inFile.beg);
 
-		// Defining the array
-		tiles = new Tile*[levelWidth];
-		for(int k = 0; k < levelWidth; ++k)
-			tiles[k] = new Tile[levelHeight];
+        // Defining the array
+        tiles = new Tile*[levelWidth];
+        for(int k = 0; k < levelWidth; ++k)
+            tiles[k] = new Tile[levelHeight];
 
-		while (std::getline(inFile, line))
-		{
+        while (std::getline(inFile, line))
+        {
             if (j < levelHeight)
             {
                 char id;
-				subString.str(line);
+                subString.str(line);
 
                 while (i < levelWidth)
                 {
@@ -86,55 +86,55 @@ Level::Level(const std::string& mapPath)
 
 Level::Level(const std::string& mapPath, const std::string& tileSheetPath, ImageManager* imageManager)
 {
-	//SaveManager saveManager;
+    //SaveManager saveManager;
     std::ifstream inFile(mapPath);
     std::istringstream subString;
     std::string line;
     imageManager->loadImage(tileSheetPath);
     levelWidth = 0;
     levelHeight = 0;
-	playerTurn = true;
-	playerUnitSelected = false;
-	playerUnitTargeting = false;
-	hoveredTile = sf::Vector2i(0,0);
-	selectedUnitPos = sf::Vector2i(-1,-1);
-	previouslyHoveredTile = sf::Vector2i(-1,-1);
-	selectedUnit = NULL;
+    playerTurn = true;
+    playerUnitSelected = false;
+    playerUnitTargeting = false;
+    hoveredTile = sf::Vector2i(0,0);
+    selectedUnitPos = sf::Vector2i(-1,-1);
+    previouslyHoveredTile = sf::Vector2i(-1,-1);
+    selectedUnit = NULL;
 
     if(inFile.good())
     {
         int i = 0;      // Iterator for within the lines of text
         int j  = 0;		// Iterator for the lines themselves
-		bool calculatingWidth = true;
+        bool calculatingWidth = true;
 
-		// Calculating the level size
-		while (std::getline(inFile, line))
-		{
-			if (calculatingWidth)
-			{
-				subString.str(line);
-				levelWidth = line.length();
-				calculatingWidth = false;
-			}
+        // Calculating the level size
+        while (std::getline(inFile, line))
+        {
+            if (calculatingWidth)
+            {
+                subString.str(line);
+                levelWidth = line.length();
+                calculatingWidth = false;
+            }
 
-			levelHeight++;
-		}
+            levelHeight++;
+        }
 
-		// Returning the cursor
-		inFile.clear();
-		inFile.seekg(0, inFile.beg);
+        // Returning the cursor
+        inFile.clear();
+        inFile.seekg(0, inFile.beg);
 
-		// Defining the array
-		tiles = new Tile*[levelWidth];
-		for(int k = 0; k < levelWidth; ++k)
-			tiles[k] = new Tile[levelHeight];
+        // Defining the array
+        tiles = new Tile*[levelWidth];
+        for(int k = 0; k < levelWidth; ++k)
+            tiles[k] = new Tile[levelHeight];
 
-		while (std::getline(inFile, line))
-		{
+        while (std::getline(inFile, line))
+        {
             if (j < levelHeight)
             {
                 char id;
-				subString.str(line);
+                subString.str(line);
 
                 while (i < levelWidth)
                 {
@@ -168,24 +168,26 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 {
     combatController = AI(unitPath, "stats/");
 
-	// Loading the images for the NPC units
-    imageManager.loadImage(spritesheetPath + "/mage.png", "mage");
-    imageManager.loadImage(spritesheetPath + "/warrior.png", "warrior");
-    imageManager.loadImage(spritesheetPath + "/tank.png", "tank");
-	//imageManager.loadImage(spritesheetPath + "/player.png", "player");
-	imageManager.loadImage(spritesheetPath + "/slime_neutral.png", "player");
+    // Loading the images for the NPC units
+    imageManager.loadAnimation(spritesheetPath + "/mage.png", "mage", 64, 64, 1);
+    imageManager.loadAnimation(spritesheetPath + "/warrior.png", "warrior", 64, 64, 1);
+    imageManager.loadAnimation(spritesheetPath + "/tank.png", "tank", 64, 64, 1);
+
+    imageManager.loadAnimation(spritesheetPath + "/slime_full.png", "player", 64, 64, 5);
 
 	// Setting the sprites for the NPC units, works as long as the generic unit
 	// names are the same as the imageManager keys
 	for(auto &unit : combatController.getAvailableUnits())
-		unit.setSprite(imageManager.getTexture(unit.getName()));
+            unit.setAnimation(imageManager.getAnimation(unit.getName()));
 
 	// Adding a unit for the AI to fight, normally these would be loaded from a file but eh.
 	combatController.addEnemyUnit(Unit("", "player", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 1, 3));
-	combatController.getEnemyUnits().back().setSprite(imageManager.getTexture("player"));
+	combatController.getEnemyUnits().back().setAnimation(imageManager.getAnimation("player"));
+	combatController.getEnemyUnits().back().getSprite().setFrameTime(sf::seconds(0.2));
 
 	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 8, 3));
-	combatController.getEnemyUnits().back().setSprite(imageManager.getTexture("player"));
+	combatController.getEnemyUnits().back().setAnimation(imageManager.getAnimation("player"));
+	combatController.getEnemyUnits().back().getSprite().setFrameTime(sf::seconds(0.15));
 
 	combatController.updateSprites(tileSize);
 
@@ -197,6 +199,7 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 {
 	// Updating the sprites
 	sf::Vector2f mousePos = inputManager.getMousePosition();
+	sf::Time frameTime = frameClock.restart();
 
 	if(!playerTurn)
 	{
@@ -463,6 +466,7 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 		if(next)
 			nextTurn();
 	}
+	combatController.updateAnimations(frameTime);
 }
 
 // Draw method, draws the tiles and the AI-controlled units

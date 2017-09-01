@@ -12,28 +12,28 @@ const std::string Unit::statNames[9] = {"health", "strength", "magic", "skill",
 Unit::Unit(std::string unitName, std::string unitType, int lvl, int health, int strength, int magic, int skill,
 	int speed, int defense, int resistance, int luck, int moveRange, int _x, int _y)
 {
-	level = lvl;
-	moved = false;
+    level = lvl;
+    moved = false;
 
     // Initilizing the unit's stats
     stats["health"] = Stat(health);
     stats["strength"] = Stat(strength);
-	stats["magic"] = Stat(magic);
+    stats["magic"] = Stat(magic);
     stats["skill"] = Stat(skill);
     stats["speed"] = Stat(speed);
     stats["defense"] = Stat(defense);
-	stats["resistance"] = Stat(resistance);
-	stats["luck"] = Stat(luck);
+    stats["resistance"] = Stat(resistance);
+    stats["luck"] = Stat(luck);
     stats["moveRange"] = Stat(moveRange);
-	movementType = "foot";
+    movementType = "foot";
 
     if (unitName == "")
         name = unitType;
     else name = unitName;
-	//name = unitName;
+    //name = unitName;
 
-	x = _x;
-	y = _y;
+    x = _x;
+    y = _y;
 
 }
 
@@ -46,13 +46,13 @@ Unit::Unit(std::string unitType, int _x, int _y, int* statArray, int lvl)
 
     // Setting the unit's level
     level = lvl;
-	moved = false;
+    moved = false;
 
-	//std::cout << unitType << " unit created!" << std::endl;
-	for(int i = 0; i < getStatsSize(); ++i)
-	{
-		stats[statNames[i]] = Stat(statArray[i]);
-	}
+    //std::cout << unitType << " unit created!" << std::endl;
+        for(int i = 0; i < getStatsSize(); ++i)
+        {
+            stats[statNames[i]] = Stat(statArray[i]);
+        }
 
 	x = _x;
 	y = _y;
@@ -120,83 +120,83 @@ void Unit::setPosition(int newX, int newY, int tileSize)
 
 void Unit::moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize)
 {
-	sf::Vector2i target = path.top();
-	sf::Vector2f moveVec = (sf::Vector2f)(target - getGridPos());
+    sf::Vector2i target = path.top();
+    sf::Vector2f moveVec = (sf::Vector2f)(target - getGridPos());
 
-	sprite.move(moveVec.x * 4, moveVec.y * 4);
+    sprite.move(moveVec.x * 4, moveVec.y * 4);
 
-	if(moveVec.x < 0)
-	{
-		x = (sprite.getPosition().x + sprite.getLocalBounds().width) / tileSize;
-	}
-	else if(moveVec.y < 0)
-	{
-		y = (sprite.getPosition().y + sprite.getLocalBounds().height) / tileSize;
-	}
-	else
-	{
-		x = sprite.getPosition().x / tileSize;
-		y = sprite.getPosition().y / tileSize;
-	}
+    if(moveVec.x < 0)
+    {
+        x = (sprite.getPosition().x + sprite.getLocalBounds().width) / tileSize;
+    }
+    else if(moveVec.y < 0)
+    {
+        y = (sprite.getPosition().y + sprite.getLocalBounds().height) / tileSize;
+    }
+    else
+    {
+        x = sprite.getPosition().x / tileSize;
+        y = sprite.getPosition().y / tileSize;
+    }
 
-	// Checking if we need to change target
-	if(getGridPos() == target)
-	{
-		x = target.x;
-		y = target.y;
+    // Checking if we need to change target
+    if(getGridPos() == target)
+    {
+        x = target.x;
+        y = target.y;
 
-		// Moving the unit back if need be
-		if(moveVec.x < 0 || moveVec.y < 0)
-			sprite.move(-moveVec);
+        // Moving the unit back if need be
+        if(moveVec.x < 0 || moveVec.y < 0)
+            sprite.move(-moveVec);
 
-		path.pop();
-	}
+        path.pop();
+    }
 }
 
 void Unit::setPosition(sf::Vector2f newPos, int tileSize)
 {
-	// Setting the unit's position on the grid
-	x = newPos.x;
-	y = newPos.y;
+    // Setting the unit's position on the grid
+    x = newPos.x;
+    y = newPos.y;
 
-	// Setting the sprite's position
-	sprite.setPosition(x * tileSize, y * tileSize);
+    // Setting the sprite's position
+    sprite.setPosition(x * tileSize, y * tileSize);
 }
 
 std::string Unit::getInfo()
 {
-	std::string result = "";
+    std::string result = "";
     std::map<std::string, Stat>::iterator stat_itr;
 
     for(stat_itr = stats.begin(); stat_itr != stats.end(); ++stat_itr)
     {
-		if(stat_itr->first != "moveRange")
-			result += stat_itr->first + ": " + std::to_string(stat_itr->second.getCurrent()) + "\n";
-	}
+        if(stat_itr->first != "moveRange")
+            result += stat_itr->first + ": " + std::to_string(stat_itr->second.getCurrent()) + "\n";
+    }
 
-	return result;
+    return result;
 
 }
 
 bool Unit::useItem(std::string itemName)
 {
-	Item* item = inventory.getItem(itemName);
+    Item* item = inventory.getItem(itemName);
 
-	// Ensuring that the item exists
-	if(item != nullptr)
-	{
-		std::cout << "Removing " << item->getName() << " from inventory." << std::endl;
-	   	std::cout << "Decreasing " << item->getTargetStat() << " by " << item->getModifier() << std::endl;
-		stats[item->getTargetStat()].modifier += item->getModifier();
+    // Ensuring that the item exists
+    if(item != nullptr)
+    {
+        std::cout << "Removing " << item->getName() << " from inventory." << std::endl;
+        std::cout << "Decreasing " << item->getTargetStat() << " by " << item->getModifier() << std::endl;
+        stats[item->getTargetStat()].modifier += item->getModifier();
 
-		// Removing the item from our inventory
-		inventory.removeItem(itemName);
-		return true;
-	}
-	else
-	{
-		std::cout << "Item " << itemName << " not found in " << getName() << "'s inventory!" << std::endl;
-		std::cout << item << " was returned!" << std::endl << std::endl;
-		return false;
-	}
+        // Removing the item from our inventory
+        inventory.removeItem(itemName);
+        return true;
+    }
+    else
+    {
+        std::cout << "Item " << itemName << " not found in " << getName() << "'s inventory!" << std::endl;
+        std::cout << item << " was returned!" << std::endl << std::endl;
+        return false;
+    }
 }

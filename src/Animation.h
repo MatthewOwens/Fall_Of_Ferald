@@ -5,6 +5,7 @@
 class Animation
 {
     public:
+        Animation() { texture = NULL; }
         Animation(const sf::Texture* texture);
         Animation(const sf::Texture* texture, int frameWidth,
                   int frameHeight, int frameCount, int reel = 0);

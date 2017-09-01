@@ -5,42 +5,44 @@
 #include <string>
 #include <list>
 #include <stack>
-#include <SFML/Graphics/Sprite.hpp>
+//#include <SFML/Graphics/Sprite.hpp>
+#include "AnimatedSprite.h"
 
 class Unit
 {
     public:
-		Unit(std::string unitName, std::string unitType, int lvl, int health, int strength, int magic, int skill,
-			int speed, int defense, int resistance, int luck, int moveRange, int _x, int _y);
+        Unit(std::string unitName, std::string unitType, int lvl, int health, int strength, int magic, int skill,
+            int speed, int defense, int resistance, int luck, int moveRange, int _x, int _y);
         Unit(std::string unitType, int _x, int _y, int* statArray, int lvl);
         virtual ~Unit();
         void modifyStat(std::string statName, int mod);
-		inline void setSprite(sf::Texture& texture) { sprite.setTexture(texture); }
+        //inline void setSprite(sf::Texture& texture) { sprite.setTexture(texture); }
+        inline void setAnimation(Animation& anim) { sprite.setAnimation(anim); }
         int getStat(std::string statName);
         std::string getHighestStat();
         int getMaxRange();
         inline int getX(){return x;}
         inline int getY(){return y;}
-		inline sf::Vector2i getGridPos() { return sf::Vector2i(x, y); }
-		inline sf::Sprite& getSprite() { return sprite; }
-		inline bool getMoved() { return moved; }
-		inline void setMoved(bool val) { moved = val; }
-		inline Inventory& getInventory() { return inventory; }
+        inline sf::Vector2i getGridPos() { return sf::Vector2i(x, y); }
+        inline AnimatedSprite& getSprite() { return sprite; }
+        inline bool getMoved() { return moved; }
+        inline void setMoved(bool val) { moved = val; }
+        inline Inventory& getInventory() { return inventory; }
 
-		inline std::string getName() { return name; }
-		inline std::string getMovementType() { return movementType; }
+        inline std::string getName() { return name; }
+        inline std::string getMovementType() { return movementType; }
 
-		void setPosition(int newX, int newY, int tileSize);	
-		void setPosition(sf::Vector2f newPos, int tileSize);
+        void setPosition(int newX, int newY, int tileSize);	
+        void setPosition(sf::Vector2f newPos, int tileSize);
 
-		void moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize);
-	
-		bool useItem(std::string itemName, Unit* target);	// For targeting other units
-		bool useItem(std::string itemName);					// For using on self
+        void moveAlong(std::stack<sf::Vector2i>& path, const int& tileSize);
 
-		std::string getInfo();
+        bool useItem(std::string itemName, Unit* target);	// For targeting other units
+        bool useItem(std::string itemName);					// For using on self
 
-		const int getStatsSize() { return 9; }
+        std::string getInfo();
+
+        const int getStatsSize() { return 9; }
 
         // Structure used to store unit statisitics and modifiers
         struct Stat
@@ -64,8 +66,9 @@ class Unit
 		static const std::string statNames[9];
 
     private:
-		sf::Sprite sprite;
-		Inventory inventory;
+        //AnimatedSprite sprite;
+        AnimatedSprite sprite;
+        Inventory inventory;
         std::string movementType;   // The unit's movement type. (Treads, flight etc.)
         std::string type;           // The unit's type (Tank, Mech, Infantry etc.)
         std::string name;           // The unit's name (if not specified, this becomes the unit's type)

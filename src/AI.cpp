@@ -115,8 +115,17 @@ void AI::updateSprites(const int& tileSize)
 	for(auto &unit : enemyUnits)
 		unit.getSprite().setPosition(unit.getX() * tileSize, unit.getY() * tileSize);
 
+
 	for(auto &unit : availableUnits)
 		unit.getSprite().setPosition(unit.getX() * tileSize, unit.getY() * tileSize);
+}
+void AI::updateAnimations(const sf::Time& frameTime)
+{
+    for(auto &unit : enemyUnits)
+        unit.getSprite().update(frameTime);
+
+    for(auto &unit : availableUnits)
+        unit.getSprite().update(frameTime);
 }
 
 void AI::outputPositions()

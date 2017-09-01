@@ -78,10 +78,12 @@ void AnimatedSprite::update(sf::Time deltaTime)
         currentTime += deltaTime;
 
 	// Need to advance to the next frame
-        if(currentTime > frameTime)
+        if(currentTime >= frameTime)
         {
             // Reset time, but keep remainder
-            currentTime = sf::microseconds(currentTime.asMicroseconds() & frameTime.asMicroseconds());
+            //currentTime = sf::microseconds(currentTime.asMicroseconds() & frameTime.asMicroseconds());
+            currentTime = sf::Time::Zero;
+
 
             // get next frame index
             if(currentFrame + 1 < animation->getSize())
@@ -94,9 +96,8 @@ void AnimatedSprite::update(sf::Time deltaTime)
                 if(!looping)
                     isPaused = true;
             }
+            setFrame(currentFrame, false);
         }
-
-        setFrame(currentFrame, false);
     }
 }
 
