@@ -183,7 +183,7 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 	// Adding a unit for the AI to fight, normally these would be loaded from a file but eh.
 	combatController.addEnemyUnit(Unit("", "player", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 1, 3));
 	combatController.getEnemyUnits().back().setAnimation(imageManager.getAnimation("player"));
-	combatController.getEnemyUnits().back().getSprite().setFrameTime(sf::seconds(0.2));
+	combatController.getEnemyUnits().back().getSprite().setFrameTime(sf::seconds(0.15));
 
 	combatController.addEnemyUnit(Unit("test", "tank", 5, 9999, 10, 0, 6, 3, 16, 2, 3, 3, 8, 3));
 	combatController.getEnemyUnits().back().setAnimation(imageManager.getAnimation("player"));
