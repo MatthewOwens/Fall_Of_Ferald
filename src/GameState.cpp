@@ -49,7 +49,7 @@ void GameState::update(InputManager* inputManager, StateManager* stateManager)
 			  inputManager->pressedOnce(sf::Mouse::Left), inputManager->pressedOnce(sf::Mouse::Right));
 
 	// Updating the level
-	level->update(*inputManager, ui);
+	level->update(*inputManager, *stateManager, ui);
 
 	if(inputManager->pressedOnce("cancel"))
 	{

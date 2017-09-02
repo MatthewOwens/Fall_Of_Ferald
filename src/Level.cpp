@@ -21,6 +21,8 @@ Level::Level(const std::string& mapPath)
     selectedUnitPos = sf::Vector2i(-1,-1);
     previouslyHoveredTile = sf::Vector2i(-1,-1);
     selectedUnit = NULL;
+    combatants[0] = NULL;
+    combatants[1] = NULL;
 
     if(inFile.good())
     {
@@ -195,7 +197,7 @@ void Level::initilizeAI(const std::string& unitPath, const std::string& spritesh
 	pathfinder = Pathfinder(this);
 }
 
-void Level::update(InputManager& inputManager, GameUserInterface& ui)
+void Level::update(InputManager& inputManager, StateManager& stateManager, GameUserInterface& ui)
 {
 	// Updating the sprites
 	sf::Vector2f mousePos = inputManager.getMousePosition();
@@ -420,6 +422,8 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 
 								if(valid)
 								{
+            								combatants[0] = selectedUnit;
+            								combatants[1] = &*unit;
 									unit->modifyStat("health", 10);	// TODO: replace temp value (10)
 									turnState = TurnState::ATTACKANIM;
 
@@ -440,13 +444,27 @@ void Level::update(InputManager& inputManager, GameUserInterface& ui)
 			}
 			case ATTACKANIM:
 			{
-				// TODO: Display the actual attack animation
+        			if(combatants[0] != NULL && combatants[1] != NULL)
+            			{
+                			std::cout << "HERE WE GO LADS" << std::endl;
+                			sf::Packet data;
+                			data << combatants[0]->getName();
+                			data << getTile(combatants[0]->getX(), combatants[0]->getY()).getType();
+                			data << combatants[1]->getName();
+                			data << getTile(combatants[1]->getX(), combatants[1]->getY()).getType();
 
-				// Cleaning up
-				selectedUnit->getSprite().setColor(sf::Color(43,43,43));
-				selectedUnit->setMoved(true);
-				deselectUnit(ui, false);
-				break;
+                			// Swapping to the combat state
+        				stateManager.pushState(StateManager::COMBAT, &data);
+
+        				// Cleaning up
+
+        				combatants[0] = NULL;
+        				combatants[1] = NULL;
+        			}
+            			selectedUnit->getSprite().setColor(sf::Color(43,43,43));
+    				selectedUnit->setMoved(true);
+    				deselectUnit(ui, false);
+    				break;
 			}
 
 			previouslyHoveredTile = hoveredTile;

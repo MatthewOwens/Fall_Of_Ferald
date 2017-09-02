@@ -73,7 +73,7 @@ class Unit
         std::string type;           // The unit's type (Tank, Mech, Infantry etc.)
         std::string name;           // The unit's name (if not specified, this becomes the unit's type)
         int level;
-		bool moved;					// Whether or not the unit has been moved this turn
+        bool moved;					// Whether or not the unit has been moved this turn
 
         // The unit's stats, stored in a map so that individual stats can be easily accessed.
         std::map<std::string, Stat> stats;

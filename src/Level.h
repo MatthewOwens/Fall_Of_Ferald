@@ -8,6 +8,7 @@
 #include "Tile.h"
 #include "ImageManager.h"
 #include "InputManager.h"
+#include "StateManager.h"
 #include "Pathfinder.h"
 #include "GameUserInterface.h"
 #include "AI.h"
@@ -22,7 +23,7 @@ class Level
         Level(const std::string& mapPath);
         void initilizeAI(const std::string& unitPath, const std::string& spritesheetPath, ImageManager& imageManager);
         void draw(sf::RenderWindow& window);
-        void update(InputManager& inputManager, GameUserInterface& ui);
+        void update(InputManager& inputManager, StateManager& stateManager, GameUserInterface& ui);
         virtual ~Level();
         Tile getTile(int x, int y);
         std::string getTileType(int x, int y);
@@ -60,6 +61,8 @@ class Level
         Tile** tiles;
         AI combatController;
         Pathfinder pathfinder;
+
+        Unit* combatants[2];
 
         void deselectUnit(GameUserInterface& ui, bool moveBack = true);
 };

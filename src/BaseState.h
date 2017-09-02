@@ -18,18 +18,18 @@ class StateManager;
 class BaseState
 {
 public:
-	virtual ~BaseState();// = 0;
-	virtual void update(InputManager* inputManager, StateManager* stateManager) = 0;
-	virtual void render(sf::RenderWindow* window) = 0;
-	virtual void onEnter(sf::Packet* data, ImageManager* imageManager) = 0;
-	virtual void onPause() = 0;
-	virtual sf::Packet onExit(ImageManager* imageManager) = 0;
-	inline bool renderingPrevious() { return renderPrevious; }
+    virtual ~BaseState();// = 0;
+    virtual void update(InputManager* inputManager, StateManager* stateManager) = 0;
+    virtual void render(sf::RenderWindow* window) = 0;
+    virtual void onEnter(sf::Packet* data, ImageManager* imageManager) = 0;
+    virtual void onPause() = 0;
+    virtual sf::Packet onExit(ImageManager* imageManager) = 0;
+    inline bool renderingPrevious() { return renderPrevious; }
 
-	// Packet used to transfer data between states
 protected:
-	BaseState(){};
-	sf::Packet bundle;
-	bool renderPrevious = false;
+    BaseState(){};
+    // Packet used to transfer data between states
+    sf::Packet bundle;
+    bool renderPrevious = false;
 };
 #endif //BASESTATE_H
