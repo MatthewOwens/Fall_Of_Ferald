@@ -30,18 +30,18 @@ Connector::Connector(Node* startNode, Node* endNode, std::string choiceText,
 	this->priority = priority;
 }
 
-void Connector::addFlag(std::string flag, bool state)
+void Connector::addFlag(std::string flag, int state)
 {
-	flags.insert(std::pair<std::string,bool>(flag, state));
+	flags.insert(std::pair<std::string,int>(flag, state));
 }
 
-void Connector::addTrigger(std::string flag, bool state)
+void Connector::addTrigger(std::string flag, int state)
 {
-	triggeredFlags.insert(std::pair<std::string,bool>(flag, state));
+	triggeredFlags.insert(std::pair<std::string,int>(flag, state));
 }
 
-bool Connector::conditionsMet(std::map<std::string, bool>& localFlags,
-							  std::map<std::string, bool>& globalFlags)
+bool Connector::conditionsMet(std::map<std::string, int>& localFlags,
+							  std::map<std::string, int>& globalFlags)
 {
 	std::vector<bool> flagsMet;
 
@@ -56,7 +56,7 @@ bool Connector::conditionsMet(std::map<std::string, bool>& localFlags,
 			if(flag.first == local.first)
 			{
 				// Checking if the flag was met locally
-				flagsMet.back() = (flag.second == local.second);
+				flagsMet.back() = (flag.second >= local.second);
 				break;
 			}
 		}
@@ -69,7 +69,7 @@ bool Connector::conditionsMet(std::map<std::string, bool>& localFlags,
 				if(flag.first == global.first)
 				{
 					// Checking if the flag was met globally
-					flagsMet.back() = (flag.second == global.second);
+					flagsMet.back() = (flag.second >= global.second);
 					break;
 				}
 			}
