@@ -2,8 +2,6 @@
 #define COMBATANIMSTATE_H
 #include "BaseState.h"
 #include "InputManager.h"
-#include "Shader.h"
-#include <SFML/OpenGL.hpp>
 
 class StateManager;
 

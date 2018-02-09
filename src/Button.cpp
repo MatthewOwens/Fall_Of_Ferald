@@ -238,7 +238,7 @@ void Button::updatePositions()
 	{
 		buttonBounds = rectShape->getLocalBounds();
 		outlineOffset = rectShape->getOutlineThickness();
-		scale = sprite->getScale();
+		scale = rectShape->getScale();
 	}
 
 	// Centering the text

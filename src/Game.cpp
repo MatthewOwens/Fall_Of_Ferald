@@ -26,8 +26,8 @@ Game::Game()
 	std::cout << "\tAttribs:\t" << (int)settings.attributeFlags << std::endl;
 	std::cout << std::endl;
 
-	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	glewInit();
+	//std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	//glewInit();
 }
 
 Game::~Game()

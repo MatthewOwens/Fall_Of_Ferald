@@ -1,7 +1,8 @@
 #include "DialogueState.h"
 #include "StateManager.h"
 
-DialogueState::DialogueState() : BaseState()
+DialogueState::DialogueState() : BaseState(),
+	charSpriteFolder("assets/images/charSprites/dialogueSprites/")
 {
 	renderPrevious = true;
 	makingChoice = false;
@@ -21,32 +22,49 @@ void DialogueState::update(InputManager* inputManager, StateManager* stateManage
 		stateManager->popState();
 	}
 
-	if (inputManager->pressedOnce("cancel"))
-		stateManager->pushState(StateManager::PAUSE);
+	//if (inputManager->pressedOnce("cancel"))
+	//	//stateManager->popState();
+	//	close = true;
 
 	if (inputManager->pressedOnce(sf::Mouse::Left))
 	{
 		std::vector<Connector>& conns = currentNode->getConnections();
 
-		if (nextNodeExists())
+		if(dialogueBox->getSprite().getGlobalBounds().contains(inputManager->getMousePosition()))
 		{
-			if (validConnectionIndices.size() == 1)
+
+			if (nextNodeExists())
 			{
-				updateFlags(conns[validConnectionIndices[0]]);
-				currentNode = conns[validConnectionIndices[0]].getEnd();
-				dialogueBox->setStrings(currentNode->getHeader(), currentNode->getBody());
+				if (validConnectionIndices.size() == 1)
+				{
+					updateFlags(conns[validConnectionIndices[0]]);
+					currentNode = conns[validConnectionIndices[0]].getEnd();
+					dialogueBox->setStrings(currentNode->getHeader(), currentNode->getBody());
+
+					// Setting colours if need be
+					if(currentNode->getHeader() == "Player")
+					{
+						playerSprite.setColor(sf::Color::White);
+						partnerSprite.setColor(deselectColor);
+					}
+					else
+					{
+						partnerSprite.setColor(sf::Color::White);
+						playerSprite.setColor(deselectColor);
+					}
+				}
+				else
+				{
+					makingChoice = true;
+
+					if (choiceButtons.size() == 0)
+						populateButtons();
+				}
 			}
 			else
-			{
-				makingChoice = true;
-
-				if (choiceButtons.size() == 0)
-					populateButtons();
-			}
+				//stateManager->popState();
+				close = true;
 		}
-		else
-			//stateManager->popState();
-			close = true;
 
 
 		if (makingChoice)
@@ -60,6 +78,10 @@ void DialogueState::update(InputManager* inputManager, StateManager* stateManage
 					updateFlags(conns[validConnectionIndices[i]]);
 					currentNode = conns[validConnectionIndices[i]].getEnd();
 					dialogueBox->setStrings(currentNode->getHeader(), currentNode->getBody());
+
+					// Reverting the player's color
+					playerSprite.setColor(deselectColor);
+					partnerSprite.setColor(sf::Color::White);
 					break;
 				}
 			}
@@ -72,7 +94,7 @@ void DialogueState::update(InputManager* inputManager, StateManager* stateManage
 
 				choiceButtons.clear();
 			}
-		}
+			}
 	}
 
 	if (close)
@@ -81,22 +103,30 @@ void DialogueState::update(InputManager* inputManager, StateManager* stateManage
 
 void DialogueState::populateButtons()
 {
-	sf::Vector2f startPos(500, 200);	// TODO: base on screen size
-	sf::Vector2f size(200, 100);
+	sf::Vector2f startPos(0, 400);	// TODO: base on screen size
+	sf::Vector2f size(1280, 30);
+	const int padding = 10;
 	std::vector<Connector> conns = currentNode->getConnections();
+
+	playerSprite.setColor(sf::Color::White);
+	partnerSprite.setColor(deselectColor);
 	
 	for (auto i : validConnectionIndices)
 	{
-		choiceButtons.push_back(new Button(size, sf::Color(40, 40, 170)));
+		choiceButtons.push_back(new Button(*buttonTexture));
 		choiceButtons.back()->setText(conns[i].getChoiceText(), font);
 		choiceButtons.back()->setPosition(startPos);
-		startPos.y += size.y;
+		startPos.y += (size.y + padding);
 	}
 }
 
 void DialogueState::render(sf::RenderWindow* window)
 {
-	dialogueBox->draw(window);
+	window->draw(playerSprite);
+	window->draw(partnerSprite);
+
+	if(dialogueBox != NULL)
+		dialogueBox->draw(window);
 
 	for (auto i : choiceButtons)
 		i->draw(window);
@@ -107,14 +137,32 @@ void DialogueState::onEnter(sf::Packet* data, ImageManager* imageManager)
 	FileManager fm("dialogue/");		// Todo: replace global dialogue folder with one for the current save
 	inputValid = false;
 	dialogueBox = NULL;
+	buttonTexture = NULL;
+	partnerData = "";
+
+	deselectColor = sf::Color(100,100,100);
+	sf::Vector2f spriteSize = sf::Vector2f(612, 600);
 
 	if (!font.loadFromFile("assets/fonts/steelfish rg.ttf"))
 		std::cerr << "fonts fucked" << std::endl;
 
-	imageManager->loadImage("assets/images/interface/Dialogue.png", "dBox");
+	// Loading textures
+	imageManager->loadImage("assets/images/interface/spookyDialogue.png", "dBox");
+	imageManager->loadImage("assets/images/interface/buttons/choiceButton.png", "choiceButton");
+	//imageManager->loadImage(charSpriteFolder + "spook.png", "spook");
+	imageManager->loadImage("assets/images/charSprites/dialogueSprites/player.png", "spook");
+	buttonTexture = &imageManager->getTexture("choiceButton");
+
+	// Initilising the player sprite
+	playerSprite.setTexture(imageManager->getTexture("spook"));
+	playerSprite.setPosition(20,20);
+	playerSprite.setColor(deselectColor);
+	playerSprite.setScale(spriteSize.x / playerSprite.getLocalBounds().width,
+						  spriteSize.y / playerSprite.getLocalBounds().height);
 
 	if (data != NULL)
 	{
+		std::cout << "DialogueState - Data non-null" << std::endl;
 		if (*data >> dialogueName)
 		{
 			dialogueNodes = fm.loadDialogue(dialogueName);
@@ -125,13 +173,44 @@ void DialogueState::onEnter(sf::Packet* data, ImageManager* imageManager)
 
 			lFlags = fm.loadLocals(dialogueName);
 			gFlags = fm.loadGlobals();
+			gFlags["depart"] = 0;
 			inputValid = true;
 
-			dialogueBox = new DialogueBox(imageManager->getTexture("dBox"), font);
+			dialogueBox = new DialogueBox(imageManager->getTexture("dBox"), font,
+										  48, 0, 570);
 			currentNode = dialogueNodes[0];
 
 			dialogueBox->setStrings(currentNode->getHeader(), currentNode->getBody());
+
+			// Resetting flags on new game
+			// TODO: Do this in a better way
+			if(dialogueName == "intro")
+			{
+				gFlags["kindness"] = 0;
+				gFlags["calmness"] = 0;
+				gFlags["anger"] = 0;
+				gFlags["vanity"] = 0;
+			}
 		}
+		else
+		{
+			std::cerr << "DialogueState - Data null!" << std::endl;
+			exit(-1);
+		}
+
+		// Loading the partner sprite
+		if(*data >> partnerData)
+		{
+			std::cout << "partnerData is: " << partnerData << std::endl;
+			imageManager->loadImage(charSpriteFolder + partnerData);
+
+			// Setting up the sprite
+			partnerSprite.setTexture(imageManager->getTexture(charSpriteFolder + partnerData));
+			partnerSprite.setPosition(750, 20);
+			partnerSprite.setScale(spriteSize.x / partnerSprite.getLocalBounds().width,
+								  spriteSize.y / partnerSprite.getLocalBounds().height);
+		}
+		else std::cerr << "no partner data!" << std::endl;
 	}
 }
 
@@ -146,7 +225,21 @@ sf::Packet DialogueState::onExit(ImageManager* imageManager)
 	fm.saveLocals(dialogueName, lFlags);
 	fm.saveGlobals(gFlags);
 
+	// Debug output
+	std::cout << "Dialogue State onExit" << std::endl;
+	std::cout << "\tmodule: dialogueName" << std::endl;
+	std::cout << "\tVanity: " << gFlags["vanity"] << std::endl;
+	std::cout << "\tAnger: " << gFlags["anger"] << std::endl;
+	std::cout << "\tKindness: " << gFlags["kindness"] << std::endl;
+	std::cout << "\tCalmness: " << gFlags["calmness"] << std::endl;
+	std::cout << "\tDepart: " << gFlags["depart"] << std::endl;
+
 	imageManager->unloadImage("dBox");
+	imageManager->unloadImage("spook");
+
+	if(partnerData != "")
+		imageManager->unloadImage(charSpriteFolder + partnerData);
+
 	for (int i = 0; i < dialogueNodes.size(); ++i)
 	{
 		delete dialogueNodes[i];
@@ -154,6 +247,7 @@ sf::Packet DialogueState::onExit(ImageManager* imageManager)
 	}
 
 	sf::Packet dat;
+	dat << gFlags["depart"];
 	return dat;
 }
 
@@ -173,7 +267,7 @@ bool DialogueState::nextNodeExists()
 	// Removing connectors who's conditions are not met
 	for (auto i = validConnectionIndices.begin(); i != validConnectionIndices.end(); )
 	{
-		const std::map<std::string, bool>& flags = conns[*i].getFlags();
+		const std::map<std::string, int>& flags = conns[*i].getFlags();
 		bool incRequired = true;
 
 		// If there's flags to parse
@@ -197,7 +291,7 @@ bool DialogueState::nextNodeExists()
 				// Prioritising local matches
 				if (lSearch != lFlags.end())
 				{
-					if (lSearch->second != flag->second)	// Flag isn't met
+					if (lSearch->second < flag->second)	// Flag isn't met
 					{
 						i = validConnectionIndices.erase(i);
 						incRequired = false;
@@ -206,7 +300,7 @@ bool DialogueState::nextNodeExists()
 				}
 				else if (gSearch != gFlags.end())
 				{
-					if (gSearch->second != flag->second) // Flag isn't met
+					if (gSearch->second < flag->second) // Flag isn't met
 					{
 						i = validConnectionIndices.erase(i);
 						incRequired = false;
@@ -249,14 +343,14 @@ void DialogueState::updateFlags(Connector& selectedConn)
 		auto lSearch = lFlags.find(flag.first);
 		if (lSearch != lFlags.end())
 		{
-			lSearch->second = flag.second;
+			lSearch->second += flag.second;
 		}
 		else
 		{
 			// Searching global flags
 			auto gSearch = gFlags.find(flag.first);
 			if (gSearch != gFlags.end())
-				gSearch->second = flag.second;
+				gSearch->second += flag.second;
 		}
 
 	}

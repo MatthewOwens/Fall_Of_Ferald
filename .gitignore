@@ -42,3 +42,7 @@ CmakeLists.txtt
 
 # swap files
 *.swp
+
+# krita
+*.kra
+*.kra~

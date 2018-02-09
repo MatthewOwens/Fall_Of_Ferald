@@ -15,11 +15,16 @@ class DialogueBox
         virtual ~DialogueBox();
         void draw(sf::RenderWindow *window);
 		void setStrings(const std::string& header, const std::string& body);
+		sf::Sprite& getSprite() { return sprite; }
 
     private:
         sf::Text name;          // The name of the character that is currently talking
         sf::Text dialogue;      // The dialogue being displayed
         sf::Sprite sprite;
+		sf::Text continuePrompt;
+
+		int continuePulse;
+		bool continuePulseDir;
 };
 
 #endif // DIALOGUEBOX_H

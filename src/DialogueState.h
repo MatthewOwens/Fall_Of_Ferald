@@ -7,6 +7,7 @@
 #include "Button.h"
 #include "FileManager.h"
 #include "Node.h"
+#include "Connector.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -28,11 +29,18 @@ private:
 	std::string dialogueName;
 
 	DialogueBox* dialogueBox;
+	sf::Texture* buttonTexture;
 	sf::Font font;
 
+	sf::Color deselectColor;
+	sf::Sprite playerSprite;
+	sf::Sprite partnerSprite;
+	const std::string charSpriteFolder;
+	std::string partnerData;
+
 	std::vector<Node*> dialogueNodes;
-	std::map<std::string, bool> gFlags;
-	std::map<std::string, bool> lFlags;
+	std::map<std::string, int> gFlags;
+	std::map<std::string, int> lFlags;
 	Node* currentNode;
 	bool makingChoice;
 
