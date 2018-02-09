@@ -13,3 +13,4 @@ project(fall_of_ferald) # defining the project's name
 
 add_subdirectory(src)	# adding a subdirectory, cmake will look here for an
 						# additional CMakeLists.txt file.
+add_subdirectory(gtest)
