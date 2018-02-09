@@ -46,3 +46,4 @@ CmakeLists.txtt
 # krita
 *.kra
 *.kra~
+*.png~
