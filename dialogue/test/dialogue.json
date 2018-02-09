@@ -1,4 +1,8 @@
 {
+	"friendlyModules" : 
+	[
+		"globals"
+	],
 	"module" : "test",
 	"nodes" : 
 	[
@@ -20,7 +24,7 @@
 					[
 						{
 							"key" : "irritated_man",
-							"value" : true
+							"value" : 1
 						}
 					],
 					"targetID" : "test5",
@@ -55,7 +59,7 @@
 					[
 						{
 							"key" : "delinquent",
-							"value" : true
+							"value" : 0
 						}
 					],
 					"targetID" : "test4",
@@ -63,7 +67,7 @@
 					[
 						{
 							"key" : "irritated_man",
-							"value" : true
+							"value" : 1
 						}
 					]
 				}
