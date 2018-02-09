@@ -1,0 +1,25 @@
+{
+	"flags" : 
+	[
+		{
+			"key" : "anger",
+			"value" : 0
+		},
+		{
+			"key" : "calmness",
+			"value" : 0
+		},
+		{
+			"key" : "kindness",
+			"value" : 0
+		},
+		{
+			"key" : "vanity",
+			"value" : 0
+		},
+		{
+			"key" : "irritated_man",
+			"value" : 0
+		}
+	]
+}
