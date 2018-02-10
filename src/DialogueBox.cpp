@@ -19,10 +19,10 @@ DialogueBox::DialogueBox(const sf::Texture& texture, const sf::Font& font,
 	name.move(25, 10);
 
 	dialogue.setPosition(sprite.getPosition());
-	dialogue.move(25, 50);
+	dialogue.move(25, 120);
 
 	continuePrompt.setPosition(sprite.getPosition());
-	continuePrompt.move(1100, 100);
+	continuePrompt.move(1150, 175);
 
 	continuePulse = 255;
 	continuePulseDir = false;
@@ -48,7 +48,7 @@ void DialogueBox::draw(sf::RenderWindow *window)
 	continuePrompt.setColor(sf::Color(255, 255, 255, continuePulse));
 
 	window->draw(sprite);
-	//window->draw(name);
+	window->draw(name);
 	window->draw(dialogue);
 	window->draw(continuePrompt);
 }

@@ -147,10 +147,10 @@ void DialogueState::onEnter(sf::Packet* data, ImageManager* imageManager)
 		std::cerr << "fonts fucked" << std::endl;
 
 	// Loading textures
-	imageManager->loadImage("assets/images/interface/spookyDialogue.png", "dBox");
-	imageManager->loadImage("assets/images/interface/buttons/choiceButton.png", "choiceButton");
+	imageManager->loadImage("assets/images/interface/Dialogue.png", "dBox");
+	imageManager->loadImage("assets/images/interface/buttons/tempButton.png", "choiceButton");
 	//imageManager->loadImage(charSpriteFolder + "spook.png", "spook");
-	imageManager->loadImage("assets/images/charSprites/dialogueSprites/player.png", "spook");
+	//imageManager->loadImage("assets/images/charSprites/dialogueSprites/player.png", "spook");
 	buttonTexture = &imageManager->getTexture("choiceButton");
 
 	// Initilising the player sprite
@@ -177,20 +177,10 @@ void DialogueState::onEnter(sf::Packet* data, ImageManager* imageManager)
 			inputValid = true;
 
 			dialogueBox = new DialogueBox(imageManager->getTexture("dBox"), font,
-										  48, 0, 570);
+										  48, 0, 0);
 			currentNode = dialogueNodes[0];
 
 			dialogueBox->setStrings(currentNode->getHeader(), currentNode->getBody());
-
-			// Resetting flags on new game
-			// TODO: Do this in a better way
-			if(dialogueName == "intro")
-			{
-				gFlags["kindness"] = 0;
-				gFlags["calmness"] = 0;
-				gFlags["anger"] = 0;
-				gFlags["vanity"] = 0;
-			}
 		}
 		else
 		{
