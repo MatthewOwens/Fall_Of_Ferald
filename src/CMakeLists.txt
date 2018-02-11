@@ -5,11 +5,14 @@ endif()
 
 list (APPEND CMAKE_CXX_FLAGS "-fPIC -Wall -DGL_GLEXT_PROTOTYPES -Werror=return-type -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
 
+message("Current source dir: " ${CMAKE_CURRENT_SOURCE_DIR})
 file(GLOB SRCS *.cpp *.h)
-add_library(GAME_LIB OBJECT ${SRCS})
+set(GAME_SOURCES ${SRCS})
+list(REMOVE_ITEM GAME_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+add_library(GAME_LIB OBJECT ${GAME_SOURCES})
 
 #add_executable(SRPG ${SRCS})
-add_executable(SRPG $<TARGET_OBJECTS:GAME_LIB>)
+add_executable(SRPG main.cpp $<TARGET_OBJECTS:GAME_LIB>)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 message(CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH})
