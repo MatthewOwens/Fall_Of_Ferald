@@ -21,6 +21,7 @@ public:
 	void render();
 	void popState();
 	bool popTo(StateEnum stateType);
+	inline StateEnum getCurrentState() { return currentState; }
 private:
 
 	std::stack<BaseState*> stateStack;
