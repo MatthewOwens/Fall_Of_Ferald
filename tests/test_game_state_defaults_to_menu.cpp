@@ -1,11 +1,16 @@
 #include "catch.hpp"
 #include "StateManager.h"
+#include "InputManager.h"
+#include "ImageManager.h"
 
 SCENARIO("game state defaults to menu", "[StateManager]")
 {
-	GIVEN("a state manager without access to the window and input/image managers")
+	GIVEN("a state manager is created")
 	{
-		StateManager sm(NULL, NULL, NULL);
-		REQUIRE(sm.getCurrentState() == StateManager::StateEnum::MENU);
+		InputManager in;
+		ImageManager im;
+
+		StateManager sm(&in,&im,NULL);
+		REQUIRE(sm.getCurrentState() == sm.StateEnum::MENU);
 	}
 }

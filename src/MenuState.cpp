@@ -12,7 +12,6 @@ MenuState::~MenuState()
 void MenuState::onEnter(sf::Packet* data, ImageManager* imageManager)
 {
 	imageManager->loadImage("assets/images/interface/menubg.png", "menubg");
-	//imageManager->loadImage("assets/images/interface/buttons/tempButtonIcon.png", "buttonIcon");
 	imageManager->loadImage("assets/images/interface/buttons/menuButton.png", "buttonIcon");
 
 	buttonFont.loadFromFile("assets/fonts/steelfish rg.ttf");
