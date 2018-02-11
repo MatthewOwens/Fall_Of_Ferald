@@ -1,30 +1,20 @@
-# Enabling debug symbols
-if(CMAKE_BUILD_TYPE STREQUAL "")
-  set(CMAKE_BUILD_TYPE Debug)
-endif()
-
-list (APPEND CMAKE_CXX_FLAGS "-fPIC -Wall -DGL_GLEXT_PROTOTYPES -Werror=return-type -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
-
-file(GLOB SRCS *.cpp *.h)
-add_library(GAME_LIB OBJECT ${SRCS})
-
-#add_executable(SRPG ${SRCS})
-add_executable(SRPG $<TARGET_OBJECTS:GAME_LIB>)
-
+list (APPEND CMAKE_CXX_FLAGS "-fPIC -Wall -DGL_GLETX_PROTOTYPES -Werror=return-type -g -pedantic-errors -std=c++11${CMAKE_CXX_FLAGS}")
+file(GLOB SRCS *.cpp catch.hpp)
+add_executable(run-tests ${SRCS} $<TARGET_OBJECTS:GAME_LIB>)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
-message(CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH})
+
 find_package(SFML 2.4.0 REQUIRED system window graphics network audio)
 find_package(Jsoncpp REQUIRED)
 
 if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(SRPG ${SFML_LIBRARIES})
+  target_link_libraries(run-tests ${SFML_LIBRARIES})
 endif()
 
 if(Jsoncpp_FOUND)
 	message("Found jsoncpp in " ${Jsoncpp_INCLUDE_DIR})
 	include_directories(${Jsoncpp_INCLUDE_DIR})
-	target_link_libraries(SRPG ${Jsoncpp_LIBRARY})
+	target_link_libraries(run-tests ${Jsoncpp_LIBRARY})
 else()
 	message("-- Jsoncpp not found")
 	message("  -- jsoncpp_INCLUDE_DIR: " ${Jsoncpp_INCLUDE_DIR})
