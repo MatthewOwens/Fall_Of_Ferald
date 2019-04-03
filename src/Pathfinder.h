@@ -34,9 +34,11 @@ class Pathfinder
         // units, stops them from being recalculated during down-time.
         std::vector<std::vector<sf::Vector2i>> playerPaths;
         Level* levelPtr;
-
+	public:
 		void findMoveRange(Unit& unit, std::vector<sf::Vector3i>& moveSet, bool playerUnit);
-		void findAtkRange(const sf::Vector2i& start, std::vector<sf::Vector3i>& moveSet, std::vector<sf::Vector2i>& atkSet, int atkRange);
+		void findAtkRange(const sf::Vector2i& start, std::vector<sf::Vector3i>& moveSet,
+				          std::vector<sf::Vector2i>& atkSet, int atkRange);
+		std::vector<sf::Vector2i> findRange(std::string& moveType, int rangeStat, bool isPlayerUnit);
 };
 
 #endif // PATHFINDER_H

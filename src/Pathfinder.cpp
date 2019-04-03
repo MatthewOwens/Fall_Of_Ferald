@@ -359,3 +359,9 @@ std::stack<sf::Vector2i> Pathfinder::getPath(std::vector<sf::Vector3i> searchRan
 	//finalPath.pop();
 	return finalPath;
 }
+
+std::vector<sf::Vector2i> findRange(std::string& moveType, int rangeStat, bool isPlayerUnit)
+{
+	std::vector<sf::Vector2i> ret;
+	return ret;
+}

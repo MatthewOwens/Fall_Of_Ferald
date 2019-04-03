@@ -2,8 +2,12 @@
 	"flags" : 
 	[
 		{
+			"key" : "depart",
+			"value" : 0
+		},
+		{
 			"key" : "irritated_man",
-			"value" : true
+			"value" : 1
 		}
 	]
 }

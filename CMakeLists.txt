@@ -1,6 +1,3 @@
-# Author: Xemerau
-# Date:	27th July 2015
-
 # Simple Cmake Setup, utilises a single subdirectory (src) and adds all C++
 # source files to the project
 

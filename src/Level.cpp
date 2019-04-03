@@ -575,5 +575,5 @@ Level::~Level()
     // Clearing up the tile array
     for(int i = 0; i < levelWidth; ++i)
         delete[] tiles[i];
-    delete tiles;
+    delete[] tiles;
 }

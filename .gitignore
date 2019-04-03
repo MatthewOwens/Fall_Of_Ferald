@@ -40,9 +40,10 @@ Makefile
 CMakeCache.txt
 cmake_install.cmake
 CmakeLists.txtt
+*.sh
 
 # swap files
-*.swp
+*.sw*
 
 # krita
 *.kra
