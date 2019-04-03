@@ -1,0 +1,47 @@
+{
+	"config":
+	{
+		"iconLocation": "assets/images/items/"
+	},
+	"data":
+	{
+		"Trinkets":
+		{
+		"Example":
+			{
+				"name": "example item",
+				"description" : "this is an exemplary example item",
+				"icon": "example.png"
+			}
+		},
+		"Weapons":
+		{
+			"Sword":
+			{
+				"name": "iron sword",
+				"description": "a bog-standard iron sword",
+				"icon": "iron-sword.png",
+				"power": 2,
+				"range": 1
+			},
+			"Spear":
+			{
+				"name": "makeshift spear",
+				"description": "cobbled together with stick, stone and string. Can be thrown",
+				"icon": "makeshift.spear.png",
+				"power": 1,
+				"range": 3
+			}
+		},
+		"Armours":
+		{
+			"Leather armour":
+			{
+				"name": "leather armour",
+				"description": "smells like cow",
+				"icon": "leather-armour.png",
+				"damageReduction": 1
+			}
+		}
+	}
+}
