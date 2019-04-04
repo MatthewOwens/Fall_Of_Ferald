@@ -5,29 +5,8 @@
 
 Game::Game()
 {
-	// Initilising the OpenGL context
-	sf::ContextSettings settings;
-	settings.depthBits = 24;
-	settings.stencilBits = 8;
-	settings.antialiasingLevel = 4;
-	settings.majorVersion = 4;
-	settings.minorVersion = 5;
-	settings.attributeFlags = sf::ContextSettings::Default;
-
-	window.create(sf::VideoMode(1280, 720), "Fall of Ferald", sf::Style::Default, settings);
+	window.create(sf::VideoMode(1280, 720), "Fall of Ferald");
 	stateManager = NULL;
-
-	settings = window.getSettings();
-	std::cout << "OpenGL context created!" << std::endl;
-	std::cout << "\tDepth Bits:\t" << settings.depthBits << std::endl;
-	std::cout << "\tStencil Bits:\t" << settings.stencilBits << std::endl;
-	std::cout << "\tAA Level:\t" << settings.antialiasingLevel << std::endl;
-	std::cout << "\tVersion:\t" << settings.majorVersion << "." << settings.minorVersion << std::endl;
-	std::cout << "\tAttribs:\t" << (int)settings.attributeFlags << std::endl;
-	std::cout << std::endl;
-
-	//std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	//glewInit();
 }
 
 Game::~Game()
@@ -36,7 +15,7 @@ Game::~Game()
 
 void Game::run()
 {
-    window.setFramerateLimit(60);
+	window.setFramerateLimit(60);
 	stateManager = new StateManager(&inputManager, &imageManager, &window);
 
 	// Main loop
